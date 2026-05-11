@@ -1,0 +1,1 @@
+INSERT INTO `question` VALUES (2,1,'午餐吃啥?','Single',1,'AAA'),(2,2,'喝啥','Single',1,'BBB');
