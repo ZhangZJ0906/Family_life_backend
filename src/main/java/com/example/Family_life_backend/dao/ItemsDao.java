@@ -10,7 +10,12 @@ import com.example.Family_life_backend.enity.Items;
 public interface ItemsDao extends JpaRepository<Items, Long> {
 
 	@Query(value = "select * from items where group_id = ?", nativeQuery = true)
-	public List<Items> getItem(int groupId);
+	public List<Items> getItemByGroupId(int groupId);
 
+	@Query(value = "SELECT * FROM locations ", nativeQuery = true)
+	public List<Object[]> getItemLocationList();
+
+	@Query(value = "SELECT * FROM categories ", nativeQuery = true)
+	public List<Object[]> getItemCategoriesList();
 
 }
