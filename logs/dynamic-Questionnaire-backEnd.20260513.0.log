@@ -2284,3 +2284,216 @@ Caused by: org.hibernate.AnnotationException: Entity 'com.example.Family_life_ba
 16:44:50.700 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
 16:44:50.702 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.281 seconds (process running for 22667.143)
 16:44:50.703 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+20:35:40.400 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+20:35:40.524 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 11116 (D:\eclipse-workspace\Family_life_backend\bin\main started by USER in D:\eclipse-workspace\Family_life_backend)
+20:35:40.525 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+20:35:40.660 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+20:35:40.661 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+20:35:42.266 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+20:35:42.389 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 101 ms. Found 1 JPA repository interface.
+20:35:43.651 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+20:35:43.680 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+20:35:43.689 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+20:35:43.690 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+20:35:43.795 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+20:35:43.796 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3134 ms
+20:35:44.065 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+20:35:44.398 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7ee9c4e8
+20:35:44.400 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+20:35:44.475 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+20:35:44.626 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+20:35:44.710 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+20:35:45.332 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+20:35:45.540 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.45
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+20:35:46.708 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+20:35:46.712 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+20:35:47.237 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+20:35:47.283 WARN  [restartedMain]o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemsController': Unsatisfied dependency expressed through field 'itemsService': Error creating bean with name 'itemsService': Unsatisfied dependency expressed through field 'locationDao': No qualifying bean of type 'com.example.Family_life_backend.dao.LocationDao' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+20:35:47.284 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+20:35:47.294 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+20:35:47.314 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+20:35:47.318 INFO  [restartedMain]org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+20:35:47.337 INFO  [restartedMain]o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+20:35:47.370 ERROR [restartedMain]o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field locationDao in com.example.Family_life_backend.service.ItemsService required a bean of type 'com.example.Family_life_backend.dao.LocationDao' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.example.Family_life_backend.dao.LocationDao' in your configuration.
+
+21:40:47.724 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+21:40:47.837 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 15548 (D:\eclipse-workspace\Family_life_backend\bin\main started by USER in D:\eclipse-workspace\Family_life_backend)
+21:40:47.839 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+21:40:47.983 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:40:47.983 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:40:49.771 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+21:40:49.893 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 100 ms. Found 1 JPA repository interface.
+21:40:50.984 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+21:40:51.013 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+21:40:51.017 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+21:40:51.019 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+21:40:51.151 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+21:40:51.152 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3168 ms
+21:40:51.449 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+21:40:51.819 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5c47d1a4
+21:40:51.824 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+21:40:51.955 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+21:40:52.041 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+21:40:52.104 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+21:40:52.667 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+21:40:52.965 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.45
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+21:40:54.491 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+21:40:54.500 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+21:40:55.046 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+21:40:55.077 WARN  [restartedMain]o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemsController': Unsatisfied dependency expressed through field 'itemsService': Error creating bean with name 'itemsService': Unsatisfied dependency expressed through field 'locationDao': No qualifying bean of type 'com.example.Family_life_backend.dao.LocationDao' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+21:40:55.078 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+21:40:55.085 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+21:40:55.099 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+21:40:55.107 INFO  [restartedMain]org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+21:40:55.125 INFO  [restartedMain]o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+21:40:55.159 ERROR [restartedMain]o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field locationDao in com.example.Family_life_backend.service.ItemsService required a bean of type 'com.example.Family_life_backend.dao.LocationDao' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.example.Family_life_backend.dao.LocationDao' in your configuration.
+
+21:43:23.456 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+21:43:23.666 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 8968 (D:\eclipse-workspace\Family_life_backend\bin\main started by USER in D:\eclipse-workspace\Family_life_backend)
+21:43:23.669 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+21:43:23.820 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:43:23.821 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:43:25.586 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+21:43:25.759 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 151 ms. Found 3 JPA repository interfaces.
+21:43:26.977 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+21:43:27.016 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+21:43:27.021 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+21:43:27.022 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+21:43:27.167 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+21:43:27.168 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3345 ms
+21:43:27.439 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+21:43:27.773 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4a74929
+21:43:27.777 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+21:43:27.837 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+21:43:27.998 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+21:43:28.091 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+21:43:28.740 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+21:43:28.948 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.45
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+21:43:30.352 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+21:43:30.358 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+21:43:30.869 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+21:43:31.151 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+21:43:31.722 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+21:43:31.749 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+21:43:31.775 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+21:43:31.789 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 9.282 seconds (process running for 9.924)
+21:43:42.406 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+21:43:42.406 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+21:43:42.409 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+21:43:43.008 WARN  [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1452, SQLState: 23000
+21:43:43.009 ERROR [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)
+21:43:43.072 WARN  [http-nio-8080-exec-1]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataIntegrityViolationException: JDBC exception executing SQL [INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)] [Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)] [n/a]; SQL [n/a]; constraint [null]]
+21:44:11.611 WARN  [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1452, SQLState: 23000
+21:44:11.612 ERROR [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_location_id` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+21:44:11.629 WARN  [http-nio-8080-exec-4]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataIntegrityViolationException: JDBC exception executing SQL [INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)] [Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_location_id` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)] [n/a]; SQL [n/a]; constraint [null]]
+22:03:02.421 WARN  [http-nio-8080-exec-9]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1452, SQLState: 23000
+22:03:02.422 ERROR [http-nio-8080-exec-9]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)
+22:03:02.429 WARN  [http-nio-8080-exec-9]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataIntegrityViolationException: JDBC exception executing SQL [INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)] [Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)] [n/a]; SQL [n/a]; constraint [null]]
+22:04:18.398 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+22:04:18.403 INFO  [Thread-5]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+22:04:18.406 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+22:04:18.772 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+22:04:18.774 INFO  [Thread-5]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+22:04:18.778 INFO  [Thread-5]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+22:04:18.787 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+22:04:18.800 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+22:04:18.969 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 8968 (D:\eclipse-workspace\Family_life_backend\bin\main started by USER in D:\eclipse-workspace\Family_life_backend)
+22:04:18.969 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+22:04:19.305 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+22:04:19.336 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 29 ms. Found 3 JPA repository interfaces.
+22:04:19.478 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+22:04:19.479 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+22:04:19.480 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+22:04:19.481 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+22:04:19.510 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+22:04:19.510 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 538 ms
+22:04:19.561 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+22:04:19.568 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4632804
+22:04:19.569 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+22:04:19.570 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+22:04:19.573 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+22:04:19.593 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+22:04:19.596 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.45
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+22:04:19.713 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+22:04:19.714 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+22:04:19.824 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+22:04:19.925 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+22:04:19.930 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+22:04:19.935 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+22:04:19.940 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 1.018 seconds (process running for 1258.075)
+22:04:19.942 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+22:06:53.003 INFO  [http-nio-8080-exec-2]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+22:06:53.004 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+22:06:53.005 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+23:31:47.315 WARN  [http-nio-8080-exec-10]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1452, SQLState: 23000
+23:31:47.316 ERROR [http-nio-8080-exec-10]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)
+23:31:47.330 WARN  [http-nio-8080-exec-10]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataIntegrityViolationException: JDBC exception executing SQL [INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)] [Cannot add or update a child row: a foreign key constraint fails (`family_db`.`items`, CONSTRAINT `fk_items_created_by_id` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE)] [n/a]; SQL [n/a]; constraint [null]]
+23:32:16.214 INFO  [SpringApplicationShutdownHook]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+23:32:16.605 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+23:32:16.608 INFO  [SpringApplicationShutdownHook]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+23:32:16.609 INFO  [SpringApplicationShutdownHook]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+23:32:16.614 INFO  [SpringApplicationShutdownHook]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.

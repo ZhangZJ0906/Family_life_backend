@@ -18,13 +18,21 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, expire_date, notify, note, created_by_id) "
-			+ "VALUES (:groupId, :catId, :name, :qty, :unit, :locId, :price, :expire, :notify, :note, :userId)", nativeQuery = true)
-	void insertItem(@Param("groupId") Integer groupId, @Param("catId") Integer catId, @Param("name") String name,
-			@Param("qty") Integer qty, @Param("unit") String unit, @Param("locId") Long locId,
-			@Param("price") Integer price, @Param("expire") LocalDate expire, @Param("notify") Boolean notify,
-			@Param("note") String note, @Param("userId") Integer userId);
-
-
+	@Query(value = "INSERT INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) "
+			+
+			"VALUES (:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId)", nativeQuery = true)
+	void insertItemNative(
+			@Param("groupId") Integer groupId,
+			@Param("categoryId") Integer categoryId,
+			@Param("name") String name,
+			@Param("quantity") Integer quantity,
+			@Param("unit") String unit,
+			@Param("locationId") Long locationId,
+			@Param("price") Integer price,
+			@Param("purchaseDate") LocalDate purchaseDate, 
+			@Param("expireDate") LocalDate expireDate,
+			@Param("notify") Boolean notify,
+			@Param("note") String note,
+			@Param("userId") Integer userId);
 
 }

@@ -17,6 +17,8 @@ import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ItemsService {
 	@Autowired
@@ -27,7 +29,7 @@ public class ItemsService {
 	private CategoiesDao categoiesDao;
 
 	public GetItemsRes getItems(List<Integer> groupId) {
-//後續還要加上 分類群組使用者查詢
+		// 後續還要加上 分類群組使用者查詢
 		List<Items> list = itemDao.getItemByGroupId(groupId);
 
 		if (list == null || list.isEmpty()) {
@@ -50,8 +52,25 @@ public class ItemsService {
 
 	}
 
+	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
+		// 處理群組邏輯：沒傳就給 0
+		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
+		// 呼叫原生 SQL
+		itemDao.insertItemNative(
+				finalGroupId,
+				req.getCategoryId(),
+				req.getName(),
+				req.getQuantity(),
+				req.getUnit(),
+				req.getLocationId(),
+				req.getPrice(),
+				req.getPurchaseDate(),
+				req.getExpireDate(),
+				req.getNotify() != null ? req.getNotify() : false,
+				req.getNote(),
+				req.getUserId());
 		return new AddItemsInfoRes("成功", 200);
 	}
 }

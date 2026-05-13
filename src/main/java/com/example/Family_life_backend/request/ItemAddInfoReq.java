@@ -6,9 +6,13 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 public class ItemAddInfoReq {
+	@NotNull(message = "創建者 ID 為必填")
+	private int userId;
+
 	private Integer groupId;
 
 	@NotNull(message = "分類 ID 為必填")
@@ -33,7 +37,7 @@ public class ItemAddInfoReq {
 	private Integer price;
 
 	@NotNull(message = "購買日期為必填")
-	@jakarta.validation.constraints.PastOrPresent(message = "購買日期不能是未來")
+	@PastOrPresent(message = "購買日期不能是未來")
 	private LocalDate purchaseDate;
 	@FutureOrPresent(message = "到期日期不能早於今天")
 	private LocalDate expireDate;
@@ -41,6 +45,22 @@ public class ItemAddInfoReq {
 	private Boolean notify = false;
 
 	private String note;
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public LocalDate getPurchaseDate() {
+		return purchaseDate;
+	}
+
+	public void setPurchaseDate(LocalDate purchaseDate) {
+		this.purchaseDate = purchaseDate;
+	}
 
 	public Integer getGroupId() {
 		return groupId;
