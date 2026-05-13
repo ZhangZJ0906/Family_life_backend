@@ -7,16 +7,26 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
+import com.example.Family_life_backend.dao.LocationDao;
+import com.example.Family_life_backend.enity.Categories;
 import com.example.Family_life_backend.enity.Items;
+import com.example.Family_life_backend.enity.Location;
+import com.example.Family_life_backend.request.ItemAddInfoReq;
+import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
 @Service
 public class ItemsService {
 	@Autowired
 	private ItemsDao itemDao;
+	@Autowired
+	private LocationDao locationDao;
+	@Autowired
+	private CategoiesDao categoiesDao;
 
-	public GetItemsRes getItems(int groupId) {
+	public GetItemsRes getItems(List<Integer> groupId) {
 //後續還要加上 分類群組使用者查詢
 		List<Items> list = itemDao.getItemByGroupId(groupId);
 
@@ -24,20 +34,24 @@ public class ItemsService {
 			return new GetItemsRes("失敗", 400);
 		}
 		// 2. 查詢資料庫取得位置資訊
-		List<Object[]> locData = itemDao.getItemLocationList();
-		List<Object[]> categoriesData = itemDao.getItemCategoriesList();
+		List<Location> locData = locationDao.getItemLocationList();
+		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
 
 		// 3. 將 List<Object[]> 轉成 Map<Integer, String>，方便前端使用
 		Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(//
-				obj -> ((Number) obj[0]).intValue(), // location_id
-				obj -> (String) obj[1] // location_name
+				Location::getId, //
+				Location::getName, //
+				(existing, replacement) -> existing // 預防 existing 為舊的 replacement維新的 當新的等於舊的會去取舊的
 		));
 		Map<Integer, String> categoriesMap = categoriesData.stream().collect(Collectors.toMap(//
-				obj -> ((Number) obj[0]).intValue(), // id
-				obj -> (String) obj[1] // name
-		));
+				Categories::getCategoryId, Categories::getCategoryName, (existing, replacement) -> existing));
 
 		return new GetItemsRes("成功", 200, list, locationMap, categoriesMap);
 
+	}
+
+	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
+
+		return new AddItemsInfoRes("成功", 200);
 	}
 }
