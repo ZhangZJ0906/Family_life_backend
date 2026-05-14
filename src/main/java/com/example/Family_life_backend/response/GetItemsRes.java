@@ -10,18 +10,6 @@ public class GetItemsRes extends BasicRes {
 	public Map<Integer, String> locationMap;
 	public Map<Integer, String> categoriesMap;
 
-	public List<Items> getItems() {
-		return items;
-	}
-
-	public GetItemsRes(String message, int code, List<Items> items, Map<Integer, String> locationMap,
-			Map<Integer, String> categoriesMap) {
-		super(message, code);
-		this.items = items;
-		this.locationMap = locationMap;
-		this.categoriesMap = categoriesMap;
-	}
-
 	public Map<Integer, String> getCategoriesMap() {
 		return categoriesMap;
 	}
@@ -30,20 +18,9 @@ public class GetItemsRes extends BasicRes {
 		this.categoriesMap = categoriesMap;
 	}
 
-	public void setItems(List<Items> items) {
-		this.items = items;
-	}
-
 	public GetItemsRes() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-
-
-	public GetItemsRes(String message, int code, List<Items> items, Map<Integer, String> locationMap) {
-		super(message, code);
-		this.items = items;
-		this.locationMap = locationMap;
 	}
 
 	public Map<Integer, String> getLocationMap() {
@@ -59,9 +36,20 @@ public class GetItemsRes extends BasicRes {
 		// TODO Auto-generated constructor stub
 	}
 
-	public GetItemsRes(String message, int code, List<Items> items) {
+	public List<Items> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Items> items) {
+		this.items = items;
+	}
+
+	public GetItemsRes(String message, int code, List<Items> items, Map<Integer, String> locationMap,
+			Map<Integer, String> categoriesMap) {
 		super(message, code);
 		this.items = items;
+		this.locationMap = locationMap;
+		this.categoriesMap = categoriesMap;
 	}
 
 }
