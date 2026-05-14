@@ -23,7 +23,7 @@ public class Expense {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-//	@NotNull(message = "群組 ID 不能為空")
+
 	@Column(name = "group_id", nullable = false)
 	private Long groupId;
 
@@ -32,7 +32,6 @@ public class Expense {
 	private Long userId;
 
 	@NotBlank(message = "分類名稱不能為空白")
-	@Size(max = 50, message = "分類名稱長度不能超過 50 個字")
 	@Column(nullable = false, length = 50, name = "category_id")
 	private int categoryId;
 
