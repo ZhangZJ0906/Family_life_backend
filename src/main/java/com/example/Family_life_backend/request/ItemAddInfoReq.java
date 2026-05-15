@@ -32,9 +32,13 @@ public class ItemAddInfoReq {
 	@NotNull(message = "地點 ID 為必填")
 	private Long locationId;
 
-	@NotNull(message = "單價為必填")
+	@NotNull(message = "總價為必填")
 	@Min(value = 0, message = "單價不能小於 0")
 	private Integer price;
+
+	@NotNull(message = "單價為必填")
+	@Min(value = 0, message = "單價不能小於 0")
+	private int unitPrice;
 
 	@NotNull(message = "購買日期為必填")
 	@PastOrPresent(message = "購買日期不能是未來")
@@ -147,14 +151,19 @@ public class ItemAddInfoReq {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemAddInfoReq(Integer groupId,
-			Integer categoryId,
-			String name,
-			Integer quantity,
-			String unit, Long locationId,
-			Integer price,
-			LocalDate expireDate, Boolean notify, String note) {
+	public int getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public ItemAddInfoReq(int userId, Integer groupId, Integer categoryId, String name, Integer quantity, String unit,
+			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
+			String note) {
 		super();
+		this.userId = userId;
 		this.groupId = groupId;
 		this.categoryId = categoryId;
 		this.name = name;
@@ -162,6 +171,8 @@ public class ItemAddInfoReq {
 		this.unit = unit;
 		this.locationId = locationId;
 		this.price = price;
+		this.unitPrice = unitPrice;
+		this.purchaseDate = purchaseDate;
 		this.expireDate = expireDate;
 		this.notify = notify;
 		this.note = note;

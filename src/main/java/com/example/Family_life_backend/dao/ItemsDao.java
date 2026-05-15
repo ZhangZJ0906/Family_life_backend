@@ -19,22 +19,14 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	/* 新增 */
 	@Modifying
 	@Transactional
-	@Query(value = "INSERT ignore INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id) "
-			+
-			"VALUES (:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId)", nativeQuery = true)
-	int insertItemNative(
-			@Param("groupId") Integer groupId,
-			@Param("categoryId") Integer categoryId,
-			@Param("name") String name,
-			@Param("quantity") Integer quantity,
-			@Param("unit") String unit,
-			@Param("locationId") Long locationId,
-			@Param("price") Integer price,
-			@Param("purchaseDate") LocalDate purchaseDate, 
-			@Param("expireDate") LocalDate expireDate,
-			@Param("notify") Boolean notify,
-			@Param("note") String note,
-			@Param("userId") Integer userId);
+	@Query(value = "INSERT ignore INTO items (group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id,unit_price) "
+			+ "VALUES (:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId,:unitPrice)", nativeQuery = true)
+	int insertItemNative(@Param("groupId") Integer groupId, @Param("categoryId") Integer categoryId,
+			@Param("name") String name, @Param("quantity") Integer quantity, @Param("unit") String unit,
+			@Param("locationId") Long locationId, @Param("price") Integer price,
+			@Param("purchaseDate") LocalDate purchaseDate, @Param("expireDate") LocalDate expireDate,
+			@Param("notify") Boolean notify, @Param("note") String note, @Param("userId") Integer userId,
+			@Param("unitPrice") int unitPrice);
 
 	/* 更新 */
 	@Modifying
@@ -42,13 +34,13 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Query(value = "UPDATE items SET " + "group_id = :groupId, " + "category_id = :categoryId, " + "name = :name, "
 			+ "quantity = :quantity, " + "unit = :unit, " + "location_id = :locationId, " + "price = :price, "
 			+ "purchase_date = :purchaseDate, " + "expire_date = :expireDate, " + "notify = :notify, " + "note = :note "
-			+ "WHERE id = :id", nativeQuery = true)
-	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId,
-			@Param("categoryId") Integer categoryId,
+			+ "unit_price= :unitPrice" + "WHERE id = :id", nativeQuery = true)
+	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId, @Param("categoryId") Integer categoryId,
 			@Param("name") String name, @Param("quantity") Integer quantity, @Param("unit") String unit,
 			@Param("locationId") Long locationId, @Param("price") Integer price,
 			@Param("purchaseDate") LocalDate purchaseDate, @Param("expireDate") LocalDate expireDate,
-			@Param("notify") Boolean notify, @Param("note") String note);
+			@Param("notify") Boolean notify, @Param("note") String note, @Param("unitPrice") int unitPrice);
+
 	/* 刪除 */
 	@Modifying
 	@Transactional

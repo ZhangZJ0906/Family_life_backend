@@ -44,6 +44,8 @@ public class Items {
 
 	@Column(name = "safe_quantity")
 	private Integer safeQuantity = 0;
+	@Column(name = "unit_price")
+	private int unitPrice;
 	@Column(name = "price")
 	private Integer price;
 
@@ -53,9 +55,11 @@ public class Items {
 	@Column(name = "note")
 	private String note;
 
+
+
 	public Items(int id, int groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
-			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, Integer price,
-			Boolean notify, String note, LocalDateTime createdAt) {
+			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
+			Integer price, Boolean notify, String note, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -68,10 +72,19 @@ public class Items {
 		this.purchaseDate = purchaseDate;
 		this.expireDate = expireDate;
 		this.safeQuantity = safeQuantity;
+		this.unitPrice = unitPrice;
 		this.price = price;
 		this.notify = notify;
 		this.note = note;
 		this.createdAt = createdAt;
+	}
+
+	public int getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
 	public Items() {

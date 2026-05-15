@@ -62,7 +62,7 @@ public class ItemsService {
 		// 呼叫原生 SQL
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId());
+				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice());
 		return new AddItemsInfoRes("成功", 200);
 	}
 
@@ -74,7 +74,7 @@ public class ItemsService {
 		// 呼叫原生 SQL
 		itemDao.updateItem(req.getId(), finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(),
 				req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote());
+				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice());
 		return new BasicRes("成功", 200);
 	}
 

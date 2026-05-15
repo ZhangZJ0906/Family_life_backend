@@ -11,8 +11,7 @@ import jakarta.validation.constraints.Size;
 
 public class ItemUpdateReq {
 	@NotNull(message = "物品 ID 為必填")
-	private int id;
-	;
+	private int id;;
 
 	private Integer groupId;
 
@@ -36,7 +35,9 @@ public class ItemUpdateReq {
 	@NotNull(message = "單價為必填")
 	@Min(value = 0, message = "單價不能小於 0")
 	private Integer price;
-
+	@NotNull(message = "單價為必填")
+	@Min(value = 0, message = "單價不能小於 0")
+	private int unitPrice;
 	@NotNull(message = "購買日期為必填")
 	@PastOrPresent(message = "購買日期不能是未來")
 	private LocalDate purchaseDate;
@@ -47,7 +48,13 @@ public class ItemUpdateReq {
 
 	private String note;
 
+	public int getUnitPrice() {
+		return unitPrice;
+	}
 
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
+	}
 
 	public int getId() {
 		return id;
@@ -56,7 +63,6 @@ public class ItemUpdateReq {
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public LocalDate getPurchaseDate() {
 		return purchaseDate;
@@ -151,14 +157,9 @@ public class ItemUpdateReq {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemUpdateReq(int id, Integer groupId,
-			Integer categoryId,
-			String name,
-			Integer quantity,
-			String unit, Long locationId,
-			Integer price,
-			LocalDate purchaseDate,
-			LocalDate expireDate, Boolean notify, String note) {
+	public ItemUpdateReq(int id, Integer groupId, Integer categoryId, String name, Integer quantity, String unit,
+			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
+			String note) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -168,11 +169,11 @@ public class ItemUpdateReq {
 		this.unit = unit;
 		this.locationId = locationId;
 		this.price = price;
+		this.unitPrice = unitPrice;
 		this.purchaseDate = purchaseDate;
 		this.expireDate = expireDate;
 		this.notify = notify;
 		this.note = note;
 	}
-
 
 }
