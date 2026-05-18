@@ -29,7 +29,7 @@ public class ExpenseController {
 //可查 私人 或是群組
 	@GetMapping("/getInfo")
 	public GetExpenseInfoRes getExpenInfo(@RequestParam(value = "groupId", required = false) Long groupId,
-			@RequestParam(value = "userId") Long userId) {
+			@RequestParam(value = "userId", required = false) Long userId) {
 
 		return expenseService.getExpenseInfo(groupId, userId);
 	}

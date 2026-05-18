@@ -29,6 +29,8 @@ public class Expense {
 
 	@Column(name = "related_item_id")
 	private Long relatedItemId;
+	@Column(name = "related_item_name")
+	private String relatedItemName;
 
 	@Column(name = "expense_date")
 	private LocalDate expenseDate;
@@ -44,8 +46,18 @@ public class Expense {
 		// TODO Auto-generated constructor stub
 	}
 
+
+
+	public String getRelatedItemName() {
+		return relatedItemName;
+	}
+
+	public void setRelatedItemName(String relatedItemName) {
+		this.relatedItemName = relatedItemName;
+	}
+
 	public Expense(Long id, Long groupId, Long userId, int price, int categoryId, Long relatedItemId,
-			LocalDate expenseDate, String note, LocalDateTime createdAt) {
+			String relatedItemName, LocalDate expenseDate, String note, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -53,10 +65,10 @@ public class Expense {
 		this.price = price;
 		this.categoryId = categoryId;
 		this.relatedItemId = relatedItemId;
+		this.relatedItemName = relatedItemName;
 		this.expenseDate = expenseDate;
 		this.note = note;
 		this.createdAt = createdAt;
-
 	}
 
 	public int getPrice() {

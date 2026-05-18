@@ -24,6 +24,8 @@ public class AddExpensesInfoReq {
 	// 非必填欄位，允許為 null
 	private Long relatedItemId;
 
+	private String relatedItemName;
+
 	@NotNull(message = "記帳日期不可為空")
 	@PastOrPresent(message = "記帳日期不能是未來的時間") // 限制不能選未來日期
 	private LocalDate expenseDate;
@@ -36,6 +38,14 @@ public class AddExpensesInfoReq {
 	public AddExpensesInfoReq() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getRelatedItemName() {
+		return relatedItemName;
+	}
+
+	public void setRelatedItemName(String relatedItemName) {
+		this.relatedItemName = relatedItemName;
 	}
 
 	public Long getGroupId() {
@@ -103,13 +113,14 @@ public class AddExpensesInfoReq {
 	}
 
 	public AddExpensesInfoReq(Long groupId, Long userId, Integer price, Integer categoryId, Long relatedItemId,
-			LocalDate expenseDate, String note, LocalDateTime createdAt) {
+			String relatedItemName, LocalDate expenseDate, String note, LocalDateTime createdAt) {
 		super();
 		this.groupId = groupId;
 		this.userId = userId;
 		this.price = price;
 		this.categoryId = categoryId;
 		this.relatedItemId = relatedItemId;
+		this.relatedItemName = relatedItemName;
 		this.expenseDate = expenseDate;
 		this.note = note;
 		this.createdAt = createdAt;

@@ -16,6 +16,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Query(value = "select * from items where group_id in (?)", nativeQuery = true)
 	public List<Items> getItemByGroupId(List<Integer> groupId);
 
+	@Query(value = "select * from items where id in (:id)", nativeQuery = true)
+	public List<Items> getItemById(@Param("id") List<Long> id);
+
 	/* 新增 */
 	@Modifying
 	@Transactional

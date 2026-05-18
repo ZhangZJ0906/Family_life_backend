@@ -24,9 +24,9 @@ public class UpdateExpensesInfoReq {
 	@NotNull(message = "分類 ID 不可為空") // 改用 Integer 才能判斷是否未傳
 	private Integer categoryId;
 
-	@NotNull(message = "物品 ID 不可為空")
-
 	private Long relatedItemId;
+
+	private String relatedItemName;
 
 	@NotNull(message = "記帳日期不可為空")
 	@PastOrPresent(message = "記帳日期不能是未來的時間") // 限制不能選未來日期
@@ -38,7 +38,7 @@ public class UpdateExpensesInfoReq {
 	private LocalDateTime createdAt;
 
 	public UpdateExpensesInfoReq(Long groupId, Integer id, Long userId, Integer price, Integer categoryId,
-			Long relatedItemId, LocalDate expenseDate, String note, LocalDateTime createdAt) {
+			Long relatedItemId, String relatedItemName, LocalDate expenseDate, String note, LocalDateTime createdAt) {
 		super();
 		this.groupId = groupId;
 		this.id = id;
@@ -46,9 +46,18 @@ public class UpdateExpensesInfoReq {
 		this.price = price;
 		this.categoryId = categoryId;
 		this.relatedItemId = relatedItemId;
+		this.relatedItemName = relatedItemName;
 		this.expenseDate = expenseDate;
 		this.note = note;
 		this.createdAt = createdAt;
+	}
+
+	public String getRelatedItemName() {
+		return relatedItemName;
+	}
+
+	public void setRelatedItemName(String relatedItemName) {
+		this.relatedItemName = relatedItemName;
 	}
 
 	public Long getGroupId() {
