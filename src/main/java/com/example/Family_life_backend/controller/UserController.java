@@ -37,4 +37,9 @@ public class UserController {
 		
 	}
 	
+	/* 更改密碼 */
+	
+	/* 變更資料*/
+	
+    
 }

@@ -17,10 +17,10 @@ import jakarta.validation.constraints.NotNull;
 public class PurchaseItem {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 
-	@Id
 	@Column(name = "shopping_list_id")
 	private int listId;
 

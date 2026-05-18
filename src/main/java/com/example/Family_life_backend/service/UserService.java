@@ -9,6 +9,8 @@ import com.example.Family_life_backend.constants.ReplyMessage;
 import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.entity.UserInfo;
 import com.example.Family_life_backend.request.AddInfoReq;
+import com.example.Family_life_backend.request.ChangePwdReq;
+import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 
 @Service
@@ -20,19 +22,15 @@ public class UserService {
 	/* 註冊 */
 	public BasicRes addInfo(AddInfoReq req) {
 
-		// 1. 檢查Email重複
-        if (userInfoDao.existsByEmail(req.getEmail())) {
-            return new BasicRes(ReplyMessage.EMAIL_EXISTS.getCode(), ReplyMessage.EMAIL_EXISTS.getMessage());
-        }
+		if (userInfoDao.existsByEmail(req.getEmail())) {
+			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getCode(), ReplyMessage.EMAIL_EXISTS.getMessage());
+		}
 
-        // 2. 自動生成時間
-        String now = LocalDateTime.now().toString(); 
+		String now = LocalDateTime.now().toString();
+		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
 
-        // 3. 呼叫 Dao 存檔 (建議 Dao 也可以改為接收 Entity 或 Req 對象)
-        userInfoDao.insert( req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
-
-        return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
-    }
+		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+	}
 	
 	/* 登入 */
 	public BasicRes login(String email, String pwd) {
@@ -54,7 +52,36 @@ public class UserService {
 	}
 	
 	/* 更改密碼 */
+	public BasicRes changePwd(ChangePwdReq req) {
+		UserInfo user = userInfoDao.findById(req.getUserId()).orElse(null);
+
+		if(user == null) {
+			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getCode(), ReplyMessage.USER_NOT_FOUND.getMessage());
+		}
+		if(!user.getPwd().equals(req.getOldPwd())) {
+			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getCode(), ReplyMessage.OLD_PASSWORD_ERROR.getMessage());
+		}
+
+		String now = LocalDateTime.now().toString();
+		userInfoDao.updatePwd(req.getUserId(), req.getNewPwd(), now);
+
+		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+	}
 	
 	/* 變更資料*/
+	public BasicRes updateInfo(UpdateUserInfoReq req) {
+		UserInfo user = userInfoDao.findById(req.getUserId()).orElse(null);
+
+		if(user == null) {
+			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getCode(), ReplyMessage.USER_NOT_FOUND.getMessage());
+		}
+
+		String userName = req.getUserName() == null ? user.getUserName() : req.getUserName();
+		String avatar = req.getAvatar() == null ? user.getAvatar() : req.getAvatar();
+		String now = LocalDateTime.now().toString();
+		userInfoDao.updateInfo(req.getUserId(), userName, avatar, req.isNotify(), now);
+
+		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+	}
 
 }
