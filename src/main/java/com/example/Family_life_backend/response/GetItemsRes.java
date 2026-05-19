@@ -3,7 +3,7 @@ package com.example.Family_life_backend.response;
 import java.util.List;
 import java.util.Map;
 
-import com.example.Family_life_backend.enity.Items;
+import com.example.Family_life_backend.entity.Items;
 
 public class GetItemsRes extends BasicRes {
 	public List<Items> items;

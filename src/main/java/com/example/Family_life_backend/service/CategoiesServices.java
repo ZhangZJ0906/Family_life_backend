@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.Family_life_backend.dao.CategoiesDao;
-import com.example.Family_life_backend.enity.Categories;
+import com.example.Family_life_backend.entity.Categories;
 import com.example.Family_life_backend.response.GetCatgoiesRes;
 
 @Service

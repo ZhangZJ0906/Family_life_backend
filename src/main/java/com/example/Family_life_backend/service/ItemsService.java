@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.LocationDao;
-import com.example.Family_life_backend.enity.Categories;
-import com.example.Family_life_backend.enity.Items;
-import com.example.Family_life_backend.enity.Location;
+import com.example.Family_life_backend.entity.Categories;
+import com.example.Family_life_backend.entity.Items;
+import com.example.Family_life_backend.entity.Location;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
@@ -37,6 +37,7 @@ public class ItemsService {
 		if (list == null) {
 			return new GetItemsRes("失敗", 400);
 		}
+		
 		// 2. 查詢資料庫取得位置資訊
 		List<Location> locData = locationDao.getItemLocationList();
 		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
