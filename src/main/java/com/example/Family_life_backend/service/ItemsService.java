@@ -30,9 +30,12 @@ public class ItemsService {
 	@Autowired
 	private CategoiesDao categoiesDao;
 
-	public GetItemsRes getItems(List<Integer> groupId) {
+	public GetItemsRes getItems(List<Integer> groupId, Integer userId) {
+		if (userId <= 0 || userId == null) {
+			return new GetItemsRes("失敗 user Id 錯誤", 400);
+		}
 		// 後續還要加上 使用者查詢
-		List<Items> list = itemDao.getItemByGroupId(groupId);
+		List<Items> list = itemDao.getItemByGroupId(groupId, userId);
 
 		if (list == null) {
 			return new GetItemsRes("失敗", 400);
