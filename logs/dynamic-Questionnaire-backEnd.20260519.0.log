@@ -1,0 +1,1662 @@
+08:28:26.777 WARN  [HikariPool-9:housekeeper]com.zaxxer.hikari.pool.HikariPool - HikariPool-9 - Thread starvation or clock leap detected (housekeeper delta=13h57m55s974ms155µs200ns).
+08:46:27.322 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+08:46:27.339 INFO  [Thread-35]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+08:46:27.345 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+08:46:27.350 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+08:46:27.352 INFO  [Thread-35]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+08:46:27.364 INFO  [Thread-35]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+08:46:27.374 INFO  [Thread-35]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown initiated...
+08:46:27.377 INFO  [Thread-35]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown completed.
+08:46:27.650 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22248 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+08:46:27.650 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+08:46:28.121 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+08:46:28.133 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 4 JPA repository interfaces.
+08:46:28.223 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+08:46:28.225 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+08:46:28.226 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+08:46:28.227 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+08:46:28.246 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+08:46:28.247 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 595 ms
+08:46:28.277 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Starting...
+08:46:28.287 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-10 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7cf5401e
+08:46:28.287 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Start completed.
+08:46:28.289 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+08:46:28.291 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+08:46:28.299 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+08:46:28.302 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-10)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+08:46:28.360 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+08:46:28.361 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+08:46:28.467 WARN  [restartedMain]o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupMemberController': Unsatisfied dependency expressed through field 'groupMemberService': Error creating bean with name 'groupMemberService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); Reason: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+08:46:28.467 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+08:46:28.468 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown initiated...
+08:46:28.495 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown completed.
+08:46:28.495 INFO  [restartedMain]org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+08:46:28.500 INFO  [restartedMain]o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+08:46:28.522 ERROR [restartedMain]org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupMemberController': Unsatisfied dependency expressed through field 'groupMemberService': Error creating bean with name 'groupMemberService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); Reason: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1228)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.example.Family_life_backend.FamilyLifeBackendApplication.main(FamilyLifeBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupMemberService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); Reason: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 25 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); Reason: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 38 common frames omitted
+Caused by: org.springframework.data.repository.query.QueryCreationException: Could not create query for public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); Reason: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.data.repository.query.QueryCreationException.create(QueryCreationException.java:101)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:120)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.mapMethodsToQuery(QueryExecutorMethodInterceptor.java:104)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lambda$new$0(QueryExecutorMethodInterceptor.java:92)
+	at java.base/java.util.Optional.map(Optional.java:260)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.<init>(QueryExecutorMethodInterceptor.java:92)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport.getRepository(RepositoryFactorySupport.java:434)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.lambda$afterPropertiesSet$4(RepositoryFactoryBeanSupport.java:355)
+	at org.springframework.data.util.Lazy.getNullable(Lazy.java:135)
+	at org.springframework.data.util.Lazy.get(Lazy.java:113)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.afterPropertiesSet(RepositoryFactoryBeanSupport.java:361)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean.afterPropertiesSet(JpaRepositoryFactoryBean.java:132)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 47 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Failed to create query for method public abstract void com.example.Family_life_backend.dao.NotifyDao.sendGroupNameUpdateNotify(); No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.data.jpa.repository.query.PartTreeJpaQuery.<init>(PartTreeJpaQuery.java:107)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$CreateQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:128)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$CreateIfNotFoundQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:260)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$AbstractQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:99)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:116)
+	... 59 common frames omitted
+Caused by: org.springframework.data.mapping.PropertyReferenceException: No property 'sendGroupNameUpdateNotify' found for type 'notify'
+	at org.springframework.data.mapping.PropertyPath.<init>(PropertyPath.java:94)
+	at org.springframework.data.mapping.PropertyPath.create(PropertyPath.java:455)
+	at org.springframework.data.mapping.PropertyPath.create(PropertyPath.java:431)
+	at org.springframework.data.mapping.PropertyPath.lambda$from$0(PropertyPath.java:384)
+	at org.springframework.util.ConcurrentReferenceHashMap$6.execute(ConcurrentReferenceHashMap.java:402)
+	at org.springframework.util.ConcurrentReferenceHashMap$Segment.doTask(ConcurrentReferenceHashMap.java:702)
+	at org.springframework.util.ConcurrentReferenceHashMap.doTask(ConcurrentReferenceHashMap.java:584)
+	at org.springframework.util.ConcurrentReferenceHashMap.computeIfAbsent(ConcurrentReferenceHashMap.java:396)
+	at org.springframework.data.mapping.PropertyPath.from(PropertyPath.java:366)
+	at org.springframework.data.mapping.PropertyPath.from(PropertyPath.java:344)
+	at org.springframework.data.repository.query.parser.Part.<init>(Part.java:81)
+	at org.springframework.data.repository.query.parser.PartTree$OrPart.lambda$new$0(PartTree.java:259)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.springframework.data.repository.query.parser.PartTree$OrPart.<init>(PartTree.java:260)
+	at org.springframework.data.repository.query.parser.PartTree$Predicate.lambda$new$0(PartTree.java:389)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.springframework.data.repository.query.parser.PartTree$Predicate.<init>(PartTree.java:390)
+	at org.springframework.data.repository.query.parser.PartTree.<init>(PartTree.java:100)
+	at org.springframework.data.jpa.repository.query.PartTreeJpaQuery.<init>(PartTreeJpaQuery.java:101)
+	... 63 common frames omitted
+09:11:50.964 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+09:11:51.021 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:11:51.022 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:11:51.069 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+09:11:51.069 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+09:11:51.830 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:11:51.897 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 55 ms. Found 4 JPA repository interfaces.
+09:11:52.585 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:11:52.599 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:11:52.601 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:11:52.602 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:11:52.646 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:11:52.646 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1576 ms
+09:11:52.816 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+09:11:52.987 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7a27623e
+09:11:52.987 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+09:11:53.019 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:11:53.070 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+09:11:53.097 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:11:53.361 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:11:53.457 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:11:54.162 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:11:54.165 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:11:54.390 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+09:11:54.656 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:11:55.085 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:11:55.101 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:11:55.120 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:11:55.127 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.648 seconds (process running for 11.101)
+09:12:00.235 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:12:00.235 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:12:00.236 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+09:15:49.438 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:15:49.441 INFO  [Thread-5]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:15:49.442 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:15:49.445 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:15:49.445 INFO  [Thread-5]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:15:49.449 INFO  [Thread-5]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:15:49.452 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+09:15:49.460 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+09:15:49.528 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:15:49.529 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:15:49.680 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:15:49.697 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 4 JPA repository interfaces.
+09:15:49.761 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:15:49.762 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:15:49.762 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:15:49.762 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:15:49.778 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:15:49.778 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 248 ms
+09:15:49.799 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+09:15:49.806 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@65649c7a
+09:15:49.806 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+09:15:49.808 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:15:49.811 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:15:49.823 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:15:49.825 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:15:49.893 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:15:49.894 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:15:49.982 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:15:50.030 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:15:50.034 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:15:50.039 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:15:50.042 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.54 seconds (process running for 246.016)
+09:15:50.044 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:16:34.597 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:16:34.599 INFO  [Thread-7]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:16:34.599 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:16:34.603 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:16:34.604 INFO  [Thread-7]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:16:34.605 INFO  [Thread-7]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:16:34.606 INFO  [Thread-7]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+09:16:34.607 INFO  [Thread-7]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+09:16:34.675 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:16:34.675 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:16:34.812 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:16:34.834 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 4 JPA repository interfaces.
+09:16:34.901 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:16:34.902 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:16:34.902 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:16:34.902 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:16:34.916 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:16:34.916 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 239 ms
+09:16:34.937 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+09:16:34.943 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3cd20717
+09:16:34.943 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+09:16:34.944 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:16:34.946 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:16:34.951 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:16:34.953 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:16:35.008 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:16:35.008 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:16:35.090 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:16:35.129 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:16:35.132 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:16:35.135 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:16:35.137 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.487 seconds (process running for 291.111)
+09:16:35.139 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:16:37.485 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:16:37.485 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:16:37.486 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+09:16:38.428 WARN  [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1064, SQLState: 42000
+09:16:38.429 ERROR [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 39
+09:16:38.466 WARN  [http-nio-8080-exec-1]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  n.target_group_id as targetGroupId,<EOL>  n.status as status,<EOL>  u.name as name,<EOL>  u.avatar as avatar<EOL>FROM notify n<EOL>JOIN users u<EOL>  ON n.send_id = u.user_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type = 'invite'<EOL><EOL>UNION ALL<EOL><EOL>SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  n.target_group_id as targetGroupId,<EOL>  n.status as status,<EOL>  g.group_name as name,<EOL>  g.avatar as avatar<EOL>FROM notify n<EOL>JOIN `groups` g<EOL>  ON n.target_group_id = g.group_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type IN ('group', 'invite');<EOL><EOL>ORDER BY sendDate DESC<EOL>] [You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 39] [n/a]; SQL [n/a]]
+09:16:40.962 WARN  [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1064, SQLState: 42000
+09:16:40.963 ERROR [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 39
+09:16:40.965 WARN  [http-nio-8080-exec-4]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  n.target_group_id as targetGroupId,<EOL>  n.status as status,<EOL>  u.name as name,<EOL>  u.avatar as avatar<EOL>FROM notify n<EOL>JOIN users u<EOL>  ON n.send_id = u.user_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type = 'invite'<EOL><EOL>UNION ALL<EOL><EOL>SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  n.target_group_id as targetGroupId,<EOL>  n.status as status,<EOL>  g.group_name as name,<EOL>  g.avatar as avatar<EOL>FROM notify n<EOL>JOIN `groups` g<EOL>  ON n.target_group_id = g.group_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type IN ('group', 'invite');<EOL><EOL>ORDER BY sendDate DESC<EOL>] [You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 39] [n/a]; SQL [n/a]]
+09:18:01.879 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:18:01.882 INFO  [Thread-11]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:18:01.883 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:18:01.889 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:18:01.890 INFO  [Thread-11]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:18:01.891 INFO  [Thread-11]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:18:01.893 INFO  [Thread-11]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+09:18:01.895 INFO  [Thread-11]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+09:18:01.955 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:18:01.955 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:18:02.071 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:18:02.086 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 4 JPA repository interfaces.
+09:18:02.132 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:18:02.133 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:18:02.133 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:18:02.133 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:18:02.143 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:18:02.143 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 187 ms
+09:18:02.160 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+09:18:02.166 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@69917f79
+09:18:02.166 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+09:18:02.167 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:18:02.168 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:18:02.173 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:18:02.175 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:18:02.226 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:18:02.227 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:18:02.296 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:18:02.328 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:18:02.330 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:18:02.333 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:18:02.335 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.399 seconds (process running for 378.309)
+09:18:02.336 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:18:06.101 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:18:06.101 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:18:06.102 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+09:18:08.236 WARN  [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 1064, SQLState: 42000
+09:18:08.236 ERROR [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 37
+09:18:08.241 WARN  [http-nio-8080-exec-2]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  n.target_group_id as targetGroupId,<EOL>  n.status as status,<EOL>  u.name as name,<EOL>  u.avatar as avatar<EOL>FROM notify n<EOL>JOIN users u<EOL>  ON n.send_id = u.user_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type = 'invite'<EOL><EOL>UNION ALL<EOL><EOL>SELECT<EOL>  n.notify_id as id,<EOL>  n.send_id as sendUserId,<EOL>  n.get_user_id as getUserId,<EOL>  n.content as content,<EOL>  n.type as type,<EOL>  n.is_read as isRead,<EOL>  n.send_date as sendDate,<EOL>  g.group_name as name,<EOL>  g.avatar as avatar<EOL>FROM notify n<EOL>JOIN `groups` g<EOL>  ON n.send_id = g.group_id<EOL>WHERE n.get_user_id = ?<EOL>  AND n.type IN ('group', 'invite');<EOL><EOL>ORDER BY sendDate DESC<EOL>] [You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY sendDate DESC' at line 37] [n/a]; SQL [n/a]]
+09:19:26.013 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:19:26.016 INFO  [Thread-15]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:19:26.017 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:19:26.027 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:19:26.027 INFO  [Thread-15]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:19:26.028 INFO  [Thread-15]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:19:26.029 INFO  [Thread-15]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+09:19:26.032 INFO  [Thread-15]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+09:19:26.091 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:19:26.091 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:19:26.203 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:19:26.220 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 4 JPA repository interfaces.
+09:19:26.268 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:19:26.269 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:19:26.269 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:19:26.269 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:19:26.282 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:19:26.282 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 190 ms
+09:19:26.297 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+09:19:26.304 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@303c3be8
+09:19:26.304 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+09:19:26.305 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:19:26.306 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:19:26.311 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:19:26.313 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:19:26.366 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:19:26.366 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:19:26.436 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:19:26.465 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:19:26.468 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:19:26.470 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:19:26.472 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.399 seconds (process running for 462.446)
+09:19:26.472 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:19:30.147 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:19:30.147 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:19:30.148 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+09:20:26.599 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:20:26.602 INFO  [Thread-19]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:20:26.602 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:20:26.606 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:20:26.607 INFO  [Thread-19]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:20:26.609 INFO  [Thread-19]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:20:26.610 INFO  [Thread-19]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated...
+09:20:26.614 INFO  [Thread-19]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed.
+09:20:26.679 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:20:26.680 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:20:26.789 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:20:26.810 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19 ms. Found 4 JPA repository interfaces.
+09:20:26.863 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:20:26.864 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:20:26.864 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:20:26.864 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:20:26.875 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:20:26.875 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 193 ms
+09:20:26.895 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting...
+09:20:26.901 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4339aa14
+09:20:26.901 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed.
+09:20:26.902 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:20:26.903 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:20:26.909 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:20:26.911 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:20:26.965 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:20:26.965 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:20:26.999 WARN  [restartedMain]o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupController': Unsatisfied dependency expressed through field 'groupService': Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'groupMemberDao': Error creating bean with name 'groupMemberDao' defined in com.example.Family_life_backend.dao.groupMemberDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract java.util.List com.example.Family_life_backend.dao.groupMemberDao.getNotifyList(java.lang.Long); Reason: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+09:20:26.999 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:20:26.999 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated...
+09:20:27.000 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed.
+09:20:27.000 INFO  [restartedMain]org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+09:20:27.003 INFO  [restartedMain]o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+09:20:27.017 ERROR [restartedMain]org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupController': Unsatisfied dependency expressed through field 'groupService': Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'groupMemberDao': Error creating bean with name 'groupMemberDao' defined in com.example.Family_life_backend.dao.groupMemberDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract java.util.List com.example.Family_life_backend.dao.groupMemberDao.getNotifyList(java.lang.Long); Reason: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1228)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.example.Family_life_backend.FamilyLifeBackendApplication.main(FamilyLifeBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'groupMemberDao': Error creating bean with name 'groupMemberDao' defined in com.example.Family_life_backend.dao.groupMemberDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract java.util.List com.example.Family_life_backend.dao.groupMemberDao.getNotifyList(java.lang.Long); Reason: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 25 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'groupMemberDao' defined in com.example.Family_life_backend.dao.groupMemberDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract java.util.List com.example.Family_life_backend.dao.groupMemberDao.getNotifyList(java.lang.Long); Reason: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 38 common frames omitted
+Caused by: org.springframework.data.repository.query.QueryCreationException: Could not create query for public abstract java.util.List com.example.Family_life_backend.dao.groupMemberDao.getNotifyList(java.lang.Long); Reason: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+	at org.springframework.data.repository.query.QueryCreationException.create(QueryCreationException.java:101)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:120)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.mapMethodsToQuery(QueryExecutorMethodInterceptor.java:104)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lambda$new$0(QueryExecutorMethodInterceptor.java:92)
+	at java.base/java.util.Optional.map(Optional.java:260)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.<init>(QueryExecutorMethodInterceptor.java:92)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport.getRepository(RepositoryFactorySupport.java:434)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.lambda$afterPropertiesSet$4(RepositoryFactoryBeanSupport.java:355)
+	at org.springframework.data.util.Lazy.getNullable(Lazy.java:135)
+	at org.springframework.data.util.Lazy.get(Lazy.java:113)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.afterPropertiesSet(RepositoryFactoryBeanSupport.java:361)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean.afterPropertiesSet(JpaRepositoryFactoryBean.java:132)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 47 common frames omitted
+Caused by: java.lang.IllegalArgumentException: The string <   SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    u.name AS name,
+    u.avatar AS avatar
+FROM notify n
+JOIN users u
+    ON n.send_id = u.user_id
+WHERE n.get_user_id = :user_id
+  AND n.type = 'invite'
+
+UNION ALL
+
+SELECT
+    n.notify_id AS id,
+    n.send_id AS sendUserId,
+    n.get_user_id AS getUserId,
+    n.content AS content,
+    n.type AS type,
+    n.is_read AS isRead,
+    n.send_date AS sendDate,
+    n.target_group_id AS targetGroupId,
+    n.status AS status,
+    g.group_name AS name,
+    g.avatar AS avatar
+FROM notify n
+JOIN `groups` g
+    ON n.target_group_id = g.group_id
+WHERE n.get_user_id = :user_id
+  AND n.type in ('group', 'invite)
+
+ORDER BY sendDate DESC;
+> starts a quoted range at 853, but never ends it.
+	at org.springframework.data.repository.query.ValueExpressionQueryRewriter$QuotationMap.<init>(ValueExpressionQueryRewriter.java:387)
+	at org.springframework.data.repository.query.ValueExpressionQueryRewriter$ParsedQuery.<init>(ValueExpressionQueryRewriter.java:248)
+	at org.springframework.data.repository.query.ValueExpressionQueryRewriter.parse(ValueExpressionQueryRewriter.java:150)
+	at org.springframework.data.jpa.repository.query.StringQuery$ParameterBindingParser.createSpelExtractor(StringQuery.java:467)
+	at org.springframework.data.jpa.repository.query.StringQuery$ParameterBindingParser.parseParameterBindingsOfQueryIntoBindingsAndReturnCleanedQuery(StringQuery.java:346)
+	at org.springframework.data.jpa.repository.query.StringQuery.<init>(StringQuery.java:96)
+	at org.springframework.data.jpa.repository.query.StringQuery.<init>(StringQuery.java:79)
+	at org.springframework.data.jpa.repository.query.ExpressionBasedStringQuery.<init>(ExpressionBasedStringQuery.java:76)
+	at org.springframework.data.jpa.repository.query.ExpressionBasedStringQuery.<init>(ExpressionBasedStringQuery.java:63)
+	at org.springframework.data.jpa.repository.query.AbstractStringBasedJpaQuery.<init>(AbstractStringBasedJpaQuery.java:86)
+	at org.springframework.data.jpa.repository.query.NativeJpaQuery.<init>(NativeJpaQuery.java:64)
+	at org.springframework.data.jpa.repository.query.JpaQueryFactory.fromMethodWithQueryString(JpaQueryFactory.java:48)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$DeclaredQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:174)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$CreateIfNotFoundQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:254)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$AbstractQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:99)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:116)
+	... 59 common frames omitted
+09:21:06.607 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:21:06.608 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:21:06.831 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:21:06.866 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 4 JPA repository interfaces.
+09:21:06.971 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:21:06.972 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:21:06.973 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:21:06.973 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:21:06.999 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:21:07.000 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 390 ms
+09:21:07.029 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Starting...
+09:21:07.033 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3a3623b6
+09:21:07.033 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Start completed.
+09:21:07.035 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:21:07.037 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:21:07.060 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:21:07.063 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-7)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:21:07.190 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:21:07.191 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:21:07.340 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:21:07.419 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:21:07.423 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:21:07.429 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:21:07.433 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.872 seconds (process running for 563.406)
+09:21:07.434 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:21:08.305 INFO  [http-nio-8080-exec-1]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:21:08.306 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:21:08.308 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+09:23:33.272 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:23:33.274 INFO  [Thread-23]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:23:33.275 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:23:33.291 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:23:33.292 INFO  [Thread-23]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:23:33.295 INFO  [Thread-23]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:23:33.296 INFO  [Thread-23]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown initiated...
+09:23:33.300 INFO  [Thread-23]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown completed.
+09:23:33.378 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:23:33.378 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:23:33.506 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:23:33.526 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19 ms. Found 4 JPA repository interfaces.
+09:23:33.594 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:23:33.595 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:23:33.595 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:23:33.595 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:23:33.606 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:23:33.606 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 227 ms
+09:23:33.625 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Starting...
+09:23:33.631 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-8 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5772f8f1
+09:23:33.632 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Start completed.
+09:23:33.633 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:23:33.635 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:23:33.644 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:23:33.646 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-8)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:23:33.724 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:23:33.725 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:23:33.822 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:23:33.870 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:23:33.877 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:23:33.881 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:23:33.883 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.527 seconds (process running for 709.857)
+09:23:33.884 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:23:42.459 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:23:42.461 INFO  [Thread-30]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:23:42.462 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:23:42.466 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:23:42.466 INFO  [Thread-30]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:23:42.468 INFO  [Thread-30]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:23:42.468 INFO  [Thread-30]com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown initiated...
+09:23:42.470 INFO  [Thread-30]com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown completed.
+09:23:42.528 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:23:42.528 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:23:42.626 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:23:42.641 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 4 JPA repository interfaces.
+09:23:42.691 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:23:42.692 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:23:42.692 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:23:42.693 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:23:42.704 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:23:42.704 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 175 ms
+09:23:42.720 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Starting...
+09:23:42.724 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-9 - Added connection com.mysql.cj.jdbc.ConnectionImpl@707fcdfd
+09:23:42.724 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Start completed.
+09:23:42.725 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:23:42.727 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:23:42.732 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:23:42.733 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-9)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:23:42.772 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:23:42.772 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:23:42.832 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:23:42.861 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:23:42.863 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:23:42.867 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:23:42.869 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.357 seconds (process running for 718.842)
+09:23:42.869 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:23:45.635 INFO  [http-nio-8080-exec-1]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:23:45.635 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:23:45.638 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+09:24:50.322 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:24:50.324 INFO  [Thread-34]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:24:50.325 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:24:50.331 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:24:50.331 INFO  [Thread-34]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:24:50.333 INFO  [Thread-34]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:24:50.333 INFO  [Thread-34]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown initiated...
+09:24:50.335 INFO  [Thread-34]com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown completed.
+09:24:50.394 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:24:50.394 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:24:50.506 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:24:50.518 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 4 JPA repository interfaces.
+09:24:50.562 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:24:50.563 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:24:50.563 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:24:50.563 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:24:50.574 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:24:50.574 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 179 ms
+09:24:50.587 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Starting...
+09:24:50.591 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-10 - Added connection com.mysql.cj.jdbc.ConnectionImpl@591d2df6
+09:24:50.591 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Start completed.
+09:24:50.592 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:24:50.593 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:24:50.597 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:24:50.599 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-10)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:24:50.647 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:24:50.648 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:24:50.712 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:24:50.740 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:24:50.742 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:24:50.747 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:24:50.748 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.369 seconds (process running for 786.722)
+09:24:50.749 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:24:56.305 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:24:56.307 INFO  [Thread-38]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:24:56.308 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:24:56.315 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:24:56.316 INFO  [Thread-38]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:24:56.319 INFO  [Thread-38]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:24:56.320 INFO  [Thread-38]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown initiated...
+09:24:56.323 INFO  [Thread-38]com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown completed.
+09:24:56.382 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:24:56.382 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:24:56.472 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:24:56.483 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 10 ms. Found 4 JPA repository interfaces.
+09:24:56.521 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:24:56.522 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:24:56.522 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:24:56.522 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:24:56.533 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:24:56.533 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 150 ms
+09:24:56.547 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Starting...
+09:24:56.550 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-11 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4ce6a314
+09:24:56.550 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Start completed.
+09:24:56.551 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:24:56.553 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:24:56.557 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:24:56.559 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-11)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:24:56.614 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:24:56.614 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:24:56.674 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:24:56.702 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:24:56.705 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:24:56.710 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:24:56.711 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.345 seconds (process running for 792.685)
+09:24:56.712 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+09:24:58.919 INFO  [http-nio-8080-exec-1]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:24:58.919 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:24:58.923 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+09:41:40.742 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+09:41:40.752 INFO  [Thread-42]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+09:41:40.756 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+09:41:40.763 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+09:41:40.764 INFO  [Thread-42]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+09:41:40.767 INFO  [Thread-42]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:41:40.771 INFO  [Thread-42]com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Shutdown initiated...
+09:41:40.774 INFO  [Thread-42]com.zaxxer.hikari.HikariDataSource - HikariPool-11 - Shutdown completed.
+09:41:40.975 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 6384 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:41:40.975 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:41:41.084 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:41:41.094 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 4 JPA repository interfaces.
+09:41:41.133 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:41:41.134 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:41:41.134 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:41:41.134 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:41:41.145 INFO  [restartedMain]o.a.c.c.ContainerBase.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:41:41.145 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 169 ms
+09:41:41.158 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Starting...
+09:41:41.203 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-12 - Added connection com.mysql.cj.jdbc.ConnectionImpl@673c32e5
+09:41:41.203 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Start completed.
+09:41:41.204 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:41:41.207 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:41:41.213 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:41:41.216 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-12)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:41:41.259 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:41:41.260 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:41:41.318 WARN  [restartedMain]o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupController': Unsatisfied dependency expressed through field 'groupService': Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); Reason: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+09:41:41.318 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+09:41:41.319 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Shutdown initiated...
+09:41:41.359 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-12 - Shutdown completed.
+09:41:41.360 INFO  [restartedMain]org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+09:41:41.363 INFO  [restartedMain]o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+09:41:41.365 ERROR [restartedMain]org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupController': Unsatisfied dependency expressed through field 'groupService': Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); Reason: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1228)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1194)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.example.Family_life_backend.FamilyLifeBackendApplication.main(FamilyLifeBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'groupService': Unsatisfied dependency expressed through field 'notifyDao': Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); Reason: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 25 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notifyDao' defined in com.example.Family_life_backend.dao.NotifyDao defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); Reason: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1826)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 38 common frames omitted
+Caused by: org.springframework.data.repository.query.QueryCreationException: Could not create query for public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); Reason: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.data.repository.query.QueryCreationException.create(QueryCreationException.java:101)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:120)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.mapMethodsToQuery(QueryExecutorMethodInterceptor.java:104)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lambda$new$0(QueryExecutorMethodInterceptor.java:92)
+	at java.base/java.util.Optional.map(Optional.java:260)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.<init>(QueryExecutorMethodInterceptor.java:92)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport.getRepository(RepositoryFactorySupport.java:434)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.lambda$afterPropertiesSet$4(RepositoryFactoryBeanSupport.java:355)
+	at org.springframework.data.util.Lazy.getNullable(Lazy.java:135)
+	at org.springframework.data.util.Lazy.get(Lazy.java:113)
+	at org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport.afterPropertiesSet(RepositoryFactoryBeanSupport.java:361)
+	at org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean.afterPropertiesSet(JpaRepositoryFactoryBean.java:132)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	... 47 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Failed to create query for method public abstract int com.example.Family_life_backend.dao.NotifyDao.getNotifyCount(java.lang.Long); No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.data.jpa.repository.query.PartTreeJpaQuery.<init>(PartTreeJpaQuery.java:107)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$CreateQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:128)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$CreateIfNotFoundQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:260)
+	at org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy$AbstractQueryLookupStrategy.resolveQuery(JpaQueryLookupStrategy.java:99)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.lookupQuery(QueryExecutorMethodInterceptor.java:116)
+	... 59 common frames omitted
+Caused by: org.springframework.data.mapping.PropertyReferenceException: No property 'getNotifyCount' found for type 'notify'
+	at org.springframework.data.mapping.PropertyPath.<init>(PropertyPath.java:94)
+	at org.springframework.data.mapping.PropertyPath.create(PropertyPath.java:455)
+	at org.springframework.data.mapping.PropertyPath.create(PropertyPath.java:431)
+	at org.springframework.data.mapping.PropertyPath.lambda$from$0(PropertyPath.java:384)
+	at org.springframework.util.ConcurrentReferenceHashMap$6.execute(ConcurrentReferenceHashMap.java:402)
+	at org.springframework.util.ConcurrentReferenceHashMap$Segment.doTask(ConcurrentReferenceHashMap.java:702)
+	at org.springframework.util.ConcurrentReferenceHashMap.doTask(ConcurrentReferenceHashMap.java:584)
+	at org.springframework.util.ConcurrentReferenceHashMap.computeIfAbsent(ConcurrentReferenceHashMap.java:396)
+	at org.springframework.data.mapping.PropertyPath.from(PropertyPath.java:366)
+	at org.springframework.data.mapping.PropertyPath.from(PropertyPath.java:344)
+	at org.springframework.data.repository.query.parser.Part.<init>(Part.java:81)
+	at org.springframework.data.repository.query.parser.PartTree$OrPart.lambda$new$0(PartTree.java:259)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.springframework.data.repository.query.parser.PartTree$OrPart.<init>(PartTree.java:260)
+	at org.springframework.data.repository.query.parser.PartTree$Predicate.lambda$new$0(PartTree.java:389)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at org.springframework.data.repository.query.parser.PartTree$Predicate.<init>(PartTree.java:390)
+	at org.springframework.data.repository.query.parser.PartTree.<init>(PartTree.java:100)
+	at org.springframework.data.jpa.repository.query.PartTreeJpaQuery.<init>(PartTreeJpaQuery.java:101)
+	... 63 common frames omitted
+09:52:47.685 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+09:52:47.735 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 31572 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+09:52:47.737 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+09:52:47.784 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+09:52:47.784 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+09:52:48.498 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+09:52:48.579 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 72 ms. Found 4 JPA repository interfaces.
+09:52:49.301 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+09:52:49.321 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+09:52:49.323 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+09:52:49.323 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+09:52:49.365 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+09:52:49.366 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1581 ms
+09:52:49.512 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+09:52:49.684 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1c310f11
+09:52:49.687 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+09:52:49.719 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+09:52:49.768 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+09:52:49.797 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+09:52:50.046 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+09:52:50.148 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+09:52:50.861 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+09:52:50.864 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+09:52:51.100 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+09:52:51.270 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+09:52:51.701 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+09:52:51.722 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+09:52:51.751 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+09:52:51.758 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.517 seconds (process running for 4.939)
+09:52:55.239 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+09:52:55.242 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+09:52:55.243 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+10:35:53.003 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+10:35:53.049 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22720 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+10:35:53.049 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+10:35:53.091 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+10:35:53.091 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+10:35:53.822 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+10:35:53.892 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 4 JPA repository interfaces.
+10:35:54.572 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+10:35:54.591 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+10:35:54.592 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+10:35:54.593 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+10:35:54.636 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+10:35:54.636 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1544 ms
+10:35:54.801 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+10:35:54.982 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@26b97017
+10:35:54.985 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+10:35:55.014 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+10:35:55.062 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+10:35:55.091 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+10:35:55.342 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+10:35:55.442 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+10:35:56.145 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+10:35:56.147 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+10:35:56.364 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+10:35:56.673 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+10:35:57.101 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+10:35:57.113 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+10:35:57.134 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+10:35:57.142 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.594 seconds (process running for 4.966)
+10:36:03.762 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+10:36:03.763 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+10:36:03.766 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+11:07:48.212 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+11:07:48.267 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:07:48.268 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:07:48.313 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+11:07:48.314 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+11:07:49.078 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:07:49.141 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 54 ms. Found 4 JPA repository interfaces.
+11:07:49.800 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:07:49.826 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:07:49.828 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:07:49.829 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:07:49.877 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:07:49.878 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1564 ms
+11:07:50.057 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:50.223 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2a0a96ad
+11:07:50.224 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+11:07:50.255 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:07:50.302 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+11:07:50.333 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:07:50.588 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:07:50.686 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:07:51.377 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:07:51.380 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:07:51.628 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+11:07:51.914 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:07:52.361 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:07:52.377 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:07:52.394 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:07:52.401 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.643 seconds (process running for 5.013)
+11:07:57.424 INFO  [http-nio-8080-exec-2]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:07:57.425 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:07:57.426 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+11:08:00.962 WARN  [http-nio-8080-exec-6]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.IllegalStateException: No primary or single unique constructor found for interface java.util.List]
+11:08:01.574 WARN  [http-nio-8080-exec-5]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [java.lang.IllegalStateException: No primary or single unique constructor found for interface java.util.List]
+11:09:02.910 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+11:09:02.913 INFO  [Thread-5]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:09:02.915 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:09:02.919 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:09:02.920 INFO  [Thread-5]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:09:02.922 INFO  [Thread-5]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:09:02.925 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+11:09:02.933 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+11:09:03.004 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:09:03.004 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:09:03.154 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:09:03.170 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 4 JPA repository interfaces.
+11:09:03.245 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:09:03.246 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:09:03.246 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:09:03.247 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:09:03.260 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:09:03.260 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 254 ms
+11:09:03.286 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+11:09:03.293 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4247b4c8
+11:09:03.293 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+11:09:03.295 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:09:03.297 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:09:03.306 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:09:03.310 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:09:03.391 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:09:03.391 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:09:03.508 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:09:03.570 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:09:03.577 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:09:03.582 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:09:03.586 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.605 seconds (process running for 76.198)
+11:09:03.588 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:09:46.995 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+11:09:46.997 INFO  [Thread-7]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:09:46.998 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:09:47.001 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:09:47.001 INFO  [Thread-7]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:09:47.004 INFO  [Thread-7]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:09:47.004 INFO  [Thread-7]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+11:09:47.007 INFO  [Thread-7]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+11:09:47.070 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:09:47.070 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:09:47.205 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:09:47.223 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 16 ms. Found 4 JPA repository interfaces.
+11:09:47.281 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:09:47.282 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:09:47.283 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:09:47.283 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:09:47.296 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:09:47.296 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 224 ms
+11:09:47.316 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+11:09:47.320 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@71393341
+11:09:47.321 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+11:09:47.322 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:09:47.323 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:09:47.329 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:09:47.330 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:09:47.399 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:09:47.399 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:09:47.497 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:09:47.543 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:09:47.547 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:09:47.553 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:09:47.556 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.506 seconds (process running for 120.168)
+11:09:47.557 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:10:08.444 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+11:10:08.446 INFO  [Thread-11]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:10:08.446 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:10:08.450 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:10:08.450 INFO  [Thread-11]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:10:08.451 INFO  [Thread-11]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:10:08.453 INFO  [Thread-11]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+11:10:08.454 INFO  [Thread-11]com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+11:10:08.509 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:10:08.509 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:10:08.602 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:10:08.615 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 4 JPA repository interfaces.
+11:10:08.667 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:10:08.669 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:10:08.669 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:10:08.669 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:10:08.682 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:10:08.682 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 172 ms
+11:10:08.699 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+11:10:08.704 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@14640ba3
+11:10:08.704 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+11:10:08.705 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:10:08.706 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:10:08.710 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:10:08.712 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:10:08.773 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:10:08.773 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:10:08.879 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:10:08.917 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:10:08.920 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:10:08.924 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:10:08.925 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.433 seconds (process running for 141.537)
+11:10:08.926 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:11:53.033 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+11:11:53.035 INFO  [Thread-15]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:11:53.035 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:11:53.040 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:11:53.040 INFO  [Thread-15]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:11:53.041 INFO  [Thread-15]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:11:53.042 INFO  [Thread-15]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+11:11:53.044 INFO  [Thread-15]com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+11:11:53.099 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:11:53.099 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:11:53.211 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:11:53.227 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 4 JPA repository interfaces.
+11:11:53.289 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:11:53.290 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:11:53.290 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:11:53.291 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:11:53.314 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:11:53.315 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 215 ms
+11:11:53.334 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+11:11:53.340 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@314beb20
+11:11:53.340 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+11:11:53.341 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:11:53.342 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:11:53.348 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:11:53.350 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:11:53.416 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:11:53.416 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:11:53.497 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:11:53.530 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:11:53.532 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:11:53.535 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:11:53.537 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.459 seconds (process running for 246.149)
+11:11:53.538 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:12:30.795 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+11:12:30.797 INFO  [Thread-19]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:12:30.798 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:12:30.806 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:12:30.807 INFO  [Thread-19]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:12:30.808 INFO  [Thread-19]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:12:30.809 INFO  [Thread-19]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated...
+11:12:30.811 INFO  [Thread-19]com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed.
+11:12:30.868 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:12:30.868 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:12:30.962 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:12:30.977 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 4 JPA repository interfaces.
+11:12:31.016 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:12:31.016 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:12:31.017 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:12:31.017 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:12:31.032 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:12:31.032 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 163 ms
+11:12:31.051 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting...
+11:12:31.056 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@38e75010
+11:12:31.056 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed.
+11:12:31.057 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:12:31.058 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:12:31.064 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:12:31.066 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:12:31.130 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:12:31.131 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:12:31.195 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:12:31.235 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:12:31.237 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:12:31.242 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:12:31.243 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.392 seconds (process running for 283.856)
+11:12:31.243 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:12:35.552 INFO  [http-nio-8080-exec-2]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:12:35.552 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:12:35.554 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+11:15:04.241 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 4 class path changes (1 addition, 1 deletion, 2 modifications)
+11:15:04.244 INFO  [Thread-23]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:15:04.244 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:15:04.252 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:15:04.252 INFO  [Thread-23]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:15:04.254 INFO  [Thread-23]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:15:04.254 INFO  [Thread-23]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated...
+11:15:04.257 INFO  [Thread-23]com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed.
+11:15:04.320 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 13148 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:15:04.320 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:15:04.426 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:15:04.436 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 4 JPA repository interfaces.
+11:15:04.471 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:15:04.472 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:15:04.473 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:15:04.474 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:15:04.487 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:15:04.487 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 165 ms
+11:15:04.502 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Starting...
+11:15:04.506 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2cb0d455
+11:15:04.507 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Start completed.
+11:15:04.508 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:15:04.509 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:15:04.514 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:15:04.516 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-7)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:15:04.561 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:15:04.562 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:15:04.627 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:15:04.659 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:15:04.661 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:15:04.665 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:15:04.666 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.363 seconds (process running for 437.279)
+11:15:04.667 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:16:17.938 INFO  [http-nio-8080-exec-3]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:16:17.938 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:16:17.939 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+11:20:59.868 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+11:20:59.923 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22328 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:20:59.924 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:20:59.968 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+11:20:59.968 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+11:21:00.667 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:21:00.723 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 48 ms. Found 4 JPA repository interfaces.
+11:21:01.383 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:21:01.406 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:21:01.407 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:21:01.408 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:21:01.453 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:21:01.454 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1484 ms
+11:21:01.597 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:21:01.748 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@26b97017
+11:21:01.750 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+11:21:01.781 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:21:01.830 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+11:21:01.859 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:21:02.109 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:21:02.203 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:21:02.902 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:21:02.906 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:21:03.385 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+11:21:04.134 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:21:05.276 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:21:05.309 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:21:05.348 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:21:05.366 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 5.924 seconds (process running for 6.285)
+11:21:05.594 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:21:05.595 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:21:05.599 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+11:24:07.166 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+11:24:07.172 INFO  [Thread-5]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+11:24:07.174 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+11:24:07.232 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+11:24:07.233 INFO  [Thread-5]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+11:24:07.247 INFO  [Thread-5]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+11:24:07.255 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+11:24:07.291 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+11:24:07.511 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22328 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:24:07.511 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:24:07.930 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:24:07.971 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 39 ms. Found 4 JPA repository interfaces.
+11:24:08.155 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:24:08.156 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:24:08.157 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:24:08.158 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:24:08.198 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:24:08.198 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 681 ms
+11:24:08.250 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+11:24:08.265 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f1b697c
+11:24:08.265 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+11:24:08.268 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:24:08.276 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:24:08.296 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:24:08.301 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:24:08.560 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:24:08.561 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:24:08.899 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:24:09.086 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:24:09.095 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:24:09.103 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:24:09.112 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 1.68 seconds (process running for 190.031)
+11:24:09.120 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+11:24:11.246 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:24:11.246 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:24:11.247 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+14:53:42.210 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+14:53:42.254 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22976 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+14:53:42.254 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+14:53:42.294 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+14:53:42.294 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+14:53:43.130 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+14:53:43.195 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 55 ms. Found 4 JPA repository interfaces.
+14:53:43.899 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+14:53:43.926 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+14:53:43.928 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+14:53:43.928 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+14:53:43.977 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+14:53:43.978 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1683 ms
+14:53:44.154 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+14:53:44.375 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2b3cf849
+14:53:44.377 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+14:53:44.410 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+14:53:44.458 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+14:53:44.490 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+14:53:44.777 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+14:53:44.885 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+14:53:45.564 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+14:53:45.567 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+14:53:45.805 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+14:53:46.075 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+14:53:46.464 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+14:53:46.480 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+14:53:46.508 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+14:53:46.517 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.757 seconds (process running for 10.685)
+14:53:50.292 INFO  [http-nio-8080-exec-2]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+14:53:50.293 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+14:53:50.295 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+15:04:37.884 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+15:04:37.893 INFO  [Thread-5]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+15:04:37.895 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+15:04:37.906 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+15:04:37.906 INFO  [Thread-5]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+15:04:37.911 INFO  [Thread-5]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+15:04:37.940 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+15:04:37.954 INFO  [Thread-5]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+15:04:38.084 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 22976 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+15:04:38.085 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+15:04:38.277 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+15:04:38.297 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 4 JPA repository interfaces.
+15:04:38.402 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+15:04:38.403 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+15:04:38.403 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+15:04:38.403 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+15:04:38.418 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+15:04:38.419 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 332 ms
+15:04:38.448 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+15:04:38.456 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@cd0533f
+15:04:38.456 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+15:04:38.458 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+15:04:38.460 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+15:04:38.468 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+15:04:38.470 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+15:04:38.560 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+15:04:38.560 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+15:04:38.741 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+15:04:38.804 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+15:04:38.809 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+15:04:38.815 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+15:04:38.818 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 0.774 seconds (process running for 662.986)
+15:04:38.822 INFO  [restartedMain]o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+15:16:12.618 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+15:16:12.676 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 25076 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+15:16:12.677 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+15:16:12.726 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+15:16:12.727 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+15:16:13.759 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+15:16:13.833 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 66 ms. Found 4 JPA repository interfaces.
+15:16:14.691 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+15:16:14.727 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+15:16:14.731 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+15:16:14.733 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+15:16:14.794 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+15:16:14.794 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2067 ms
+15:16:15.099 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+15:16:15.285 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@726e5456
+15:16:15.287 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+15:16:15.324 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+15:16:15.375 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+15:16:15.417 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+15:16:15.711 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+15:16:15.821 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+15:16:16.618 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+15:16:16.622 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+15:16:16.878 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+15:16:17.238 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+15:16:17.834 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+15:16:17.859 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+15:16:17.887 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+15:16:17.900 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 5.79 seconds (process running for 6.261)
+15:16:22.021 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+15:16:22.021 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+15:16:22.023 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
