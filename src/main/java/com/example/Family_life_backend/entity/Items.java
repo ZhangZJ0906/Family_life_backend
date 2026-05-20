@@ -1,4 +1,4 @@
-package com.example.Family_life_backend.enity;
+package com.example.Family_life_backend.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,8 +44,10 @@ public class Items {
 
 	@Column(name = "safe_quantity")
 	private Integer safeQuantity = 0;
+	
 	@Column(name = "unit_price")
 	private int unitPrice;
+	
 	@Column(name = "price")
 	private Integer price;
 
@@ -54,12 +56,15 @@ public class Items {
 
 	@Column(name = "note")
 	private String note;
+	
+	@Column(name = "status")
+	private String status;
 
 
 
 	public Items(int id, int groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
 			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
-			Integer price, Boolean notify, String note, LocalDateTime createdAt) {
+			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -77,6 +82,7 @@ public class Items {
 		this.notify = notify;
 		this.note = note;
 		this.createdAt = createdAt;
+		this.status = status;
 	}
 
 	public int getUnitPrice() {
@@ -214,5 +220,13 @@ public class Items {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	
+	public String getStatus() {
+	    return status;
+	}
+
+	public void setStatus(String status) {
+	    this.status = status;
+	  }
 
 }
