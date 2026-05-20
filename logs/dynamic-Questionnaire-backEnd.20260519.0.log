@@ -1631,3 +1631,55 @@ Caused by: java.lang.Error: Unresolved compilation problem:
 17:06:42.251 INFO  [http-nio-8080-exec-2]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 17:06:42.256 WARN  [http-nio-8080-exec-2]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
 17:06:47.812 WARN  [http-nio-8080-exec-4]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' is not supported]
+17:35:36.460 INFO  [File Watcher]o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+17:35:36.462 INFO  [Thread-154]o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+17:35:36.463 INFO  [tomcat-shutdown]org.apache.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8080"]
+17:35:36.851 INFO  [tomcat-shutdown]o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+17:35:36.852 INFO  [Thread-154]org.apache.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8080"]
+17:35:36.854 INFO  [Thread-154]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+17:35:36.855 INFO  [Thread-154]com.zaxxer.hikari.HikariDataSource - HikariPool-39 - Shutdown initiated...
+17:35:36.858 INFO  [Thread-154]com.zaxxer.hikari.HikariDataSource - HikariPool-39 - Shutdown completed.
+17:35:36.978 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 25680 (C:\Users\ASUS\eclipse-workspace\java_project\Family_life_backend\bin\main started by ASUS in C:\Users\ASUS\eclipse-workspace\java_project\Family_life_backend)
+17:35:36.978 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+17:35:37.258 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+17:35:37.299 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 38 ms. Found 6 JPA repository interfaces.
+18:16:55.940 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+18:16:55.989 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 17.0.18 with PID 31352 (C:\Users\ASUS\eclipse-workspace\java_project\Family_life_backend\bin\main started by ASUS in C:\Users\ASUS\eclipse-workspace\java_project\Family_life_backend)
+18:16:55.993 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+18:16:56.094 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+18:16:56.094 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+18:16:56.926 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+18:16:57.020 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 80 ms. Found 6 JPA repository interfaces.
+18:16:57.855 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+18:16:57.875 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+18:16:57.878 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+18:16:57.879 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+18:16:57.941 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+18:16:57.941 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1846 ms
+18:16:58.195 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+18:16:58.502 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@56ba6530
+18:16:58.506 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+18:16:58.600 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+18:16:58.707 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+18:16:58.782 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+18:16:59.139 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+18:16:59.272 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.45
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+18:17:00.310 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+18:17:00.314 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+18:17:00.733 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+18:17:01.136 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+18:17:01.704 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+18:17:01.735 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+18:17:01.852 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+18:17:01.873 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 6.521 seconds (process running for 12.786)
+18:20:51.966 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+18:20:51.978 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+18:20:51.987 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 5 ms
+19:23:32.937 WARN  [HikariPool-1:housekeeper]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=52m4s94ms877µs101ns).

@@ -15,6 +15,7 @@ public class UpdateSubscriptionReq {
     private LocalDate trialEndDate;
     private Boolean notify;
     private String note;
+    
 
     public Integer getId() {
         return id;
