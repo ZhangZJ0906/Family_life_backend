@@ -63,7 +63,7 @@ public class groupService {
 
 		group saved = groupRepository.save(group);
 
-		groupMemberDao.insert(saved.getGroupId(), saved.getCreatedBy(), 0, self_name);
+		groupMemberDao.insert(saved.getGroupId(), saved.getCreatedBy(), 0);
 
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
