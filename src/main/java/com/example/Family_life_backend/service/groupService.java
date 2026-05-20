@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
@@ -111,9 +112,9 @@ public class groupService {
 
 			String content = selfName + "已將群組" + oldGroupName + "改成" + NewGroupId;
 
-			List<GroupMembers> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 
-			for (GroupMembers member : getGroupMembers) {
+			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
 				}
