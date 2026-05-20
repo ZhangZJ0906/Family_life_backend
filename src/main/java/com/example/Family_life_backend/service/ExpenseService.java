@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.Family_life_backend.dao.ExpenseDao;
 import com.example.Family_life_backend.dao.ItemsDao;
-import com.example.Family_life_backend.enity.Expense;
-import com.example.Family_life_backend.enity.Items;
+import com.example.Family_life_backend.entity.Expense;
+import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.request.AddExpensesInfoReq;
 import com.example.Family_life_backend.request.UpdateExpensesInfoReq;
 import com.example.Family_life_backend.response.BasicRes;

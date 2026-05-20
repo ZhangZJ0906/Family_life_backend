@@ -3,8 +3,8 @@ package com.example.Family_life_backend.response;
 import java.util.List;
 import java.util.Map;
 
-import com.example.Family_life_backend.enity.Expense;
-import com.example.Family_life_backend.enity.Items;
+import com.example.Family_life_backend.entity.Expense;
+import com.example.Family_life_backend.entity.Items;
 
 public class GetExpenseInfoRes extends BasicRes {
 	private List<Expense> list;
