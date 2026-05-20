@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.response;
 
 public class BasicRes {
+
 	private String message;
 
 	private int code;
@@ -31,4 +32,5 @@ public class BasicRes {
 	public void setCode(int code) {
 		this.code = code;
 	}
+
 }
