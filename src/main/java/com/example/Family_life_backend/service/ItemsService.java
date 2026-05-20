@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,11 +60,12 @@ public class ItemsService {
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
 		// 處理群組邏輯：沒傳就給 0
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
+		String status = calcStatus(req.getQuantity(), req.getExpireDate());
 
 		// 呼叫原生 SQL
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice());
+				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(), status);
 		return new AddItemsInfoRes("成功", 200);
 	}
 
@@ -72,10 +74,11 @@ public class ItemsService {
 		// 處理群組邏輯：沒傳就給 0
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
+		String status = calcStatus(req.getQuantity(), req.getExpireDate());
 		// 呼叫原生 SQL
 		itemDao.updateItem(req.getId(), finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(),
 				req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice());
+				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice(), status);
 		return new BasicRes("成功", 200);
 	}
 
@@ -94,4 +97,24 @@ public class ItemsService {
 		return new BasicRes("成功", 200);
 
 	}
+	
+	private String calcStatus(Integer quantity, LocalDate expireDate) {
+	    LocalDate today = LocalDate.now();
+
+	    if (expireDate != null && expireDate.isBefore(today)) {
+	        return "已到期";
+	    }
+
+	    if (expireDate != null && !expireDate.isAfter(today.plusDays(7))) {
+	        return "即將到期";
+	    }
+
+	    if (quantity != null && quantity <= 1) {
+	        return "庫存不足";
+	    }
+
+	    return "正常";
+	}
+	
+	
 }

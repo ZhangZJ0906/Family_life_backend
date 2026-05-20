@@ -20,9 +20,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO items "
-	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price) "
+	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, status) "
 	        + "VALUES "
-	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice)",
+	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :status)",
 	        nativeQuery = true)
 	int insertItemNative(
 	        @Param("groupId") Integer groupId,
@@ -37,7 +37,8 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("notify") Boolean notify,
 	        @Param("note") String note,
 	        @Param("userId") Integer userId,
-	        @Param("unitPrice") int unitPrice
+	        @Param("unitPrice") int unitPrice,
+	        @Param("status") String status
 	);
 
 	/* 更新 */
@@ -56,6 +57,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        + "notify = :notify, "
 	        + "note = :note, "
 	        + "unit_price = :unitPrice "
+	        + "status = :status "
 	        + "WHERE id = :id", nativeQuery = true)
 	int updateItem(
 	        @Param("id") int id,
@@ -70,7 +72,8 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("expireDate") LocalDate expireDate,
 	        @Param("notify") Boolean notify,
 	        @Param("note") String note,
-	        @Param("unitPrice") int unitPrice
+	        @Param("unitPrice") int unitPrice,
+	        @Param("status") String status
 	);
 
 	/* 刪除 */
