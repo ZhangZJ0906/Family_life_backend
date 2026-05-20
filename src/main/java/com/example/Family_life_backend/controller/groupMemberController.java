@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Family_life_backend.req.groupMemberReq;
-import com.example.Family_life_backend.req.joinGroupReq;
-import com.example.Family_life_backend.respond.BasicResponse;
-import com.example.Family_life_backend.respond.GetGroupMemberRes;
-import com.example.Family_life_backend.respond.getInvitedMemberRes;
-import com.example.Family_life_backend.respond.getNotifyRes;
+import com.example.Family_life_backend.request.groupMemberReq;
+import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupMemberRes;
+import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getNotifyRes;
 import com.example.Family_life_backend.service.GroupMemberService;
 
 import jakarta.validation.Valid;

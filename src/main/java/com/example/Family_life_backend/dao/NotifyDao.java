@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Family_life_backend.DTO.UserNotifyDTO;
 import com.example.Family_life_backend.entity.notify;
-import com.example.Family_life_backend.respond.BasicResponse;
+import com.example.Family_life_backend.response.BasicResponse;
 
 @Repository
 public interface NotifyDao extends JpaRepository<notify, Long>{

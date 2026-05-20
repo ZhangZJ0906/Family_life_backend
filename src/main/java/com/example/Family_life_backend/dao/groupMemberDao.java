@@ -15,7 +15,7 @@ import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.GroupMembersId;
 import com.example.Family_life_backend.entity.invitedMembers;
 import com.example.Family_life_backend.entity.notify;
-import com.example.Family_life_backend.respond.BasicResponse;
+import com.example.Family_life_backend.response.BasicResponse;
 
 @Repository
 public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembersId> {
@@ -150,6 +150,6 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 		    JOIN users u
 		        ON gm.user_id = u.user_id
 		    WHERE gm.group_id = ?1
-		    """, nativeQuery = true)
+		   groupMembersDTO """, nativeQuery = true)
 	public List<groupMembersDTO> getMembersByGroupId(Long group_id);
 }

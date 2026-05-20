@@ -36,19 +36,19 @@ public class ShoppingListService {
 	@Transactional (rollbackOn = Exception.class)
 	public BasicRes create(CreateListReq req) {
 		if(req == null || req.getShoppingList() == null) {
-			return new BasicRes(ReplyMessage.TITLE_ERROR.getCode(), ReplyMessage.TITLE_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.TITLE_ERROR.getMessage(), ReplyMessage.TITLE_ERROR.getCode());
 		}
 
 		ShoppingList shoppingList = req.getShoppingList();
 		List<PurchaseItemVo> purchaseItemVoList = req.getPurchaseItemVoList();
 
 		if(!StringUtils.hasText(shoppingList.getTitle())) {
-			return new BasicRes(ReplyMessage.TITLE_ERROR.getCode(), ReplyMessage.TITLE_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.TITLE_ERROR.getMessage(), ReplyMessage.TITLE_ERROR.getCode());
 		}
 		
 		if(CollectionUtils.isEmpty(purchaseItemVoList)) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(),
-					ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
 		LocalDate now = LocalDate.now();
@@ -58,7 +58,7 @@ public class ShoppingListService {
 		List<PurchaseItem> purchaseItemList = new ArrayList<>();
 		for (PurchaseItemVo vo : purchaseItemVoList) {
 			if(vo == null || !StringUtils.hasText(vo.getItem()) || vo.getQuantity() <= 0) {
-				return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+				return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(), ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 			}
 
 			PurchaseItem purchaseItem = new PurchaseItem();
@@ -74,7 +74,7 @@ public class ShoppingListService {
 		}
 		purchaseItemDao.saveAll(purchaseItemList);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.example.Family_life_backend.req;
+package com.example.Family_life_backend.request;
 
 public class joinGroupReq {
 

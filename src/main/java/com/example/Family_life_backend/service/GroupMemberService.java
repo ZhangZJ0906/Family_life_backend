@@ -14,13 +14,13 @@ import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.GroupMembers;
-import com.example.Family_life_backend.req.groupMemberReq;
-import com.example.Family_life_backend.req.joinGroupReq;
-import com.example.Family_life_backend.respond.BasicResponse;
-import com.example.Family_life_backend.respond.GetGroupMemberRes;
-import com.example.Family_life_backend.respond.getInvitedMemberRes;
-import com.example.Family_life_backend.respond.getNotifyRes;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupMemberRes;
+import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getNotifyRes;
 import com.example.Family_life_backend.entity.notify;
+import com.example.Family_life_backend.request.groupMemberReq;
+import com.example.Family_life_backend.request.joinGroupReq;
 
 @Service
 public class GroupMemberService {

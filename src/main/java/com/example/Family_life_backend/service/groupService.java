@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
@@ -20,9 +21,9 @@ import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.group;
 import com.example.Family_life_backend.repositary.GroupRepository;
-import com.example.Family_life_backend.respond.BasicResponse;
-import com.example.Family_life_backend.respond.CreateGroupReq;
-import com.example.Family_life_backend.respond.GetGroupRes;
+import com.example.Family_life_backend.request.CreateGroupReq;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupRes;
 import com.example.Family_life_backend.vo.GroupMembersVo;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -111,9 +112,9 @@ public class groupService {
 
 			String content = selfName + "已將群組" + oldGroupName + "改成" + NewGroupId;
 
-			List<GroupMembers> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 
-			for (GroupMembers member : getGroupMembers) {
+			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
 				}

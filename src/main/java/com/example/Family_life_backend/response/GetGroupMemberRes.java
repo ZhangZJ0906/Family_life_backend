@@ -1,4 +1,4 @@
-package com.example.Family_life_backend.respond;
+package com.example.Family_life_backend.response;
 
 import java.util.List;
 
