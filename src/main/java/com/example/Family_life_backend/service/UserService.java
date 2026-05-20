@@ -53,17 +53,17 @@ public class UserService {
 	
 	/* 更改密碼 */
 	public BasicRes changePwd(ChangePwdReq req) {
-		UserInfo user = userInfoDao.findById(req.getUserId()).orElse(null);
+		UserInfo user = userInfoDao.getByEmail(req.getEmail());
 
 		if(user == null) {
-			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getCode(), ReplyMessage.USER_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(), ReplyMessage.EMAIL_NOT_FOUND.getMessage());
 		}
 		if(!user.getPwd().equals(req.getOldPwd())) {
 			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getCode(), ReplyMessage.OLD_PASSWORD_ERROR.getMessage());
 		}
 
 		String now = LocalDateTime.now().toString();
-		userInfoDao.updatePwd(req.getUserId(), req.getNewPwd(), now);
+		userInfoDao.updatePwd(user.getUserId(), req.getNewPwd(), now);
 
 		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
 	}

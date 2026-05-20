@@ -15,7 +15,7 @@ public class UserInfo {
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@Column(name = "id")
+	@Column(name = "user_id")
 	private int userId;
 
 	@Column(name = "name")
@@ -36,7 +36,7 @@ public class UserInfo {
 	@Column(name = "created_at")
 	private LocalDate createdDate;
 
-	@Column(name = "update_at")
+	@Column(name = "updated_at")
 	private LocalDate updateDate;
 
 	public int getUserId() {
