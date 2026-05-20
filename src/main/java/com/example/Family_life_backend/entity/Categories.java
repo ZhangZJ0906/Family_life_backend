@@ -1,4 +1,4 @@
-package com.example.Family_life_backend.enity;
+package com.example.Family_life_backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

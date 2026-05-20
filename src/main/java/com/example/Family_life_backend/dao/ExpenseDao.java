@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.Family_life_backend.enity.Expense;
+import com.example.Family_life_backend.entity.Expense;
 
 import jakarta.transaction.Transactional;
 
