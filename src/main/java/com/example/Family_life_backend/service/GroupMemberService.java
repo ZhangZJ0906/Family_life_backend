@@ -1,6 +1,5 @@
 package com.example.Family_life_backend.service;
 
-import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +12,12 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
-import com.example.Family_life_backend.entity.GroupMembers;
+import com.example.Family_life_backend.request.groupMemberReq;
+import com.example.Family_life_backend.request.joinGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
 import com.example.Family_life_backend.response.getInvitedMemberRes;
 import com.example.Family_life_backend.response.getNotifyRes;
-import com.example.Family_life_backend.entity.notify;
-import com.example.Family_life_backend.request.groupMemberReq;
-import com.example.Family_life_backend.request.joinGroupReq;
 
 @Service
 public class GroupMemberService {
@@ -71,7 +68,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, userId, 0, groupDao.getSelfName(userId));
+		groupMemberDao.insert(groupId, userId, 0);
 		notifyDao.isReadNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("accepted", userId, notifyId);
@@ -108,7 +105,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, req.getUserId(), 0, groupDao.getSelfName(req.getUserId()));
+		groupMemberDao.insert(groupId, req.getUserId(), 0);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 

@@ -14,8 +14,6 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.GroupMembersId;
 import com.example.Family_life_backend.entity.invitedMembers;
-import com.example.Family_life_backend.entity.notify;
-import com.example.Family_life_backend.response.BasicResponse;
 
 @Repository
 public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembersId> {
@@ -42,10 +40,11 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into group_members (group_id, user_id, public_inventory, name)
-			    values (:groupId, :userId, :publicInventory, :Name)
+			    insert into group_members (group_id, user_id, public_inventory)
+			    values (:groupId, :userId, :publicInventory )
 			""", nativeQuery = true)
-	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId, @Param("publicInventory") int publicInventory, @Param("Name") String name);
+	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId,
+			@Param("publicInventory") int publicInventory);
 	
 	@Query(value = """
 		    select count(*)
@@ -152,4 +151,12 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 		    WHERE gm.group_id = ?1
 		   groupMembersDTO """, nativeQuery = true)
 	public List<groupMembersDTO> getMembersByGroupId(Long group_id);
+
+	/* 卻任該成員否有在群組裡 2026/05/20 by ZJ */
+	@Query(value = """
+			    SELECT COUNT(*) > 0 FROM group_members
+			    WHERE group_id = :groupId
+			    AND user_id = :userId
+			""", nativeQuery = true)
+	boolean existsByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
 }

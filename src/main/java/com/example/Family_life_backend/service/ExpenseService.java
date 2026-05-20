@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Family_life_backend.dao.ExpenseDao;
 import com.example.Family_life_backend.dao.ItemsDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Expense;
 import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.request.AddExpensesInfoReq;
@@ -22,14 +23,18 @@ import com.example.Family_life_backend.response.GetExpenseInfoRes;
 public class ExpenseService {
 	@Autowired
 	private ExpenseDao expenseDao;
-
 	@Autowired
+	private groupMemberDao groupMemberDao;
 	private ItemsDao itemsDao;
 //沒有group 用自己去查
 	public GetExpenseInfoRes getExpenseInfo(Long groupId, Long userId) {
 
 		if (groupId == null && userId == null) {
 			return new GetExpenseInfoRes("groupId 或 userId 至少要有一個", 400);
+		}
+		boolean isMember = groupMemberDao.existsByGroupIdAndUserId(groupId, userId);
+		if (!isMember) {
+			return new GetExpenseInfoRes("你不是該群組成員", 400);
 		}
 
 		List<Expense> result = expenseDao.findExpenses(groupId, userId);
