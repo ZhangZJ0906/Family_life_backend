@@ -12,6 +12,8 @@ import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
+import com.example.Family_life_backend.response.LoginRes;
+import com.example.Family_life_backend.response.UserInfoRes;
 
 @Service
 public class UserService {
@@ -27,28 +29,28 @@ public class UserService {
 		}
 
 		String now = LocalDateTime.now().toString();
-		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
+		userInfoDao.insert(req.getUserName(), req.getEmail(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
 
 		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
 	}
 	
 	/* 登入 */
-	public BasicRes login(String email, String pwd) {
+	public LoginRes login(String email, String pwd) {
 		
 		UserInfo user = userInfoDao.getByEmail(email);
 
 		if (user == null) {
-			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(),
+			return new LoginRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(),
 					ReplyMessage.EMAIL_NOT_FOUND.getMessage());
 		}
 
 		if (!user.getPwd().equals(pwd)) {
-			return new BasicRes(ReplyMessage.PASSWORD_ERROR.getCode(),
+			return new LoginRes(ReplyMessage.PASSWORD_ERROR.getCode(),
 					ReplyMessage.PASSWORD_ERROR.getMessage());
 		}
   
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(),
-				ReplyMessage.SUCCESS.getMessage());
+		return new LoginRes(ReplyMessage.SUCCESS.getCode(),
+				ReplyMessage.SUCCESS.getMessage(), new UserInfoRes(user));
 	}
 	
 	/* 更改密碼 */

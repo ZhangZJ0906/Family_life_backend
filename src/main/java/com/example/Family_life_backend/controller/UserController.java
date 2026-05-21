@@ -13,6 +13,7 @@ import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
+import com.example.Family_life_backend.response.LoginRes;
 import com.example.Family_life_backend.service.UserService;
 
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class UserController {
      
     /* 登入 */
     @GetMapping (value = "/login")
-	public BasicRes login(@RequestParam ("email") String email,//
+	public LoginRes login(@RequestParam ("email") String email,//
 										@RequestParam("password") String pwd) {
 		return userService.login(email, pwd);
 	}

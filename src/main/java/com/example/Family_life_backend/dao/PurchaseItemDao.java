@@ -32,7 +32,7 @@ public interface PurchaseItemDao extends JpaRepository<PurchaseItem, PurchaseIte
 	@Modifying
 	@Transactional
 	@Query(value = "update shopping_list_items set"
-			+ " is_checked = ?3, check_at = ?4, checked_by_id = ?5 where shopping_list_id = ?1 and id = ?2", nativeQuery = true)
+			+ " is_checked = ?3, checked_at = ?4, checked_by_id = ?5 where shopping_list_id = ?1 and id = ?2", nativeQuery = true)
 	public void updateCheck(int listId, int itemId, boolean check, LocalDate checkDate, int checkMan);
 
 }

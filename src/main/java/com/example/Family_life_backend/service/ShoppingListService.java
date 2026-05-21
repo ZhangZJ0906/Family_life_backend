@@ -49,13 +49,14 @@ public class ShoppingListService {
 		if(checkRes != null) {
 			return checkRes;
 		}
-		if(CollectionUtils.isEmpty(purchaseItemVoList)) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
-		}
-
 		LocalDate now = LocalDate.now();
 		shoppingList.setCreatedDate(now);
 		ShoppingList savedShoppingList = shoppingListDao.save(shoppingList);
+
+		// Shopping lists can be created without items. Items are managed later from PurchaseItemComponent.
+		if(CollectionUtils.isEmpty(purchaseItemVoList)) {
+			return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		}
 
 		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(
 				savedShoppingList.getId(), shoppingList.getCreaterId(), purchaseItemVoList, now);
@@ -104,6 +105,11 @@ public class ShoppingListService {
 	}
 	
 	/* 查看購物項目 */
+	public List<ShoppingList> getLists(int createrId) {
+		// Returns lists created by the login user for the frontend list selector.
+		return shoppingListDao.findByCreaterId(createrId);
+	}
+
 	public List<PurchaseItem> getItems(int listId) {
 		return purchaseItemDao.getByListId(listId);
 	}
