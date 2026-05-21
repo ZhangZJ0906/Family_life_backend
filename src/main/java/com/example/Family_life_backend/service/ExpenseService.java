@@ -25,19 +25,33 @@ public class ExpenseService {
 	private ExpenseDao expenseDao;
 	@Autowired
 	private groupMemberDao groupMemberDao;
+	@Autowired
 	private ItemsDao itemsDao;
+
 //沒有group 用自己去查
 	public GetExpenseInfoRes getExpenseInfo(Long groupId, Long userId) {
-
-		if (groupId == null && userId == null) {
-			return new GetExpenseInfoRes("groupId 或 userId 至少要有一個", 400);
+		// 私人
+		if (groupId == null) {
+			if (userId == null || userId <= 0) {
+				return new GetExpenseInfoRes("userId 錯誤", 400);
+			}
+			// 直接撈個人資料，不需要驗群組成員
+			List<Expense> result = expenseDao.findPersonalExpenses(userId);
+			return buildRes(result);
 		}
-		boolean isMember = groupMemberDao.existsByGroupIdAndUserId(groupId, userId);
-		if (!isMember) {
+		// 群組帳：驗成員身份後撈整個群組
+		if (userId == null) {
+			return new GetExpenseInfoRes("userId 錯誤", 400);
+		}
+		int isMember = groupMemberDao.checkUserIdExistInGroup(groupId, userId);
+		if (isMember <= 0) {
 			return new GetExpenseInfoRes("你不是該群組成員", 400);
 		}
+		List<Expense> result = expenseDao.findExpenses(groupId, null);
+		return buildRes(result);
+	}
 
-		List<Expense> result = expenseDao.findExpenses(groupId, userId);
+	private GetExpenseInfoRes buildRes(List<Expense> result) {
 		List<Long> itemIds = result.stream().map(Expense::getRelatedItemId).filter(Objects::nonNull).distinct()
 				.collect(Collectors.toList());
 		Map<Long, Items> itemMap = new HashMap<>();
@@ -49,8 +63,6 @@ public class ExpenseService {
 					item -> item, (existing, replacement) -> existing // 防呆：若有重複的 ID 則保留前一個
 			));
 		}
-
-
 		return new GetExpenseInfoRes("成功", 200, result, itemMap);
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.LocationDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Categories;
 import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.entity.Location;
@@ -30,10 +31,18 @@ public class ItemsService {
 	private LocationDao locationDao;
 	@Autowired
 	private CategoiesDao categoiesDao;
-
-	public GetItemsRes getItems(List<Integer> groupId, Integer userId) {
-		if (userId <= 0 || userId == null) {
+@Autowired
+private groupMemberDao groupMemberDao;
+	public GetItemsRes getItems(Integer groupId, Integer userId) {
+		if (userId == null || userId <= 0) {
 			return new GetItemsRes("失敗 user Id 錯誤", 400);
+		}
+		// 群組模式驗成員
+		if (groupId != null) {
+			int isMember = groupMemberDao.checkUserIdExistInGroup(Long.valueOf(groupId), Long.valueOf(userId));
+			if (isMember <= 0) {
+				return new GetItemsRes("你不是該群組成員", 400);
+			}
 		}
 		// 後續還要加上 使用者查詢
 		List<Items> list = itemDao.getItemByGroupId(groupId, userId);

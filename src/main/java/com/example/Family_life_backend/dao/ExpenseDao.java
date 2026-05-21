@@ -22,6 +22,9 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 			""", nativeQuery = true)
 	public List<Expense> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
+	@Query(value = "Select * from expenses where user_id = :userId and group_id is null", nativeQuery = true)
+	public List<Expense> findPersonalExpenses(@Param("userId") Long userId);
+
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT ignore INTO expenses (group_id,user_id, price, category_id, related_item_id, expense_date, note, created_at,related_item_name) "

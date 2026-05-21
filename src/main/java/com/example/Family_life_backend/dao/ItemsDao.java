@@ -15,11 +15,13 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	/* 拿全部 */
 	@Query(value = """
 			    SELECT * FROM items
-			    WHERE (:groupId IS NULL OR group_id = :groupId)
-			    AND (:userId IS NULL OR created_by_id = :userId)
+			    WHERE (
+			        (:groupId IS NULL AND group_id IS NULL AND created_by_id = :userId)
+			        OR
+			        (:groupId IS NOT NULL AND group_id = :groupId)
+			    )
 			""", nativeQuery = true)
-	public List<Items> getItemByGroupId(@Param("groupId") List<Integer> groupId, @Param("userId") Integer userId);
-
+	public List<Items> getItemByGroupId(@Param("groupId") Integer groupId, @Param("userId") Integer userId);
 	@Query(value = "select * from items where id in (:id)", nativeQuery = true)
 	public List<Items> getItemById(@Param("id") List<Long> id);
 
