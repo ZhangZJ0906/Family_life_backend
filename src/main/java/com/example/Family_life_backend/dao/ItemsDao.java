@@ -20,9 +20,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO items "
-	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, status) "
+	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status) "
 	        + "VALUES "
-	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :status)",
+	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status)",
 	        nativeQuery = true)
 	int insertItemNative(
 	        @Param("groupId") Integer groupId,
@@ -38,6 +38,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("note") String note,
 	        @Param("userId") Integer userId,
 	        @Param("unitPrice") int unitPrice,
+	        @Param("safeQuantity") Integer safeQuantity,
 	        @Param("status") String status
 	);
 
@@ -56,9 +57,11 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        + "expire_date = :expireDate, "
 	        + "notify = :notify, "
 	        + "note = :note, "
-	        + "unit_price = :unitPrice "
+	        + "unit_price = :unitPrice, "
+	        + "safe_quantity = :safeQuantity, "
 	        + "status = :status "
-	        + "WHERE id = :id", nativeQuery = true)
+	        + "WHERE id = :id",
+	        nativeQuery = true)
 	int updateItem(
 	        @Param("id") int id,
 	        @Param("groupId") Integer groupId,
@@ -73,9 +76,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("notify") Boolean notify,
 	        @Param("note") String note,
 	        @Param("unitPrice") int unitPrice,
+	        @Param("safeQuantity") Integer safeQuantity,
 	        @Param("status") String status
 	);
-
 	/* 刪除 */
 	@Modifying
 	@Transactional

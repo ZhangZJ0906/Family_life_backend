@@ -58,30 +58,76 @@ public class ItemsService {
 
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
-		// 處理群組邏輯：沒傳就給 0
-		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
-		String status = calcStatus(req.getQuantity(), req.getExpireDate());
+	    Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
-		// 呼叫原生 SQL
-		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
-				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(), status);
-		return new AddItemsInfoRes("成功", 200);
+	    // 安全庫存量：沒填就給 0
+	    Integer finalSafeQuantity = req.getSafeQuantity() != null
+	            ? req.getSafeQuantity()
+	            : 0;
+
+	    String status = calcStatus(
+	            req.getQuantity(),
+	            finalSafeQuantity,
+	            req.getExpireDate()
+	    );
+
+	    itemDao.insertItemNative(
+	            finalGroupId,
+	            req.getCategoryId(),
+	            req.getName(),
+	            req.getQuantity(),
+	            req.getUnit(),
+	            req.getLocationId(),
+	            req.getPrice(),
+	            req.getPurchaseDate(),
+	            req.getExpireDate(),
+	            req.getNotify() != null ? req.getNotify() : false,
+	            req.getNote(),
+	            req.getUserId(),
+	            req.getUnitPrice(),
+	            finalSafeQuantity,
+	            status
+	    );
+
+	    return new AddItemsInfoRes("成功", 200);
 	}
 
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
-		// 處理群組邏輯：沒傳就給 0
-		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
+	    Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
-		String status = calcStatus(req.getQuantity(), req.getExpireDate());
-		// 呼叫原生 SQL
-		itemDao.updateItem(req.getId(), finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(),
-				req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice(), status);
-		return new BasicRes("成功", 200);
+	    // 安全庫存量：沒填就給 0
+	    Integer finalSafeQuantity = req.getSafeQuantity() != null
+	            ? req.getSafeQuantity()
+	            : 0;
+
+	    String status = calcStatus(
+	            req.getQuantity(),
+	            finalSafeQuantity,
+	            req.getExpireDate()
+	    );
+
+	    itemDao.updateItem(
+	            req.getId(),
+	            finalGroupId,
+	            req.getCategoryId(),
+	            req.getName(),
+	            req.getQuantity(),
+	            req.getUnit(),
+	            req.getLocationId(),
+	            req.getPrice(),
+	            req.getPurchaseDate(),
+	            req.getExpireDate(),
+	            req.getNotify() != null ? req.getNotify() : false,
+	            req.getNote(),
+	            req.getUnitPrice(),
+	            finalSafeQuantity,
+	            status
+	    );
+
+	    return new BasicRes("成功", 200);
 	}
-
+	
 	@Transactional
 	public BasicRes deleteItem(List<Integer> id) {
 		if (id == null || id.isEmpty()) {
@@ -98,7 +144,7 @@ public class ItemsService {
 
 	}
 	
-	private String calcStatus(Integer quantity, LocalDate expireDate) {
+	private String calcStatus(Integer quantity, Integer saveQuantity, LocalDate expireDate) {
 	    LocalDate today = LocalDate.now();
 
 	    if (expireDate != null && expireDate.isBefore(today)) {
@@ -109,12 +155,13 @@ public class ItemsService {
 	        return "即將到期";
 	    }
 
-	    if (quantity != null && quantity <= 1) {
+	    if (quantity != null
+	            && saveQuantity != null
+	            && quantity <= saveQuantity) {
 	        return "庫存不足";
 	    }
 
 	    return "正常";
 	}
-	
 	
 }
