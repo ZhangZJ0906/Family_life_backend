@@ -34,7 +34,22 @@ public interface groupDao extends JpaRepository<group, Long> {
 			    JOIN group_members gm ON g.group_id = gm.group_id
 			    WHERE gm.user_id = :userId
 			""", nativeQuery = true)
-	public List<group> getAll(@Param("userId") Long userId);
+	public List<group> getMyGroups(@Param("userId") Long userId);
+	
+	@Query(value = """
+		    SELECT gm.public_inventory
+		    FROM `groups` g
+		    JOIN group_members gm ON g.group_id = gm.group_id
+		    WHERE gm.user_id = :userId
+		""", nativeQuery = true)
+	public List<Integer> getMyGroupsPublicInventory(@Param("userId") Long userId);
+
+	@Query(value = """
+		    SELECT group_id
+		    FROM group_members 
+		    WHERE user_id = :userId
+		""", nativeQuery = true)
+	public List<Long> getMyGroupIdList(@Param("userId") Long userId);
 
 	@Query(value = "select group_name from `groups` where group_id = :group_id", nativeQuery = true)
 	public String getGroupName(@Param("group_id") Long group_id);
@@ -47,6 +62,11 @@ public interface groupDao extends JpaRepository<group, Long> {
 	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar, created_by = :createdBy, creater = :Creater where group_id = :groupId", nativeQuery = true)
 	void updateGroup(@Param("groupName") String groupName, @Param("Avatar") String Avatar,
 			@Param("createdBy") Long createdBy, @Param("Creater") String Creater, @Param("groupId") Long groupId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "update group_members set public_inventory = :isChecked where group_id = :groupId and user_id = :userId", nativeQuery = true)
+	public void updatePublicInventoryToThisGroup(@Param("isChecked")boolean isChecked, @Param("groupId")Long groupId, @Param("userId")Long userId);
 
 	@Modifying
 	@Transactional

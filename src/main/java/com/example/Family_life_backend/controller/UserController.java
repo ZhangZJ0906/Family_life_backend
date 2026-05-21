@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
+import com.example.Family_life_backend.request.UpdateUserAllReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
+import com.example.Family_life_backend.respond.getUserInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.service.UserService;
 
@@ -46,8 +48,13 @@ public class UserController {
 	
 	/* 變更資料*/
     @PostMapping("/update_info")
-    public BasicRes updateInfo(@RequestBody  UpdateUserInfoReq req) {
+    public BasicRes updateInfo(@RequestBody UpdateUserAllReq req) {
         return userService.updateInfo(req);
     }
+    
+    @GetMapping (value = "/get_user_info")
+	public getUserInfoRes getSelfInfo(@RequestParam ("userId") Long userId) {
+		return userService.getUserInfo(userId);
+	}
     
 }
