@@ -17,10 +17,10 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	/* 註冊 */
 	@Modifying
 	@Transactional
-	@Query(value = "insert ignore into users( name, email, password, avatar, is_notify, created_at)"//
-			+ "values (?1, ?2, ?3, ?4, ?5, ?6)", nativeQuery = true)
+	@Query(value = "insert ignore into users(email, name, password, avatar, created_at)"//
+			+ "values (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
 	public void insert(String email, String userName, String pwd, //
-			String avatar, boolean notify, String createdDate);
+			String avatar, String createdDate);
 
 	/* 檢查 Email 是否存在 */
 	public boolean existsByEmail(String email);

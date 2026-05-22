@@ -11,8 +11,6 @@ public class UpdateUserInfoReq {
 
 	private String userName;
 
-	private String avatar;
-	
 	private String email;
 
 	private boolean notifyByEndDate;
@@ -33,14 +31,6 @@ public class UpdateUserInfoReq {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 
 	public String getEmail() {

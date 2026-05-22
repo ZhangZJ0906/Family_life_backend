@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Family_life_backend.DTO.UserNotifyDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
+import com.example.Family_life_backend.DTO.invitedMembersDTO;
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.GroupMembersId;
 import com.example.Family_life_backend.entity.invitedMembers;
@@ -23,9 +24,9 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-		    insert into invited_members (user_id, group_id, name, avatar) values (:getUserId, :groupId, :name, :avatar)
+		    insert into invited_members (user_id, group_id) values (:getUserId, :groupId)
 		""", nativeQuery = true)
-	public void addToInviteMember(@Param("getUserId") Long getUserId,  @Param("groupId") Long groupId, @Param("name") String name, @Param("avatar") String avatar);
+	public void addToInviteMember(@Param("getUserId") Long getUserId,  @Param("groupId") Long groupId);
 	
 	@Query(value = "select count(*) from invited_members where user_id = :getUserId and group_id = :groupId", nativeQuery = true)
 	public int isInvite(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId);
@@ -136,8 +137,19 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 		    @Param("user_id") Long user_id
 		);
 	
-	@Query(value = "select * from invited_members where group_id = :groupId", nativeQuery = true)
-	public List<invitedMembers> getInvitedMemberList(@Param("groupId") Long groupId);
+	
+	@Query(value = """
+		    SELECT
+	        im.group_id as group_id,
+	        im.user_id as user_id,
+	        u.name as name,
+	        u.avatar as avatar
+	    FROM invited_members im
+	    JOIN users u
+	        ON im.user_id = u.user_id
+	    WHERE im.group_id = ?1
+	    """, nativeQuery = true)
+	public List<invitedMembersDTO> getInvitedMemberList(@Param("groupId") Long groupId);
 
 	@Query(value = """
 		    SELECT

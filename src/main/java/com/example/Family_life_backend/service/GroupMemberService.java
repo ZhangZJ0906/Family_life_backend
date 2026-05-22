@@ -18,7 +18,7 @@ import com.example.Family_life_backend.req.groupMemberReq;
 import com.example.Family_life_backend.req.joinGroupReq;
 import com.example.Family_life_backend.respond.BasicResponse;
 import com.example.Family_life_backend.respond.GetGroupMemberRes;
-import com.example.Family_life_backend.respond.getInvitedMemberRes;
+import com.example.Family_life_backend.respond.getInviteMembersRes;
 import com.example.Family_life_backend.respond.getNotifyRes;
 import com.example.Family_life_backend.entity.notify;
 
@@ -54,7 +54,7 @@ public class GroupMemberService {
 		String type = "invite";
 
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
-		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id(), req.getUser_name(), null);
+		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
 //		groupMemberDao.insert(req.getGroup_id(), req.getUser_id(), 0, req.getUser_name());
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
@@ -128,8 +128,9 @@ public class GroupMemberService {
 		return count;
 	}
 
-	public getInvitedMemberRes getInvitedMemberList(Long group_id) {
-		return new getInvitedMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
+	public getInviteMembersRes getInvitedMemberList(Long group_id) {
+		
+		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getInvitedMemberList(group_id));
 	}
 
