@@ -15,9 +15,9 @@ public class UpdateUserInfoReq {
 	
 	private String email;
 
-	private boolean isNotifyByEndDate;
+	private boolean notifyByEndDate;
 
-	private boolean isNotifyByEmail;
+	private boolean notifyByEmail;
 
 	public int getUserId() {
 		return userId;
@@ -52,19 +52,19 @@ public class UpdateUserInfoReq {
 	}
 
 	public boolean isNotifyByEndDate() {
-		return isNotifyByEndDate;
+		return notifyByEndDate;
 	}
 
-	public void setNotifyByEndDate(boolean isNotifyByEndDate) {
-		this.isNotifyByEndDate = isNotifyByEndDate;
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
 	}
 
 	public boolean isNotifyByEmail() {
-		return isNotifyByEmail;
+		return notifyByEmail;
 	}
 
-	public void setNotifyByEmail(boolean isNotifyByEmail) {
-		this.isNotifyByEmail = isNotifyByEmail;
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 }

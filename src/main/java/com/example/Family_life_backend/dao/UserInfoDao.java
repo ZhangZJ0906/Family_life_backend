@@ -39,7 +39,7 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "update users set name = ?2, email = ?3, avatar = ?4, is_notify_by_enddate = ?5, is_notify_by_email = ?6, updated_at = ?7 where user_id = ?1", nativeQuery = true)
-	public void updateInfo(int userId, String userName, String email, String avatar, boolean isNotifyByEndDate, boolean isNotifyByEmail, String updateDate);
+	public void updateInfo(int userId, String userName, String email, String avatar, boolean NotifyByEndDate, boolean NotifyByEmail, String updateDate);
 	
 	//拿個資
 	@Query(value = "select * from users where user_id = :userId", nativeQuery = true)

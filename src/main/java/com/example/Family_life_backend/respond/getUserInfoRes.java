@@ -10,9 +10,9 @@ public class getUserInfoRes extends BasicResponse {
 
 	private String avatar;
 
-	private boolean isNotifyByEndDate;
+	private boolean notifyByEndDate;
 
-	private boolean isNotifyByEmail;
+	private boolean notifyByEmail;
 
 	public Long getUserId() {
 		return userId;
@@ -47,19 +47,19 @@ public class getUserInfoRes extends BasicResponse {
 	}
 
 	public boolean isNotifyByEndDate() {
-		return isNotifyByEndDate;
+		return notifyByEndDate;
 	}
 
-	public void setNotifyByEndDate(boolean isNotifyByEndDate) {
-		this.isNotifyByEndDate = isNotifyByEndDate;
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
 	}
 
 	public boolean isNotifyByEmail() {
-		return isNotifyByEmail;
+		return notifyByEmail;
 	}
 
-	public void setNotifyByEmail(boolean isNotifyByEmail) {
-		this.isNotifyByEmail = isNotifyByEmail;
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 	public getUserInfoRes() {
@@ -72,15 +72,15 @@ public class getUserInfoRes extends BasicResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	public getUserInfoRes(String message, int code, Long userId, String name, String email, String avatar, boolean isNotifyByEndDate,
-			boolean isNotifyByEmail) {
+	public getUserInfoRes(String message, int code, Long userId, String name, String email, String avatar, boolean notifyByEndDate,
+			boolean notifyByEmail) {
 		super(message, code);
 		this.userId = userId;
 		this.name = name;
 		this.Email = email;
 		this.avatar = avatar;
-		this.isNotifyByEndDate = isNotifyByEndDate;
-		this.isNotifyByEmail = isNotifyByEmail;
+		this.notifyByEndDate = notifyByEndDate;
+		this.notifyByEmail = notifyByEmail;
 	}
 
 }

@@ -91,6 +91,7 @@ public class UserService {
 		String avatar = user.getAvatar() == null ? user.getAvatar() : user.getAvatar();
 		String now = LocalDateTime.now().toString();
 		String email = user.getEmail();
+		System.out.print("e: " + user.isNotifyByEndDate());
 		userInfoDao.updateInfo(user.getUserId(), userName, email, avatar, user.isNotifyByEndDate(), user.isNotifyByEmail(), now);
 
 		// 個人清單是否公開

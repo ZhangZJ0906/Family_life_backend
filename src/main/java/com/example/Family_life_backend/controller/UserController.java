@@ -49,6 +49,8 @@ public class UserController {
 	/* 變更資料*/
     @PostMapping("/update_info")
     public BasicRes updateInfo(@RequestBody UpdateUserAllReq req) {
+        System.out.println(req.getUserInfo().isNotifyByEndDate());
+
         return userService.updateInfo(req);
     }
     
