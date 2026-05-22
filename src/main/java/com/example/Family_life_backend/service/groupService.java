@@ -63,13 +63,15 @@ public class groupService {
 
 		group saved = groupRepository.save(group);
 
-		groupMemberDao.insert(saved.getGroupId(), saved.getCreatedBy(), 0, self_name);
+		groupMemberDao.insert(saved.getGroupId(), saved.getCreatedBy(), 0);
 
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
 	public GetGroupRes getList(Long user_id) {
-		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getAll(user_id));
+		System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
+		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id)
+				, groupDao.getMyGroupsPublicInventory(user_id));
 	}
 
 	@Transactional

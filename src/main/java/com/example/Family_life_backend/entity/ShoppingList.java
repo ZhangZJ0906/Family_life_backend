@@ -20,7 +20,7 @@ public class ShoppingList {
 	private int id;
 	
 	@Column(name = "group_id")
-	private int group_id;
+	private Integer group_id;
 
 	@NotBlank
 	@Column(name = "title")
@@ -41,11 +41,11 @@ public class ShoppingList {
 		this.id = id;
 	}
 
-	public int getGroup_id() {
+	public Integer getGroup_id() {
 		return group_id;
 	}
 
-	public void setGroup_id(int group_id) {
+	public void setGroup_id(Integer group_id) {
 		this.group_id = group_id;
 	}
 

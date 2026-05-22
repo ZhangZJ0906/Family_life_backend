@@ -71,7 +71,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, userId, 0, groupDao.getSelfName(userId));
+		groupMemberDao.insert(groupId, userId, 0);
 		notifyDao.isReadNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("accepted", userId, notifyId);
@@ -108,7 +108,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, req.getUserId(), 0, groupDao.getSelfName(req.getUserId()));
+		groupMemberDao.insert(groupId, req.getUserId(), 0);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 

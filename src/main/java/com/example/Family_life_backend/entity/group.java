@@ -30,6 +30,7 @@ public class group {
     
     @Column(name = "creater", nullable = false)
     private String creater;
+    
     // ===== Getter / Setter =====
 
     public Long getGroupId() {

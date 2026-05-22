@@ -13,7 +13,8 @@ public enum ReplyMessage {
 	USER_INFO_ERROR (400, "User info Error"),//
 	TITLE_ERROR (400, "Title Error"),//
 	CREATOR_ID_ERROR (400, "Creator id Error"),//
-	PURCHASE_ITEM_ERROR (400, "Purchase item Error");//
+	PURCHASE_ITEM_ERROR (400, "Purchase item Error"),//
+	LIST_NOT_FOUND (404, "Shopping list not found");//
 
 	private int code;
 
