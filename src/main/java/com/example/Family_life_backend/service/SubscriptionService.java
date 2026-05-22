@@ -1,0 +1,249 @@
+package com.example.Family_life_backend.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.Family_life_backend.dao.SubscriptionDao;
+import com.example.Family_life_backend.request.AddSubscriptionReq;
+import com.example.Family_life_backend.request.UpdateSubscriptionReq;
+import com.example.Family_life_backend.response.SubscriptionRes;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.Family_life_backend.entity.Subscription;
+import com.example.Family_life_backend.vo.SubscriptionVo;
+
+@Service
+public class SubscriptionService {
+
+	
+
+	    @Autowired
+	    private SubscriptionDao subscriptionDao;
+
+	 // 查詢
+	    public SubscriptionRes getByGroup(Integer groupId) {
+	        if (groupId == null || groupId <= 0) {
+	            return new SubscriptionRes(400, "groupId 不可為空");
+	        }
+
+	        List<Subscription> subscriptionList = subscriptionDao.findByGroupId(groupId);
+
+	        List<SubscriptionVo> resultList = new ArrayList<>();
+
+	        for (Subscription sub : subscriptionList) {
+
+	            String status = getSubscriptionStatus(
+	                    sub.getTrialEndDate(),
+	                    sub.getNextBillingDate()
+	            );
+
+	            String remindMessage = getSubscriptionRemindMessage(
+	                    sub.getTrialEndDate(),
+	                    sub.getNextBillingDate()
+	            );
+
+	            SubscriptionVo vo = new SubscriptionVo(
+	                    sub.getId(),
+	                    sub.getGroupId(),
+	                    sub.getUserId(),
+	                    sub.getName(),
+	                    sub.getPrice(),
+	                    sub.getBillingCycle(),
+	                    sub.getPurchaseDate(),
+	                    sub.getTrialEndDate(),
+	                    sub.getNextBillingDate(),
+	                    status,
+	                    remindMessage,
+	                    sub.getNotify() == null ? true : sub.getNotify(),
+	                    sub.getNote()		
+	            );
+
+	            resultList.add(vo);
+	        }
+
+	        return new SubscriptionRes(200, "查詢成功", resultList);}
+
+	 // 新增
+	    public SubscriptionRes add(AddSubscriptionReq req) {
+	        if (req.getGroupId() == null || req.getGroupId() <= 0) {
+	            return new SubscriptionRes(400, "groupId 不可為空");
+	        }
+
+	        if (req.getUserId() == null || req.getUserId() <= 0) {
+	            return new SubscriptionRes(400, "userId 不可為空");
+	        }
+
+	        if (req.getName() == null || req.getName().isBlank()) {
+	            return new SubscriptionRes(400, "訂閱名稱不可為空");
+	        }
+
+	        if (req.getPrice() == null || req.getPrice() < 0) {
+	            return new SubscriptionRes(400, "價格不可小於 0");
+	        }
+
+	        if (req.getBillingCycle() == null || req.getBillingCycle().isBlank()) {
+	            return new SubscriptionRes(400, "扣款週期不可為空");
+	        }
+
+	        LocalDate nextBillingDate = calculateNextBillingDate(
+	                req.getTrialEndDate(),
+	                req.getBillingCycle()
+	        );
+
+	        if (nextBillingDate == null) {
+	            return new SubscriptionRes(400, "試用結束日不可為空");
+	        }
+
+	        subscriptionDao.addSubscription(
+	                req.getGroupId(),
+	                req.getUserId(),
+	                req.getName(),
+	                req.getPrice(),
+	                req.getBillingCycle(),
+	                nextBillingDate,
+	                req.getPurchaseDate(),
+	                req.getTrialEndDate(),
+	                req.getNotify() == null ? true : req.getNotify(),
+	                req.getNote()
+	        );
+
+	        return new SubscriptionRes(200, "新增成功");
+	    }
+	    
+	 // 修改
+	    public SubscriptionRes update(UpdateSubscriptionReq req) {
+	        if (req.getId() == null || req.getId() <= 0) {
+	            return new SubscriptionRes(400, "id 不可為空");
+	        }
+
+	        LocalDate nextBillingDate = calculateNextBillingDate(
+	                req.getTrialEndDate(),
+	                req.getBillingCycle()
+	        );
+
+	        if (nextBillingDate == null) {
+	            return new SubscriptionRes(400, "試用結束日不可為空");
+	        }
+
+	        int result = subscriptionDao.updateSubscription(
+	                req.getId(),
+	                req.getGroupId(),
+	                req.getUserId(),
+	                req.getName(),
+	                req.getPrice(),
+	                req.getBillingCycle(),
+	                nextBillingDate,
+	                req.getPurchaseDate(),
+	                req.getTrialEndDate(),
+	                req.getNotify() == null ? true : req.getNotify(),
+	                req.getNote()
+	        );
+
+	        if (result == 0) {
+	            return new SubscriptionRes(404, "查無此訂閱資料");
+	        }
+
+	        return new SubscriptionRes(200, "修改成功");
+	    }
+	    
+	 // 刪除訂閱
+	    public SubscriptionRes delete(Integer id) {
+	        if (id == null || id <= 0) {
+	            return new SubscriptionRes(400, "id 不可為空");
+	        }
+
+	        int result = subscriptionDao.deleteSubscription(id);
+
+	        if (result == 0) {
+	            return new SubscriptionRes(404, "查無此訂閱資料");
+	        }
+
+	        return new SubscriptionRes(200, "刪除成功");
+	    }
+	    
+	 // 判斷訂閱狀態
+	    private String getSubscriptionStatus(LocalDate trialEndDate, LocalDate nextBillingDate) {
+	        LocalDate today = LocalDate.now();
+
+	        if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+	            long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+
+	            if (daysLeft <= 3) {
+	                return "試用即將結束";
+	            }
+
+	            return "試用中";
+	        }
+
+	        if (nextBillingDate != null) {
+	            long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+
+	            if (daysLeft < 0) {
+	                return "已逾期扣款";
+	            }
+
+	            if (daysLeft <= 3) {
+	                return "即將扣款";
+	            }
+
+	            return "正常";
+	        }
+
+	        return "未設定";
+	    }
+
+	    // 產生提醒文字
+	    private String getSubscriptionRemindMessage(LocalDate trialEndDate, LocalDate nextBillingDate) {
+	        LocalDate today = LocalDate.now();
+
+	        if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+	            long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+
+	            return "試用剩餘 " + daysLeft + " 天";
+	        }
+
+	        if (nextBillingDate != null) {
+	            long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+
+	            if (daysLeft < 0) {
+	                return "扣款日已過 " + Math.abs(daysLeft) + " 天";
+	            }
+
+	            return "距離扣款剩餘 " + daysLeft + " 天";
+	        }
+
+	        return "尚未設定提醒日期";
+	    }
+	    
+	 // 依照試用結束日 + 扣款週期，自動計算下次扣款日
+	    private LocalDate calculateNextBillingDate(LocalDate trialEndDate, String billingCycle) {
+
+	        if (trialEndDate == null) {
+	            return null;
+	        }
+
+	        if (billingCycle == null || billingCycle.isBlank()) {
+	            return trialEndDate;
+	        }
+
+	        switch (billingCycle) {
+	            case "每月":
+	                return trialEndDate.plusMonths(1);
+
+	            case "每季":
+	                return trialEndDate.plusMonths(3);
+
+	            case "每半年":
+	                return trialEndDate.plusMonths(6);
+
+	            case "每年":
+	                return trialEndDate.plusYears(1);
+
+	            default:
+	                return trialEndDate;
+	        }
+	    }
+	}

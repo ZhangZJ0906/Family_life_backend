@@ -11,12 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
 import com.example.Family_life_backend.req.groupMemberReq;
 import com.example.Family_life_backend.req.joinGroupReq;
 import com.example.Family_life_backend.respond.BasicResponse;
 import com.example.Family_life_backend.respond.GetGroupMemberRes;
 import com.example.Family_life_backend.respond.getInviteMembersRes;
 import com.example.Family_life_backend.respond.getNotifyRes;
+=======
+import com.example.Family_life_backend.request.groupMemberReq;
+import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
+import com.example.Family_life_backend.response.GetGroupMemberRes;
+import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getNotifyRes;
+>>>>>>> origin/ZJ
 import com.example.Family_life_backend.service.GroupMemberService;
 
 import jakarta.validation.Valid;
@@ -78,5 +88,11 @@ public class groupMemberController {
 	        @PathVariable("user_id") Long user_id
 	) {
 	    return groupMemberService.removeMember(group_id, user_id);
+	}
+
+	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	@GetMapping("getGroupList")
+	public GetGroupIdByUserIdRes getGroupIdList(@RequestParam("user_Id") Long userId) {
+		return groupMemberService.getGroupIdList(userId);
 	}
 }

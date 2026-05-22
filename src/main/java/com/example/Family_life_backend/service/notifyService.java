@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
-import com.example.Family_life_backend.req.UpdateAllNotifyReq;
-import com.example.Family_life_backend.respond.BasicResponse;
+import com.example.Family_life_backend.request.UpdateAllNotifyReq;
+import com.example.Family_life_backend.response.BasicResponse;
 
 @Service
 public class notifyService {

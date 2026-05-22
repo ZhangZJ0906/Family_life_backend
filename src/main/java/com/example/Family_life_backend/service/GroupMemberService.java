@@ -1,7 +1,8 @@
 package com.example.Family_life_backend.service;
 
-import java.io.Console;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+<<<<<<< HEAD
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.req.groupMemberReq;
 import com.example.Family_life_backend.req.joinGroupReq;
@@ -21,6 +23,15 @@ import com.example.Family_life_backend.respond.GetGroupMemberRes;
 import com.example.Family_life_backend.respond.getInviteMembersRes;
 import com.example.Family_life_backend.respond.getNotifyRes;
 import com.example.Family_life_backend.entity.notify;
+=======
+import com.example.Family_life_backend.request.groupMemberReq;
+import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
+import com.example.Family_life_backend.response.GetGroupMemberRes;
+import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getNotifyRes;
+>>>>>>> origin/ZJ
 
 @Service
 public class GroupMemberService {
@@ -137,5 +148,18 @@ public class GroupMemberService {
 	public GetGroupMemberRes getMemberList(Long groupId) {
 		return new GetGroupMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getMembersByGroupId(groupId));
+	}
+
+	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	public GetGroupIdByUserIdRes getGroupIdList(Long userId) {
+		List<Object[]> list = groupMemberDao.getGroupIdByUserId(userId);
+
+		Map<Long, String> idMap = list.stream()//
+				.filter(row -> row[0] != null)//
+				.collect(Collectors.toMap(//
+						row -> ((Number) row[0]).longValue(),
+						row -> row[1] != null ? row[1].toString() : "未命名群組"//
+				));
+		return new GetGroupIdByUserIdRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), idMap);
 	}
 }

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.Family_life_backend.respond.BasicResponse;
-import com.example.Family_life_backend.respond.CreateGroupReq;
-import com.example.Family_life_backend.respond.GetGroupRes;
+import com.example.Family_life_backend.request.CreateGroupReq;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupRes;
 import com.example.Family_life_backend.service.groupService;
 
 import jakarta.validation.Valid;

@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.Family_life_backend.entity.UserInfo;
-import com.example.Family_life_backend.respond.getUserInfoRes;
 
 import jakarta.transaction.Transactional;
 

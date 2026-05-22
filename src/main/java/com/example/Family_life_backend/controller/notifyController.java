@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Family_life_backend.req.UpdateAllNotifyReq;
-import com.example.Family_life_backend.respond.BasicResponse;
-import com.example.Family_life_backend.respond.CreateGroupReq;
+import com.example.Family_life_backend.request.CreateGroupReq;
+import com.example.Family_life_backend.request.UpdateAllNotifyReq;
+import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.service.notifyService;
 
 import jakarta.validation.Valid;

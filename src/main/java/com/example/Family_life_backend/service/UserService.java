@@ -16,8 +16,8 @@ import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserAllReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
-import com.example.Family_life_backend.respond.getUserInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
+import com.example.Family_life_backend.response.getUserInfoRes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,14 +38,14 @@ public class UserService {
 	public BasicRes addInfo(AddInfoReq req) {
 
 		if (userInfoDao.existsByEmail(req.getEmail())) {
-			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getCode(), ReplyMessage.EMAIL_EXISTS.getMessage());
+			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getMessage(), ReplyMessage.EMAIL_EXISTS.getCode());
 		}
 
 		String now = LocalDateTime.now().toString();
 		System.out.println(req.getEmail());
 		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar() , now);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
 	/* 登入 */
@@ -54,7 +54,13 @@ public class UserService {
 		UserInfo user = userInfoDao.getByEmail(email);
 
 		if (user == null) {
-			return new getUserInfoRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
+//			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(),
+//					ReplyMessage.EMAIL_NOT_FOUND.getCode());
+		}
+
+		if (!user.getPwd().equals(pwd)) {
+//			return new BasicRes(ReplyMessage.PASSWORD_ERROR.getMessage(),
+//					ReplyMessage.PASSWORD_ERROR.getCode());
 		}
 
 		if (!user.getPwd().equals(pwd)) {
@@ -62,7 +68,7 @@ public class UserService {
 		}
 
 		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
-				(long)user.getUserId(),user.getUserName(), user.getEmail(), user.getAvatar(), 
+				(long) user.getUserId(), user.getUserName(), user.getEmail(), user.getAvatar(),
 				user.isNotifyByEndDate(), user.isNotifyByEmail());
 	}
 
@@ -71,18 +77,20 @@ public class UserService {
 		UserInfo user = userInfoDao.getByEmail(req.getEmail());
 
 		if (user == null) {
-			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(), ReplyMessage.EMAIL_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getMessage(), ReplyMessage.USER_NOT_FOUND.getCode());
 		}
 		if (!user.getPwd().equals(req.getOldPwd())) {
-			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getCode(),
-					ReplyMessage.OLD_PASSWORD_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getMessage(),
+					ReplyMessage.OLD_PASSWORD_ERROR.getCode());
 		}
 
-		String now = LocalDateTime.now().toString();
-		userInfoDao.updatePwd(user.getUserId(), req.getNewPwd(), now);
+			String now = LocalDateTime.now().toString();
+			userInfoDao.updatePwd(user.getUserId(), req.getNewPwd(), now);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
-	}
+			return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+		}
+
+
 
 	/* 變更資料 */
 	public BasicRes updateInfo(UpdateUserAllReq req, MultipartFile avatarFile){
@@ -95,6 +103,7 @@ public class UserService {
 	            .findById(user.getUserId())
 	            .orElse(null);
 
+<<<<<<< HEAD
 	    if (userInfo == null) {
 	        return new BasicRes(
 	                ReplyMessage.USER_NOT_FOUND.getCode(),
@@ -176,13 +185,33 @@ public class UserService {
 	            ReplyMessage.SUCCESS.getCode(),
 	            ReplyMessage.SUCCESS.getMessage()
 	    );
+=======
+		if (userInfo == null) {
+			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getMessage(), ReplyMessage.USER_NOT_FOUND.getCode());
+		}
+
+		String userName = user.getUserName() == null ? userInfo.getUserName() : user.getUserName();
+		String avatar = user.getAvatar() == null ? user.getAvatar() : user.getAvatar();
+		String now = LocalDateTime.now().toString();
+		String email = user.getEmail();
+		System.out.print("e: " + user.isNotifyByEndDate());
+		userInfoDao.updateInfo(user.getUserId(), userName, email, avatar, user.isNotifyByEndDate(), user.isNotifyByEmail(), now);
+
+
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+>>>>>>> origin/ZJ
 	}
-	
 	public getUserInfoRes getUserInfo(Long userId) {
 		UserInfo userInfo = userInfoDao.getSelfInfoById(userId);
+<<<<<<< HEAD
 		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage() ,ReplyMessage.SUCCESS.getCode(),
 				(long)userInfo.getUserId(), userInfo.getUserName(), userInfo.getEmail(), userInfo.getAvatar(), 
 				userInfo.isNotifyByEndDate(), userInfo.isNotifyByEmail());
+=======
+		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
+				(long) userInfo.getUserId(), userInfo.getUserName(), userInfo.getEmail(), userInfo.getAvatar(),
+				userInfo.isNotifyByEmail(), userInfo.isNotifyByEndDate());
+>>>>>>> origin/ZJ
 	}
 
 }
