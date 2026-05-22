@@ -1,0 +1,164 @@
+11:07:24.528 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+11:07:24.580 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 29756 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:07:24.580 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:07:24.631 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+11:07:24.632 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+11:07:26.507 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:07:26.585 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 70 ms. Found 13 JPA repository interfaces.
+11:07:27.179 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:07:27.207 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:07:27.210 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:07:27.210 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:07:27.252 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:07:27.253 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2620 ms
+11:07:27.423 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:28.623 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:07:28.675 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+11:07:28.703 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:07:28.937 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:07:28.967 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:29.984 WARN  [restartedMain]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:29.985 ERROR [restartedMain]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:29.986 WARN  [restartedMain]o.h.e.jdbc.env.internal.JdbcEnvironmentInitiator - HHH000342: Could not obtain connection to query metadata
+org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection [Public Key Retrieval is not allowed] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:334)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:129)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:81)
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238)
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215)
+	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:226)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:194)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1442)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1513)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:388)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:364)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:974)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.example.Family_life_backend.FamilyLifeBackendApplication.main(FamilyLifeBackendApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.sql.SQLNonTransientConnectionException: Public Key Retrieval is not allowed
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:102)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:840)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:416)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:237)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:144)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:370)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:207)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:488)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:576)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:97)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:485)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61)
+	... 38 common frames omitted
+Caused by: com.mysql.cj.exceptions.UnableToConnectException: Public Key Retrieval is not allowed
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:76)
+	at com.mysql.cj.protocol.a.authentication.CachingSha2PasswordPlugin.nextAuthenticationStep(CachingSha2PasswordPlugin.java:122)
+	at com.mysql.cj.protocol.a.authentication.CachingSha2PasswordPlugin.nextAuthenticationStep(CachingSha2PasswordPlugin.java:40)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.proceedHandshakeWithPluggableAuthentication(NativeAuthenticationProvider.java:436)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.connect(NativeAuthenticationProvider.java:206)
+	at com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1334)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:155)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:964)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:828)
+	... 51 common frames omitted
+11:07:30.016 WARN  [restartedMain]org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+11:07:30.026 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (null)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:07:30.813 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:07:30.815 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:07:31.045 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+11:07:31.626 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:07:32.141 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:07:32.161 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:07:32.177 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:07:32.185 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 8.124 seconds (process running for 8.56)
+11:07:37.763 INFO  [http-nio-8080-exec-3]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:07:37.763 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:07:37.765 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+11:07:37.939 WARN  [http-nio-8080-exec-1]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource users/get_user_info.]
+11:07:37.999 INFO  [http-nio-8080-exec-2]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:38.324 WARN  [http-nio-8080-exec-5]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource users/get_user_info.]
+11:07:38.894 WARN  [http-nio-8080-exec-10]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource users/get_user_info.]
+11:07:39.015 INFO  [http-nio-8080-exec-9]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:39.015 WARN  [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:39.016 ERROR [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:39.039 WARN  [http-nio-8080-exec-2]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:40.026 WARN  [http-nio-8080-exec-9]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:40.026 INFO  [http-nio-8080-exec-8]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:40.026 ERROR [http-nio-8080-exec-9]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:40.033 WARN  [http-nio-8080-exec-9]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:41.043 INFO  [http-nio-8080-exec-7]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:41.043 WARN  [http-nio-8080-exec-8]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:41.043 ERROR [http-nio-8080-exec-8]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:41.045 WARN  [http-nio-8080-exec-8]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:42.061 INFO  [http-nio-8080-exec-6]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:42.061 WARN  [http-nio-8080-exec-7]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:42.061 ERROR [http-nio-8080-exec-7]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:42.063 WARN  [http-nio-8080-exec-7]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:43.075 INFO  [http-nio-8080-exec-4]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:43.075 WARN  [http-nio-8080-exec-6]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:43.075 ERROR [http-nio-8080-exec-6]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:43.077 WARN  [http-nio-8080-exec-6]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:44.087 WARN  [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:44.087 ERROR [http-nio-8080-exec-4]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:44.087 INFO  [http-nio-8080-exec-3]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:44.092 WARN  [http-nio-8080-exec-4]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:45.106 INFO  [http-nio-8080-exec-1]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:45.106 WARN  [http-nio-8080-exec-3]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:45.111 ERROR [http-nio-8080-exec-3]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:45.119 WARN  [http-nio-8080-exec-3]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:46.121 WARN  [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:46.122 ERROR [http-nio-8080-exec-1]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:46.125 WARN  [http-nio-8080-exec-1]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:57.359 INFO  [http-nio-8080-exec-2]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:57.363 WARN  [http-nio-8080-exec-5]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource users/get_user_info.]
+11:07:57.368 WARN  [http-nio-8080-exec-9]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource users/get_user_info.]
+11:07:58.368 INFO  [http-nio-8080-exec-10]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:07:58.368 WARN  [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:58.369 ERROR [http-nio-8080-exec-2]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:58.371 WARN  [http-nio-8080-exec-2]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
+11:07:59.387 WARN  [http-nio-8080-exec-10]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 08001
+11:07:59.388 ERROR [http-nio-8080-exec-10]org.hibernate.engine.jdbc.spi.SqlExceptionHelper - Public Key Retrieval is not allowed
+11:07:59.392 WARN  [http-nio-8080-exec-10]o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.dao.DataAccessResourceFailureException: Unable to acquire JDBC Connection [Public Key Retrieval is not allowed] [n/a]]
