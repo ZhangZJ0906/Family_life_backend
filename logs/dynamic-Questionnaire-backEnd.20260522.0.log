@@ -341,3 +341,43 @@
 10:36:20.656 INFO  [http-nio-8080-exec-1]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 10:36:20.657 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 10:36:20.658 INFO  [http-nio-8080-exec-1]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+11:22:12.234 INFO  [background-preinit]org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.3.Final
+11:22:12.289 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Starting FamilyLifeBackendApplication using Java 21.0.8 with PID 3488 (C:\Users\billc\Desktop\Family_life_backend\bin\main started by leo in C:\Users\billc\Desktop\Family_life_backend)
+11:22:12.290 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - No active profile set, falling back to 1 default profile: "default"
+11:22:12.339 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+11:22:12.339 INFO  [restartedMain]o.s.b.d.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+11:22:13.050 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+11:22:13.114 INFO  [restartedMain]o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 58 ms. Found 7 JPA repository interfaces.
+11:22:13.724 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+11:22:13.744 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+11:22:13.746 INFO  [restartedMain]org.apache.catalina.core.StandardService - Starting service [Tomcat]
+11:22:13.746 INFO  [restartedMain]org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.54]
+11:22:13.795 INFO  [restartedMain]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+11:22:13.796 INFO  [restartedMain]o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1456 ms
+11:22:13.993 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+11:22:14.153 INFO  [restartedMain]com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7358f016
+11:22:14.155 INFO  [restartedMain]com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+11:22:14.188 INFO  [restartedMain]org.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+11:22:14.234 INFO  [restartedMain]org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.50.Final
+11:22:14.264 INFO  [restartedMain]o.hibernate.cache.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+11:22:14.513 INFO  [restartedMain]o.s.o.j.persistenceunit.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+11:22:14.600 WARN  [restartedMain]org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+11:22:14.614 INFO  [restartedMain]org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+11:22:15.348 INFO  [restartedMain]o.h.e.t.jta.platform.internal.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+11:22:15.351 INFO  [restartedMain]o.s.orm.jpa.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+11:22:15.540 INFO  [restartedMain]o.s.data.jpa.repository.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+11:22:15.759 WARN  [restartedMain]o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+11:22:16.084 INFO  [restartedMain]o.s.b.d.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+11:22:16.095 INFO  [restartedMain]org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+11:22:16.123 INFO  [restartedMain]o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+11:22:16.131 INFO  [restartedMain]c.e.F.FamilyLifeBackendApplication - Started FamilyLifeBackendApplication in 4.353 seconds (process running for 4.736)
+11:22:20.773 INFO  [http-nio-8080-exec-3]o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+11:22:20.773 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+11:22:20.775 INFO  [http-nio-8080-exec-3]org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
