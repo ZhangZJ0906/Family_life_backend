@@ -35,7 +35,7 @@ public class UserController {
      
     /* 登入 */
     @GetMapping (value = "/login")
-	public BasicRes login(@RequestParam ("email") String email,//
+	public getUserInfoRes login(@RequestParam ("email") String email,//
 										@RequestParam("password") String pwd) {
 		return userService.login(email, pwd);
 	}

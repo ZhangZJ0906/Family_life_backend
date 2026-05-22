@@ -41,19 +41,21 @@ public class UserService {
 	}
 
 	/* 登入 */
-	public BasicRes login(String email, String pwd) {
+	public getUserInfoRes login(String email, String pwd) {
 
 		UserInfo user = userInfoDao.getByEmail(email);
 
 		if (user == null) {
-			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(), ReplyMessage.EMAIL_NOT_FOUND.getMessage());
+			return new getUserInfoRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
 		}
 
 		if (!user.getPwd().equals(pwd)) {
-			return new BasicRes(ReplyMessage.PASSWORD_ERROR.getCode(), ReplyMessage.PASSWORD_ERROR.getMessage());
+			return new getUserInfoRes(ReplyMessage.PASSWORD_ERROR.getMessage(), ReplyMessage.PASSWORD_ERROR.getCode());
 		}
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
+				(long)user.getUserId(),user.getUserName(), user.getEmail(), user.getAvatar(), 
+				user.isNotifyByEndDate(), user.isNotifyByEmail());
 	}
 
 	/* 更改密碼 */
