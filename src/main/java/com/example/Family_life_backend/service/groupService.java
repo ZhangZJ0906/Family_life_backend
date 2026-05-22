@@ -63,7 +63,9 @@ public class groupService {
 	}
 
 	public GetGroupRes getList(Long user_id) {
-		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getAll(user_id));
+		System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
+		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id)
+				, groupDao.getMyGroupsPublicInventory(user_id));
 	}
 
 	@Transactional

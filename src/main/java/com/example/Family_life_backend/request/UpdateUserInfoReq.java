@@ -12,8 +12,12 @@ public class UpdateUserInfoReq {
 	private String userName;
 
 	private String avatar;
+	
+	private String email;
 
-	private boolean notify;
+	private boolean notifyByEndDate;
+
+	private boolean notifyByEmail;
 
 	public int getUserId() {
 		return userId;
@@ -39,12 +43,28 @@ public class UpdateUserInfoReq {
 		this.avatar = avatar;
 	}
 
-	public boolean isNotify() {
-		return notify;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setNotify(boolean notify) {
-		this.notify = notify;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isNotifyByEndDate() {
+		return notifyByEndDate;
+	}
+
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
+	}
+
+	public boolean isNotifyByEmail() {
+		return notifyByEmail;
+	}
+
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 }

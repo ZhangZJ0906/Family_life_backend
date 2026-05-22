@@ -1,22 +1,22 @@
 package com.example.Family_life_backend.dao;
 
-import java.time.LocalDate;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import com.example.Family_life_backend.entity.ShoppingList;
 
-import jakarta.transaction.Transactional;
-
 public interface ShoppingListDao extends JpaRepository<ShoppingList, Integer> {
 
-	@Modifying
-	@Transactional
-	@Query(value = "insert into quiz (title, description, start_date, end_date, published)"
-			+ "values (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
-	public void insert(String title, String description, LocalDate startDate, LocalDate endDate, boolean pulished);
+//	/* 新增清單 */
+//	@Modifying
+//	@Transactional
+//	@Query(value = "insert into shopping_lists (group_id, title, created_by_id, created_at) "
+//			+ "values (?1, ?2, ?3, ?4)", nativeQuery = true)
+//	public void insert(int groupId, String title, int createrId, LocalDate createdDate);
+//	
+//	
+//	@Modifying
+//	@Transactional
+//	@Query(value = "delete  from shopping_lists where id = ?1", nativeQuery = true)
+//	public void deleteById(int listId);
 
-	
 }

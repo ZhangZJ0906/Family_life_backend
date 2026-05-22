@@ -15,7 +15,7 @@ public class UserInfo {
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@Column(name = "id")
+	@Column(name = "user_id")
 	private int userId;
 
 	@Column(name = "name")
@@ -30,13 +30,16 @@ public class UserInfo {
 	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "is_notify")
-	private boolean notify;
+	@Column(name = "is_notify_by_enddate")
+	private boolean notifyByEndDate;
+	
+	@Column(name = "is_notify_by_email")
+	private boolean notifyByEmail;
 
 	@Column(name = "created_at")
 	private LocalDate createdDate;
 
-	@Column(name = "update_at")
+	@Column(name = "updated_at")
 	private LocalDate updateDate;
 
 	public int getUserId() {
@@ -79,12 +82,20 @@ public class UserInfo {
 		this.avatar = avatar;
 	}
 
-	public boolean isNotify() {
-		return notify;
+	public boolean isNotifyByEndDate() {
+		return notifyByEndDate;
 	}
 
-	public void setNotify(boolean notify) {
-		this.notify = notify;
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
+	}
+
+	public boolean isNotifyByEmail() {
+		return notifyByEmail;
+	}
+
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 	public LocalDate getCreatedDate() {

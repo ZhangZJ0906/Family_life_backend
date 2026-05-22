@@ -4,12 +4,10 @@ import java.time.LocalDate;
 
 import com.example.Family_life_backend.constants.ValidMessage;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class PurchaseItemVo {
 
-	@Min(value = 1, message = ValidMessage.PURCHASE_ID_ERROR)
 	private int id;
 
 	private int listId;
@@ -25,7 +23,6 @@ public class PurchaseItemVo {
 	@NotBlank(message = ValidMessage.ITEM_IS_BLANK)
 	private String item;
 
-	@Min(value = 1, message = ValidMessage.QUANTITY_IS_NULL)
 	private int quantity;
 	
 	private boolean check;
