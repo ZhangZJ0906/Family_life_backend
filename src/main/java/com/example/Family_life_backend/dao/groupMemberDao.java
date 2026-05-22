@@ -22,18 +22,10 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-<<<<<<< HEAD
 		    insert into invited_members (user_id, group_id) values (:getUserId, :groupId)
 		""", nativeQuery = true)
 	public void addToInviteMember(@Param("getUserId") Long getUserId,  @Param("groupId") Long groupId);
 	
-=======
-			    insert into invited_members (user_id, group_id, name, avatar) values (:getUserId, :groupId, :name, :avatar)
-			""", nativeQuery = true)
-	public void addToInviteMember(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId,
-			@Param("name") String name, @Param("avatar") String avatar);
-
->>>>>>> origin/ZJ
 	@Query(value = "select count(*) from invited_members where user_id = :getUserId and group_id = :groupId", nativeQuery = true)
 	public int isInvite(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId);
 
@@ -140,7 +132,6 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			  AND n.type in ('group', 'update')
 
 			ORDER BY sendDate DESC;
-<<<<<<< HEAD
 		    """, nativeQuery = true)
 		public List<UserNotifyDTO> getNotifyList(
 		    @Param("user_id") Long user_id
@@ -159,14 +150,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	    WHERE im.group_id = ?1
 	    """, nativeQuery = true)
 	public List<invitedMembersDTO> getInvitedMemberList(@Param("groupId") Long groupId);
-=======
-			   """, nativeQuery = true)
-	public List<UserNotifyDTO> getNotifyList(@Param("user_id") Long user_id);
-
-	@Query(value = "select * from invited_members where group_id = :groupId", nativeQuery = true)
-	public List<invitedMembers> getInvitedMemberList(@Param("groupId") Long groupId);
->>>>>>> origin/ZJ
-
+			
 	@Query(value = """
 			 SELECT
 			     gm.group_id as group_id,

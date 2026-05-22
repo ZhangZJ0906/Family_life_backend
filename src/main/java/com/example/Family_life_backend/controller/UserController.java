@@ -11,6 +11,7 @@ import com.example.Family_life_backend.entity.PublicInventoryItem;
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserAllReq;
+import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.getUserInfoRes;
 import com.example.Family_life_backend.service.UserService;
