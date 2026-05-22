@@ -9,11 +9,11 @@ public class LoginRes extends BasicRes {
 	}
 
 	public LoginRes(int code, String message) {
-		super(code, message);
+		super(message, code);
 	}
 
 	public LoginRes(int code, String message, UserInfoRes user) {
-		super(code, message);
+		super(message, code);
 		this.user = user;
 	}
 

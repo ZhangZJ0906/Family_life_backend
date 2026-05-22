@@ -39,77 +39,77 @@ public class ShoppingListService {
 	@Transactional(rollbackOn = Exception.class)
 	public BasicRes create(CreateListReq req) {
 		if(req == null || req.getShoppingList() == null) {
-			return new BasicRes(ReplyMessage.TITLE_ERROR.getCode(), ReplyMessage.TITLE_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.TITLE_ERROR.getMessage(), ReplyMessage.TITLE_ERROR.getCode());
 		}
 
 		ShoppingList shoppingList = req.getShoppingList();
-		List<PurchaseItemVo> purchaseItemVoList = req.getPurchaseItemVoList();
-
 		BasicRes checkRes = checkShoppingList(shoppingList);
 		if(checkRes != null) {
 			return checkRes;
 		}
+
 		LocalDate now = LocalDate.now();
 		shoppingList.setCreatedDate(now);
 		ShoppingList savedShoppingList = shoppingListDao.save(shoppingList);
 
-		// Shopping lists can be created without items. Items are managed later from PurchaseItemComponent.
+		List<PurchaseItemVo> purchaseItemVoList = req.getPurchaseItemVoList();
 		if(CollectionUtils.isEmpty(purchaseItemVoList)) {
-			return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+			return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 		}
 
 		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(
 				savedShoppingList.getId(), shoppingList.getCreaterId(), purchaseItemVoList, now);
 		if(purchaseItemList.size() != purchaseItemVoList.size()) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 		purchaseItemDao.saveAll(purchaseItemList);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
 	/* 刪除購物清單 */
 	@Transactional(rollbackOn = Exception.class)
 	public BasicRes delete(int listId) {
 		if(!shoppingListDao.existsById(listId)) {
-			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getCode(), ReplyMessage.LIST_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getMessage(), ReplyMessage.LIST_NOT_FOUND.getCode());
 		}
 
 		purchaseItemDao.deleteByListId(listId);
 		shoppingListDao.deleteById(listId);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
 	/* 變更購物清單 */
 	public BasicRes updateList(CreateListReq req) {
 		if(req == null || req.getShoppingList() == null) {
-			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getCode(), ReplyMessage.LIST_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getMessage(), ReplyMessage.LIST_NOT_FOUND.getCode());
 		}
 
 		ShoppingList reqList = req.getShoppingList();
 		ShoppingList oldList = shoppingListDao.findById(reqList.getId()).orElse(null);
 
 		if(oldList == null) {
-			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getCode(), ReplyMessage.LIST_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getMessage(), ReplyMessage.LIST_NOT_FOUND.getCode());
 		}
 		if(!StringUtils.hasText(reqList.getTitle())) {
-			return new BasicRes(ReplyMessage.TITLE_ERROR.getCode(), ReplyMessage.TITLE_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.TITLE_ERROR.getMessage(), ReplyMessage.TITLE_ERROR.getCode());
 		}
 
 		oldList.setTitle(reqList.getTitle());
 		oldList.setGroup_id(reqList.getGroup_id());
 		shoppingListDao.save(oldList);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
-	/* 查看購物項目 */
+	/* 查看購物清單 */
 	public List<ShoppingList> getLists(int createrId) {
-		// Returns lists created by the login user for the frontend list selector.
 		return shoppingListDao.findByCreaterId(createrId);
 	}
 
+	/* 查看購物項目 */
 	public List<PurchaseItem> getItems(int listId) {
 		return purchaseItemDao.getByListId(listId);
 	}
@@ -117,56 +117,60 @@ public class ShoppingListService {
 	/* 在已有的購物清單裡增加購物項目 */
 	public BasicRes addItems(AddPurchaseItemReq req) {
 		if(req == null || !shoppingListDao.existsById(req.getListId())) {
-			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getCode(), ReplyMessage.LIST_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.LIST_NOT_FOUND.getMessage(), ReplyMessage.LIST_NOT_FOUND.getCode());
 		}
 		if(req.getCreaterId() <= 0 || !userInfoDao.existsById(req.getCreaterId())) {
-			return new BasicRes(ReplyMessage.CREATOR_ID_ERROR.getCode(), ReplyMessage.CREATOR_ID_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.CREATOR_ID_ERROR.getMessage(), ReplyMessage.CREATOR_ID_ERROR.getCode());
 		}
 		if(CollectionUtils.isEmpty(req.getPurchaseItemVoList())) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
 		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(
 				req.getListId(), req.getCreaterId(), req.getPurchaseItemVoList(), LocalDate.now());
 		if(purchaseItemList.size() != req.getPurchaseItemVoList().size()) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 		purchaseItemDao.saveAll(purchaseItemList);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
 	/* 刪除購物清單裡的購物項目 */
 	public BasicRes deleteItem(int listId, int itemId) {
 		PurchaseItemId purchaseItemId = new PurchaseItemId(itemId, listId);
 		if(!purchaseItemDao.existsById(purchaseItemId)) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
 		purchaseItemDao.deleteById(purchaseItemId);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
 	/* 勾選 / 取消勾選購物項目 */
 	public BasicRes updateCheck(int listId, int itemId, boolean check, int checkMan) {
 		if(!purchaseItemDao.existsById(new PurchaseItemId(itemId, listId))) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getCode(), ReplyMessage.PURCHASE_ITEM_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
 		LocalDate checkDate = check ? LocalDate.now() : null;
 		int checkedById = check ? checkMan : 0;
 		purchaseItemDao.updateCheck(listId, itemId, check, checkDate, checkedById);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
 	private BasicRes checkShoppingList(ShoppingList shoppingList) {
 		if(!StringUtils.hasText(shoppingList.getTitle())) {
-			return new BasicRes(ReplyMessage.TITLE_ERROR.getCode(), ReplyMessage.TITLE_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.TITLE_ERROR.getMessage(), ReplyMessage.TITLE_ERROR.getCode());
 		}
 		if(shoppingList.getCreaterId() <= 0 || !userInfoDao.existsById(shoppingList.getCreaterId())) {
-			return new BasicRes(ReplyMessage.CREATOR_ID_ERROR.getCode(), ReplyMessage.CREATOR_ID_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.CREATOR_ID_ERROR.getMessage(), ReplyMessage.CREATOR_ID_ERROR.getCode());
 		}
 		return null;
 	}

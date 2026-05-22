@@ -23,28 +23,26 @@ public class UserService {
 
 	/* 註冊 */
 	public BasicRes addInfo(AddInfoReq req) {
-
-		if (userInfoDao.existsByEmail(req.getEmail())) {
-			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getCode(), ReplyMessage.EMAIL_EXISTS.getMessage());
+		if(userInfoDao.existsByEmail(req.getEmail())) {
+			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getMessage(), ReplyMessage.EMAIL_EXISTS.getCode());
 		}
 
 		String now = LocalDateTime.now().toString();
 		userInfoDao.insert(req.getUserName(), req.getEmail(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
 	/* 登入 */
 	public LoginRes login(String email, String pwd) {
-		
 		UserInfo user = userInfoDao.getByEmail(email);
 
-		if (user == null) {
+		if(user == null) {
 			return new LoginRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(),
 					ReplyMessage.EMAIL_NOT_FOUND.getMessage());
 		}
 
-		if (!user.getPwd().equals(pwd)) {
+		if(!user.getPwd().equals(pwd)) {
 			return new LoginRes(ReplyMessage.PASSWORD_ERROR.getCode(),
 					ReplyMessage.PASSWORD_ERROR.getMessage());
 		}
@@ -58,24 +56,24 @@ public class UserService {
 		UserInfo user = userInfoDao.getByEmail(req.getEmail());
 
 		if(user == null) {
-			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getCode(), ReplyMessage.EMAIL_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
 		}
 		if(!user.getPwd().equals(req.getOldPwd())) {
-			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getCode(), ReplyMessage.OLD_PASSWORD_ERROR.getMessage());
+			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getMessage(), ReplyMessage.OLD_PASSWORD_ERROR.getCode());
 		}
 
 		String now = LocalDateTime.now().toString();
 		userInfoDao.updatePwd(user.getUserId(), req.getNewPwd(), now);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 	
-	/* 變更資料*/
+	/* 變更資料 */
 	public BasicRes updateInfo(UpdateUserInfoReq req) {
 		UserInfo user = userInfoDao.findById(req.getUserId()).orElse(null);
 
 		if(user == null) {
-			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getCode(), ReplyMessage.USER_NOT_FOUND.getMessage());
+			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getMessage(), ReplyMessage.USER_NOT_FOUND.getCode());
 		}
 
 		String userName = req.getUserName() == null ? user.getUserName() : req.getUserName();
@@ -83,7 +81,7 @@ public class UserService {
 		String now = LocalDateTime.now().toString();
 		userInfoDao.updateInfo(req.getUserId(), userName, avatar, req.isNotify(), now);
 
-		return new BasicRes(ReplyMessage.SUCCESS.getCode(), ReplyMessage.SUCCESS.getMessage());
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
 }
