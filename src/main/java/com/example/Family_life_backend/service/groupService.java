@@ -1,12 +1,12 @@
 package com.example.Family_life_backend.service;
 
-import java.time.LocalDate;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +18,11 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
-import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.group;
 import com.example.Family_life_backend.repositary.GroupRepository;
 import com.example.Family_life_backend.request.CreateGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.response.GetGroupRes;
-import com.example.Family_life_backend.vo.GroupMembersVo;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 @Service
 public class groupService {

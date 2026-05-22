@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Family_life_backend.request.groupMemberReq;
 import com.example.Family_life_backend.request.joinGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
 import com.example.Family_life_backend.response.getInvitedMemberRes;
 import com.example.Family_life_backend.response.getNotifyRes;
@@ -78,5 +79,11 @@ public class groupMemberController {
 	        @PathVariable("user_id") Long user_id
 	) {
 	    return groupMemberService.removeMember(group_id, user_id);
+	}
+
+	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	@GetMapping("getGroupList")
+	public GetGroupIdByUserIdRes getGroupIdList(@RequestParam("user_Id") Long userId) {
+		return groupMemberService.getGroupIdList(userId);
 	}
 }
