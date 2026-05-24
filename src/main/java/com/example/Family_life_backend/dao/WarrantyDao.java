@@ -24,10 +24,10 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	 @Transactional
 	 @Query(value = "INSERT INTO warranties "
 	         + "(group_id, user_id, product_name, brand, model, serial_number, "
-	         + "purchase_date, warranty_end_date, store_name, price, notify, note, status) "
+	         + "purchase_date, warranty_end_date, store_name, price, notify, note, status, remind_message) "
 	         + "VALUES "
 	         + "(:groupId, :userId, :productName, :brand, :model, :serialNumber, "
-	         + ":purchaseDate, :warrantyEndDate, :storeName, :price, :notify, :note, :status)",
+	         + ":purchaseDate, :warrantyEndDate, :storeName, :price, :notify, :note, :status, :remindMessage)",
 	         nativeQuery = true)
 	 int addWarranty(
 	         @Param("groupId") Integer groupId,
@@ -42,7 +42,8 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	         @Param("price") Integer price,
 	         @Param("notify") Boolean notify,
 	         @Param("note") String note,
-	         @Param("status") String status
+	         @Param("status") String status,
+	         @Param("remindMessage") String remindMessage
 	 );
 
 	    
@@ -62,7 +63,8 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	         + "price = :price, "
 	         + "notify = :notify, "
 	         + "note = :note, "
-	         + "status = :status "
+	         + "status = :status, "
+	         + "remind_message = :remindMessage "
 	         + "WHERE id = :id",
 	         nativeQuery = true)
 	 int updateWarranty(
@@ -79,7 +81,8 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	         @Param("price") Integer price,
 	         @Param("notify") Boolean notify,
 	         @Param("note") String note,
-	         @Param("status") String status
+	         @Param("status") String status,
+	         @Param("remindMessage") String remindMessage
 	 );
 
 	 // 刪除

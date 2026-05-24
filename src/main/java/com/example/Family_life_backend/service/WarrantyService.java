@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,7 @@ public class WarrantyService {
         }
 
         String status = calcWarrantyStatus(req.getWarrantyEndDate());
+        String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
 
         warrantyDao.addWarranty(
                 req.getGroupId(),
@@ -68,7 +70,8 @@ public class WarrantyService {
                 req.getPrice() != null ? req.getPrice() : 0,
                 req.getNotify() != null ? req.getNotify() : true,
                 req.getNote(),
-                status
+                status,
+                remindMessage
         );
 
         return new WarrantyRes(200, "新增成功");
@@ -96,7 +99,7 @@ public class WarrantyService {
         }
 
         String status = calcWarrantyStatus(req.getWarrantyEndDate());
-
+        String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
         int result = warrantyDao.updateWarranty(
                 req.getId(),
                 req.getGroupId(),
@@ -111,7 +114,8 @@ public class WarrantyService {
                 req.getPrice() != null ? req.getPrice() : 0,
                 req.getNotify() != null ? req.getNotify() : true,
                 req.getNote(),
-                status
+                status,
+                remindMessage
         );
 
         if (result == 0) {
@@ -147,5 +151,25 @@ public class WarrantyService {
         }
 
         return "正常";
+    }
+    
+    private String calcWarrantyRemindMessage(LocalDate warrantyEndDate) {
+        LocalDate today = LocalDate.now();
+
+        if (warrantyEndDate == null) {
+            return "";
+        }
+
+        long daysLeft = ChronoUnit.DAYS.between(today, warrantyEndDate);
+
+        if (daysLeft < 0) {
+            return "已過保 " + Math.abs(daysLeft) + " 天";
+        }
+
+        if (daysLeft <= 30) {
+            return "保固剩餘 " + daysLeft + " 天";
+        }
+
+        return "";
     }
     }

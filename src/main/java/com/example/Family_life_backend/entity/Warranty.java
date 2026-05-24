@@ -60,6 +60,9 @@ public class Warranty {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
+    @Column(name = "remind_message")
+    private String remindMessage;
+    
     
 
 	public Integer getId() {
@@ -182,6 +185,12 @@ public class Warranty {
 		this.createdAt = createdAt;
 	}
     
-    
+	public String getRemindMessage() {
+	    return remindMessage;
+	}
+
+	public void setRemindMessage(String remindMessage) {
+	    this.remindMessage = remindMessage;
+	}
 
 }

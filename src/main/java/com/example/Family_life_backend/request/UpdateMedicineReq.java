@@ -13,15 +13,16 @@ public class UpdateMedicineReq {
 	    private String unit;
 	    private Integer safeQuantity;
 	    private LocalDate purchaseDate;
-	    private LocalDate openDate;
+	    
 	    private LocalDate expireDate;
 	    private String dosage;
 	    private String usageMethod;
-	    private String frequency;
+	    
 	    private String location;
 	    private String source;
 	    private Boolean notify;
 	    private String note;
+	    private Integer unitPrice;
 
 	    public Integer getId() {
 	        return id;
@@ -59,9 +60,7 @@ public class UpdateMedicineReq {
 	        return purchaseDate;
 	    }
 
-	    public LocalDate getOpenDate() {
-	        return openDate;
-	    }
+	    
 
 	    public LocalDate getExpireDate() {
 	        return expireDate;
@@ -75,10 +74,7 @@ public class UpdateMedicineReq {
 	        return usageMethod;
 	    }
 
-	    public String getFrequency() {
-	        return frequency;
-	    }
-
+	  
 	    public String getLocation() {
 	        return location;
 	    }
@@ -93,5 +89,9 @@ public class UpdateMedicineReq {
 
 	    public String getNote() {
 	        return note;
+	    }
+	    
+	    public Integer getUnitPrice() {
+	        return unitPrice;
 	    }
 }

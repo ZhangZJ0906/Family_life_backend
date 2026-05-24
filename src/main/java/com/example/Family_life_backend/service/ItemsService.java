@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,6 +72,12 @@ public class ItemsService {
 	            req.getExpireDate()
 	    );
 
+	    String remindMessage = calcRemindMessage(
+	            req.getQuantity(),
+	            finalSafeQuantity,
+	            req.getExpireDate()
+	    );
+
 	    itemDao.insertItemNative(
 	            finalGroupId,
 	            req.getCategoryId(),
@@ -86,7 +93,8 @@ public class ItemsService {
 	            req.getUserId(),
 	            req.getUnitPrice(),
 	            finalSafeQuantity,
-	            status
+	            status,
+	            remindMessage
 	    );
 
 	    return new AddItemsInfoRes("成功", 200);
@@ -100,12 +108,19 @@ public class ItemsService {
 	    Integer finalSafeQuantity = req.getSafeQuantity() != null
 	            ? req.getSafeQuantity()
 	            : 0;
-
+	    
 	    String status = calcStatus(
 	            req.getQuantity(),
 	            finalSafeQuantity,
 	            req.getExpireDate()
 	    );
+
+	    String remindMessage = calcRemindMessage(
+	            req.getQuantity(),
+	            finalSafeQuantity,
+	            req.getExpireDate()
+	    );
+
 
 	    itemDao.updateItem(
 	            req.getId(),
@@ -122,7 +137,8 @@ public class ItemsService {
 	            req.getNote(),
 	            req.getUnitPrice(),
 	            finalSafeQuantity,
-	            status
+	            status,
+	            remindMessage
 	    );
 
 	    return new BasicRes("成功", 200);
@@ -162,6 +178,28 @@ public class ItemsService {
 	    }
 
 	    return "正常";
+	}
+	
+	private String calcRemindMessage(Integer quantity, Integer safeQuantity, LocalDate expireDate) {
+	    LocalDate today = LocalDate.now();
+
+	    if (expireDate != null) {
+	        long daysLeft = ChronoUnit.DAYS.between(today, expireDate);
+
+	        if (daysLeft < 0) {
+	            return "已過期 " + Math.abs(daysLeft) + " 天";
+	        }
+
+	        if (daysLeft <= 7) {
+	            return "剩餘 " + daysLeft + " 天";
+	        }
+	    }
+
+	    if (quantity != null && safeQuantity != null && quantity <= safeQuantity) {
+	        return "目前庫存低於安全庫存";
+	    }
+
+	    return "";
 	}
 	
 }

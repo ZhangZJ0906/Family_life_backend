@@ -35,15 +35,18 @@ public class Medicine {
     
     @Column(name = "unit")
     private String unit;
+    
+    @Column(name = "unit_price")
+    private Integer unitPrice;
+
+    @Column(name = "price")
+    private Integer price;
 
     @Column(name = "safe_quantity")
     private Integer safeQuantity;
 
     @Column(name = "purchase_date")
     private LocalDate purchaseDate;
-
-    @Column(name = "open_date")
-    private LocalDate openDate;
 
     @Column(name = "expire_date")
     private LocalDate expireDate;
@@ -53,9 +56,6 @@ public class Medicine {
 
     @Column(name = "usage_method")
     private String usageMethod;
-
-    @Column(name = "frequency")
-    private String frequency;
     
     @Column(name = "location")
     private String location;
@@ -74,6 +74,9 @@ public class Medicine {
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
+    
+    @Column(name = "remind_message")
+    private String remindMessage;
     
     public Medicine() {
     }
@@ -150,13 +153,7 @@ public class Medicine {
 		this.purchaseDate = purchaseDate;
 	}
 
-	public LocalDate getOpenDate() {
-		return openDate;
-	}
 
-	public void setOpenDate(LocalDate openDate) {
-		this.openDate = openDate;
-	}
 
 	public LocalDate getExpireDate() {
 		return expireDate;
@@ -182,13 +179,6 @@ public class Medicine {
 		this.usageMethod = usageMethod;
 	}
 
-	public String getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
 
 	public String getLocation() {
 		return location;
@@ -238,6 +228,28 @@ public class Medicine {
 		this.createdAt = createdAt;
 	}
     
-    
+	public Integer getUnitPrice() {
+	    return unitPrice;
+	}
+
+	public void setUnitPrice(Integer unitPrice) {
+	    this.unitPrice = unitPrice;
+	}
+
+	public Integer getPrice() {
+	    return price;
+	}
+
+	public void setPrice(Integer price) {
+	    this.price = price;
+	}
+	
+	public String getRemindMessage() {
+	    return remindMessage;
+	}
+
+	public void setRemindMessage(String remindMessage) {
+	    this.remindMessage = remindMessage;
+	}
 
 }

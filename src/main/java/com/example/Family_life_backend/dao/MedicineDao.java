@@ -23,12 +23,12 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
     @Transactional
     @Query(value = "INSERT INTO medicines "
             + "(group_id, user_id, name, medicine_type, quantity, unit, safe_quantity, "
-            + "purchase_date, open_date, expire_date, dosage, usage_method, frequency, "
-            + "location, source, notify, note, status) "
+            + "purchase_date, expire_date, dosage, usage_method, "
+            + "location, source, notify, note, unit_price, price, status, remind_message) "
             + "VALUES "
             + "(:groupId, :userId, :name, :medicineType, :quantity, :unit, :safeQuantity, "
-            + ":purchaseDate, :openDate, :expireDate, :dosage, :usageMethod, :frequency, "
-            + ":location, :source, :notify, :note, :status)",
+            + ":purchaseDate, :expireDate, :dosage, :usageMethod, "
+            + ":location, :source, :notify, :note, :unitPrice, :price, :status, :remindMessage)",
             nativeQuery = true)
     int addMedicine(
             @Param("groupId") Integer groupId,
@@ -39,17 +39,19 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
             @Param("unit") String unit,
             @Param("safeQuantity") Integer safeQuantity,
             @Param("purchaseDate") LocalDate purchaseDate,
-            @Param("openDate") LocalDate openDate,
             @Param("expireDate") LocalDate expireDate,
             @Param("dosage") String dosage,
             @Param("usageMethod") String usageMethod,
-            @Param("frequency") String frequency,
             @Param("location") String location,
             @Param("source") String source,
             @Param("notify") Boolean notify,
             @Param("note") String note,
-            @Param("status") String status
-    );
+            @Param("unitPrice") Integer unitPrice,
+            @Param("price") Integer price,
+            @Param("status") String status,
+            @Param("remindMessage") String remindMessage
+    		);
+    	
 
     
     //修改
@@ -64,16 +66,17 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
             + "unit = :unit, "
             + "safe_quantity = :safeQuantity, "
             + "purchase_date = :purchaseDate, "
-            + "open_date = :openDate, "
             + "expire_date = :expireDate, "
             + "dosage = :dosage, "
             + "usage_method = :usageMethod, "
-            + "frequency = :frequency, "
             + "location = :location, "
             + "source = :source, "
             + "notify = :notify, "
             + "note = :note, "
-            + "status = :status "
+            + "unit_price = :unitPrice, "
+            + "price = :price, "
+            + "status = :status, "
+            + "remind_message = :remindMessage "
             + "WHERE id = :id",
             nativeQuery = true)
     int updateMedicine(
@@ -86,18 +89,18 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
             @Param("unit") String unit,
             @Param("safeQuantity") Integer safeQuantity,
             @Param("purchaseDate") LocalDate purchaseDate,
-            @Param("openDate") LocalDate openDate,
             @Param("expireDate") LocalDate expireDate,
             @Param("dosage") String dosage,
             @Param("usageMethod") String usageMethod,
-            @Param("frequency") String frequency,
             @Param("location") String location,
             @Param("source") String source,
             @Param("notify") Boolean notify,
             @Param("note") String note,
-            @Param("status") String status
+            @Param("unitPrice") Integer unitPrice,
+            @Param("price") Integer price,
+            @Param("status") String status,
+            @Param("remindMessage") String remindMessage
     );
-
     //刪除
     @Modifying
     @Transactional

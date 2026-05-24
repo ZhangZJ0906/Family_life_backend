@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,34 +49,40 @@ public class MedicineService {
         if (req.getPurchaseDate() != null && req.getPurchaseDate().isAfter(req.getExpireDate())) {
             return new MedicineRes(400, "購買日期不可晚於到期日期");
         }
-
-        if (req.getOpenDate() != null && req.getOpenDate().isAfter(req.getExpireDate())) {
-            return new MedicineRes(400, "開封日期不可晚於到期日期");
+        
+        if (req.getUnit() == null || req.getUnit().isBlank()) {
+            return new MedicineRes(400, "單位不可為空");
         }
+
+        
 
         Integer quantity = req.getQuantity() != null ? req.getQuantity() : 0;
         Integer safeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
         String status = calcMedicineStatus(quantity, safeQuantity, req.getExpireDate());
+        Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
+        Integer price = quantity * unitPrice;
+        String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
 
         medicineDao.addMedicine(
-                req.getGroupId(),
-                req.getUserId(),
-                req.getName(),
-                req.getMedicineType(),
-                quantity,
-                req.getUnit(),
-                safeQuantity,
-                req.getPurchaseDate(),
-                req.getOpenDate(),
-                req.getExpireDate(),
-                req.getDosage(),
-                req.getUsageMethod(),
-                req.getFrequency(),
-                req.getLocation(),
-                req.getSource(),
-                req.getNotify() != null ? req.getNotify() : true,
-                req.getNote(),
-                status
+        		 req.getGroupId(),
+        	        req.getUserId(),
+        	        req.getName(),
+        	        req.getMedicineType(),
+        	        quantity,
+        	        req.getUnit(),
+        	        safeQuantity,
+        	        req.getPurchaseDate(),
+        	        req.getExpireDate(),
+        	        req.getDosage(),
+        	        req.getUsageMethod(),
+        	        req.getLocation(),
+        	        req.getSource(),
+        	        req.getNotify() != null ? req.getNotify() : true,
+        	        req.getNote(),
+        	        unitPrice,
+        	        price,
+        	        status,
+        	        remindMessage
         );
 
         return new MedicineRes(200, "新增成功");
@@ -97,35 +104,42 @@ public class MedicineService {
         if (req.getPurchaseDate() != null && req.getPurchaseDate().isAfter(req.getExpireDate())) {
             return new MedicineRes(400, "購買日期不可晚於到期日期");
         }
-
-        if (req.getOpenDate() != null && req.getOpenDate().isAfter(req.getExpireDate())) {
-            return new MedicineRes(400, "開封日期不可晚於到期日期");
+        
+        if (req.getUnit() == null || req.getUnit().isBlank()) {
+            return new MedicineRes(400, "單位不可為空");
         }
+
+       
 
         Integer quantity = req.getQuantity() != null ? req.getQuantity() : 0;
         Integer safeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
         String status = calcMedicineStatus(quantity, safeQuantity, req.getExpireDate());
+        Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
+        Integer price = quantity * unitPrice;
+        String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
+
 
         int result = medicineDao.updateMedicine(
-                req.getId(),
-                req.getGroupId(),
-                req.getUserId(),
-                req.getName(),
-                req.getMedicineType(),
-                quantity,
-                req.getUnit(),
-                safeQuantity,
-                req.getPurchaseDate(),
-                req.getOpenDate(),
-                req.getExpireDate(),
-                req.getDosage(),
-                req.getUsageMethod(),
-                req.getFrequency(),
-                req.getLocation(),
-                req.getSource(),
-                req.getNotify() != null ? req.getNotify() : true,
-                req.getNote(),
-                status
+        		 req.getId(),
+        	        req.getGroupId(),
+        	        req.getUserId(),
+        	        req.getName(),
+        	        req.getMedicineType(),
+        	        quantity,
+        	        req.getUnit(),
+        	        safeQuantity,
+        	        req.getPurchaseDate(),
+        	        req.getExpireDate(),
+        	        req.getDosage(),
+        	        req.getUsageMethod(),
+        	        req.getLocation(),
+        	        req.getSource(),
+        	        req.getNotify() != null ? req.getNotify() : true,
+        	        req.getNote(),
+        	        unitPrice,
+        	        price,
+        	        status,
+        	        remindMessage
         );
 
         if (result == 0) {
@@ -165,5 +179,27 @@ public class MedicineService {
         }
 
         return "正常";
+    }
+    
+    private String calcMedicineRemindMessage(Integer quantity, Integer safeQuantity, LocalDate expireDate) {
+        LocalDate today = LocalDate.now();
+
+        if (expireDate != null) {
+            long daysLeft = ChronoUnit.DAYS.between(today, expireDate);
+
+            if (daysLeft < 0) {
+                return "已過期 " + Math.abs(daysLeft) + " 天";
+            }
+
+            if (daysLeft <= 30) {
+                return "剩餘 " + daysLeft + " 天";
+            }
+        }
+
+        if (quantity != null && safeQuantity != null && quantity <= safeQuantity) {
+            return "目前藥品低於安全庫存";
+        }
+
+        return "";
     }
 }
