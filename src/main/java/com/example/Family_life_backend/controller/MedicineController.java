@@ -24,8 +24,8 @@ public class MedicineController {
     private MedicineService medicineService;
 
     @GetMapping("/getByGroup")
-    public MedicineRes getByGroup(@RequestParam("groupId") Integer groupId) {
-        return medicineService.getByGroup(groupId);
+    public MedicineRes getByGroup(@RequestParam("groupId") Integer groupId, @RequestParam("userId") Long userId) {
+        return medicineService.getByGroup(groupId, userId);
     }
 
     @PostMapping("/add")

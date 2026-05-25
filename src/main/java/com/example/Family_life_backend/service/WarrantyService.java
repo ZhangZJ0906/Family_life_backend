@@ -2,174 +2,165 @@ package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
+import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.WarrantyDao;
+import com.example.Family_life_backend.dao.groupDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.request.AddWarrantyReq;
 import com.example.Family_life_backend.request.UpdateWarrantyReq;
+import com.example.Family_life_backend.response.MedicineRes;
 import com.example.Family_life_backend.response.WarrantyRes;
 
 @Service
 public class WarrantyService {
 
-    @Autowired
-    private WarrantyDao warrantyDao;
+	@Autowired
+	private WarrantyDao warrantyDao;
 
-    public WarrantyRes getByGroup(Integer groupId) {
-        if (groupId == null || groupId <= 0) {
-            return new WarrantyRes(400, "groupId 不可為空");
-        }
+	@Autowired
+	private ItemsDao itemDao;
 
-        return new WarrantyRes(
-                200,
-                "查詢成功",
-                warrantyDao.findByGroupId(groupId)
-        );
-    }
+	@Autowired
+	private groupMemberDao groupMemberDao;
 
-    public WarrantyRes add(AddWarrantyReq req) {
-        if (req.getGroupId() == null || req.getGroupId() <= 0) {
-            return new WarrantyRes(400, "groupId 不可為空");
-        }
+	@Autowired
+	private groupDao groupDao;
 
-        if (req.getUserId() == null || req.getUserId() <= 0) {
-            return new WarrantyRes(400, "userId 不可為空");
-        }
+	public WarrantyRes getByGroup(Integer groupId, Long userId) {
+//        if (groupId == null || groupId <= 0) {
+//            return new WarrantyRes(400, "groupId 不可為空");
+//        }
 
-        if (req.getProductName() == null || req.getProductName().isBlank()) {
-            return new WarrantyRes(400, "產品名稱不可為空");
-        }
+		if (groupId == 0) {
+			return new WarrantyRes(200, "查詢成功", warrantyDao.findBySelfId(userId));
+		}
 
-        if (req.getPurchaseDate() == null) {
-            return new WarrantyRes(400, "購買日期不可為空");
-        }
+		return new WarrantyRes(200, "查詢成功", warrantyDao.findByGroupId(groupId));
+	}
 
-        if (req.getWarrantyEndDate() == null) {
-            return new WarrantyRes(400, "保固到期日不可為空");
-        }
+	public WarrantyRes add(AddWarrantyReq req) {
 
-        if (req.getPurchaseDate().isAfter(req.getWarrantyEndDate())) {
-            return new WarrantyRes(400, "購買日期不可晚於保固到期日");
-        }
+		if (req.getUserId() == null || req.getUserId() <= 0) {
+			return new WarrantyRes(400, "userId 不可為空");
+		}
 
-        String status = calcWarrantyStatus(req.getWarrantyEndDate());
-        String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
+		if (req.getProductName() == null || req.getProductName().isBlank()) {
+			return new WarrantyRes(400, "產品名稱不可為空");
+		}
 
-        warrantyDao.addWarranty(
-                req.getGroupId(),
-                req.getUserId(),
-                req.getProductName(),
-                req.getBrand(),
-                req.getModel(),
-                req.getSerialNumber(),
-                req.getPurchaseDate(),
-                req.getWarrantyEndDate(),
-                req.getStoreName(),
-                req.getPrice() != null ? req.getPrice() : 0,
-                req.getNotify() != null ? req.getNotify() : true,
-                req.getNote(),
-                status,
-                remindMessage
-        );
+		if (req.getPurchaseDate() == null) {
+			return new WarrantyRes(400, "購買日期不可為空");
+		}
 
-        return new WarrantyRes(200, "新增成功");
-    }
+		if (req.getWarrantyEndDate() == null) {
+			return new WarrantyRes(400, "保固到期日不可為空");
+		}
 
-    public WarrantyRes update(UpdateWarrantyReq req) {
-        if (req.getId() == null || req.getId() <= 0) {
-            return new WarrantyRes(400, "id 不可為空");
-        }
+		if (req.getPurchaseDate().isAfter(req.getWarrantyEndDate())) {
+			return new WarrantyRes(400, "購買日期不可晚於保固到期日");
+		}
 
-        if (req.getProductName() == null || req.getProductName().isBlank()) {
-            return new WarrantyRes(400, "產品名稱不可為空");
-        }
+		String status = calcWarrantyStatus(req.getWarrantyEndDate());
+		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
 
-        if (req.getPurchaseDate() == null) {
-            return new WarrantyRes(400, "購買日期不可為空");
-        }
+		warrantyDao.addWarranty(req.getGroupId(), req.getUserId(), req.getProductName(), req.getBrand(), req.getModel(),
+				req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(), req.getStoreName(),
+				req.getPrice() != null ? req.getPrice() : 0, req.getNotify() != null ? req.getNotify() : true,
+				req.getNote(), status, remindMessage);
 
-        if (req.getWarrantyEndDate() == null) {
-            return new WarrantyRes(400, "保固到期日不可為空");
-        }
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "清單";
 
-        if (req.getPurchaseDate().isAfter(req.getWarrantyEndDate())) {
-            return new WarrantyRes(400, "購買日期不可晚於保固到期日");
-        }
+		if (req.getGroupId() != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "group", false);
+				}
+			}
+		}
+		return new WarrantyRes(200, "新增成功");
+	}
 
-        String status = calcWarrantyStatus(req.getWarrantyEndDate());
-        String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
-        int result = warrantyDao.updateWarranty(
-                req.getId(),
-                req.getGroupId(),
-                req.getUserId(),
-                req.getProductName(),
-                req.getBrand(),
-                req.getModel(),
-                req.getSerialNumber(),
-                req.getPurchaseDate(),
-                req.getWarrantyEndDate(),
-                req.getStoreName(),
-                req.getPrice() != null ? req.getPrice() : 0,
-                req.getNotify() != null ? req.getNotify() : true,
-                req.getNote(),
-                status,
-                remindMessage
-        );
+	public WarrantyRes update(UpdateWarrantyReq req) {
 
-        if (result == 0) {
-            return new WarrantyRes(404, "查無此保固資料");
-        }
+		if (req.getProductName() == null || req.getProductName().isBlank()) {
+			return new WarrantyRes(400, "產品名稱不可為空");
+		}
 
-        return new WarrantyRes(200, "修改成功");
-    }
+		if (req.getPurchaseDate() == null) {
+			return new WarrantyRes(400, "購買日期不可為空");
+		}
 
-    public WarrantyRes delete(Integer id) {
-        if (id == null || id <= 0) {
-            return new WarrantyRes(400, "id 不可為空");
-        }
+		if (req.getWarrantyEndDate() == null) {
+			return new WarrantyRes(400, "保固到期日不可為空");
+		}
 
-        int result = warrantyDao.deleteWarranty(id);
+		if (req.getPurchaseDate().isAfter(req.getWarrantyEndDate())) {
+			return new WarrantyRes(400, "購買日期不可晚於保固到期日");
+		}
 
-        if (result == 0) {
-            return new WarrantyRes(404, "查無此保固資料");
-        }
+		String status = calcWarrantyStatus(req.getWarrantyEndDate());
+		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
+		int result = warrantyDao.updateWarranty(req.getId(), req.getGroupId(), req.getUserId(), req.getProductName(),
+				req.getBrand(), req.getModel(), req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(),
+				req.getStoreName(), req.getPrice() != null ? req.getPrice() : 0,
+				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
 
-        return new WarrantyRes(200, "刪除成功");
-    }
+		if (result == 0) {
+			return new WarrantyRes(404, "查無此保固資料");
+		}
 
-    private String calcWarrantyStatus(LocalDate warrantyEndDate) {
-        LocalDate today = LocalDate.now();
+		return new WarrantyRes(200, "修改成功");
+	}
 
-        if (warrantyEndDate != null && warrantyEndDate.isBefore(today)) {
-            return "已過保";
-        }
+	public WarrantyRes delete(Integer id) {
 
-        if (warrantyEndDate != null && !warrantyEndDate.isAfter(today.plusDays(30))) {
-            return "即將到期";
-        }
+		int result = warrantyDao.deleteWarranty(id);
 
-        return "正常";
-    }
-    
-    private String calcWarrantyRemindMessage(LocalDate warrantyEndDate) {
-        LocalDate today = LocalDate.now();
+		if (result == 0) {
+			return new WarrantyRes(404, "查無此保固資料");
+		}
 
-        if (warrantyEndDate == null) {
-            return "";
-        }
+		return new WarrantyRes(200, "刪除成功");
+	}
 
-        long daysLeft = ChronoUnit.DAYS.between(today, warrantyEndDate);
+	private String calcWarrantyStatus(LocalDate warrantyEndDate) {
+		LocalDate today = LocalDate.now();
 
-        if (daysLeft < 0) {
-            return "已過保 " + Math.abs(daysLeft) + " 天";
-        }
+		if (warrantyEndDate != null && warrantyEndDate.isBefore(today)) {
+			return "已過保";
+		}
 
-        if (daysLeft <= 30) {
-            return "保固剩餘 " + daysLeft + " 天";
-        }
+		if (warrantyEndDate != null && !warrantyEndDate.isAfter(today.plusDays(30))) {
+			return "即將到期";
+		}
 
-        return "";
-    }
-    }
+		return "正常";
+	}
+
+	private String calcWarrantyRemindMessage(LocalDate warrantyEndDate) {
+		LocalDate today = LocalDate.now();
+
+		if (warrantyEndDate == null) {
+			return "";
+		}
+
+		long daysLeft = ChronoUnit.DAYS.between(today, warrantyEndDate);
+
+		if (daysLeft < 0) {
+			return "已過保 " + Math.abs(daysLeft) + " 天";
+		}
+
+		if (daysLeft <= 30) {
+			return "保固剩餘 " + daysLeft + " 天";
+		}
+
+		return "";
+	}
+}

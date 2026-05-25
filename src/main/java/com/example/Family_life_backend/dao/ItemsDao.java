@@ -38,7 +38,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Query(value = "INSERT INTO items "
 	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, remind_message) "
 	        + "VALUES "
-	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, ；remindMessage)",
+	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, :remindMessage)",
 	        nativeQuery = true)
 	int insertItemNative(
 	        @Param("groupId") Integer groupId,
@@ -58,6 +58,16 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("status") String status,
 	        @Param("remindMessage") String remindMessage
 	);
+	
+	//通知
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void addGroupItemNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
 
 	/* 更新 */
 	@Modifying
