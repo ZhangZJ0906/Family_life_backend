@@ -26,7 +26,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
-<<<<<<< HEAD
     @Autowired
     private UserService userService;
 
@@ -94,41 +93,3 @@ public class UserController {
         return userService.getUserInfo(userId);
     }
 }
-=======
-	@Autowired
-	private UserService userService;
-
-	/* 註冊 */
-	@PostMapping("/register")
-	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
-		return userService.addInfo(req);
-	}
-
-	/* 登入 */
-	@GetMapping(value = "/login")
-	public getUserInfoRes login(@RequestParam("email") String email, //
-			@RequestParam("password") String pwd) {
-		return userService.login(email, pwd);
-	}
-
-	/* 更改密碼 */
-	@PostMapping("/chang_pwd")
-	public BasicRes updatePwd(@Valid @RequestBody ChangePwdReq req) {
-		return userService.changePwd(req);
-	}
-
-	/* 變更資料 */
-	@PostMapping("/update_info")
-	public BasicRes updateInfo(@RequestBody UpdateUserAllReq req) {
-		System.out.println(req.getUserInfo().isNotifyByEndDate());
-
-		return userService.updateInfo(req);
-	}
-
-	@GetMapping(value = "/get_user_info")
-	public getUserInfoRes getSelfInfo(@RequestParam("userId") Long userId) {
-		return userService.getUserInfo(userId);
-	}
-
-}
->>>>>>> origin/ZJ
