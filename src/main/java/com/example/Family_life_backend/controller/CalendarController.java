@@ -16,6 +16,8 @@ import com.example.Family_life_backend.request.CalendarReq;
 import com.example.Family_life_backend.response.CalendarRes;
 import com.example.Family_life_backend.service.CalendarService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/calendar")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,7 +28,7 @@ public class CalendarController {
 
 	// 新增事件
 	@PostMapping("/create")
-	public CalendarRes create(@RequestBody CalendarReq req) {
+	public CalendarRes create(@Valid @RequestBody CalendarReq req) {
 		return calendarService.create(req);
 	}
 
