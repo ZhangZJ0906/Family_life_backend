@@ -48,6 +48,9 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId, @Param("publicInventory") int publicInventory);
 	
 
+
+
+
 	@Query(value = """
 			    select count(*)
 			    from group_members
