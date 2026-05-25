@@ -63,8 +63,6 @@ public class Items {
 	@Column(name = "remind_message")
 	private String remindMessage;
 
-
-
 	public Items(int id, int groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
 			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
 			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status,String remindMessage) {
