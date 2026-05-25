@@ -22,6 +22,13 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			    )
 			""", nativeQuery = true)
 	public List<Items> getItemByGroupId(@Param("groupId") Integer groupId, @Param("userId") Integer userId);
+	
+	@Query(value = """
+		    SELECT * FROM items
+		    WHERE group_id = 0 and created_by_id = :userId
+		""", nativeQuery = true)
+	public List<Items> getSelfItem(@Param("userId") Integer userId);
+	
 	@Query(value = "select * from items where id in (:id)", nativeQuery = true)
 	public List<Items> getItemById(@Param("id") List<Long> id);
 
