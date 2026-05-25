@@ -65,8 +65,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        + "expire_date = :expireDate, "
 	        + "notify = :notify, "
 	        + "note = :note, "
-	        + "unit_price = :unitPrice "
-	        + "status = :status "
+			+ "unit_price = :unitPrice, " + "status = :status, "
 	        + "WHERE id = :id", nativeQuery = true)
 	int updateItem(
 	        @Param("id") int id,
