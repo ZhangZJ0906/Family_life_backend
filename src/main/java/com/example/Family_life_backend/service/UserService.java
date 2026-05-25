@@ -27,7 +27,7 @@ public class UserService {
 		}
 
 		String now = LocalDateTime.now().toString();
-		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), req.isNotify(), now);
+		userInfoDao.insert( req.getUserName(), req.getEmail(),req.getPwd(), req.getAvatar(), now);
 
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
