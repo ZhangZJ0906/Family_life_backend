@@ -28,8 +28,12 @@ public class ItemsController {
 	private ItemsService itemsService;
 
 	@GetMapping(value = "/getItems")
-	public GetItemsRes getItems(@RequestParam("groupId") List<Integer> groupId) {
-		return itemsService.getItems(groupId);
+	public GetItemsRes getItems(@RequestParam(value = "groupId", required = false) Integer groupId,
+			@RequestParam(value = "userId", required = false) Integer userId) {
+		System.out.println("UID:" + userId);
+		System.out.println("GID:" + groupId);
+
+		return itemsService.getItems(groupId, userId);
 	};
 
 	@PostMapping("/add")

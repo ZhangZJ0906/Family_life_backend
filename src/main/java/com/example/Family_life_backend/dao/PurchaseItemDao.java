@@ -8,30 +8,31 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.Family_life_backend.entity.PurchaseItem;
+import com.example.Family_life_backend.entity.PurchaseItemId;
 
 import jakarta.transaction.Transactional;
 
-public interface PurchaseItemDao extends JpaRepository<PurchaseItem, Integer> {
-
-	/* 新增購物項目 */
-	@Modifying
-	@Transactional
-	@Query(value = "insert into shopping_list_items (id, shopping_list_id, created_by_id,"
-			+ " created_at, user_id, category_id, item_name, quantity)"
-			+ "values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)", nativeQuery = true)
-	public void insert(int id, int listId, int createrId, LocalDate createdDate, int userId, //
-			int categoryId, String item, int quantity, boolean check, LocalDate checkDate, int checkMan);
+public interface PurchaseItemDao extends JpaRepository<PurchaseItem, PurchaseItemId> {
 
 	/* 查看購物項目 */
 	@Query(value = "select * from shopping_list_items where shopping_list_id = ?1", nativeQuery = true)
 	public List<PurchaseItem> getByListId(int listId);
+
+	/* 取得該購物清單目前最大的項目 id */
+	@Query(value = "select coalesce(max(id), 0) from shopping_list_items where shopping_list_id = ?1", nativeQuery = true)
+	public int getMaxIdByListId(int listId);
 	
-	/* 刪除購物項目(現尚未購買) */
+	/* 刪除購物清單底下的購物項目 */
 	@Modifying
 	@Transactional
-	@Query(value = "delete from shopping_list_items where shopping_list_id in (?)", nativeQuery = true)
-	public void delete(List<Integer> quizIds);
+	@Query(value = "delete from shopping_list_items where shopping_list_id = ?1", nativeQuery = true)
+	public void deleteByListId(int listId);
 
-	
+	/* 勾選 / 取消勾選購物項目 */
+	@Modifying
+	@Transactional
+	@Query(value = "update shopping_list_items set"
+			+ " is_checked = ?3, check_at = ?4, checked_by_id = ?5 where shopping_list_id = ?1 and id = ?2", nativeQuery = true)
+	public void updateCheck(int listId, int itemId, boolean check, LocalDate checkDate, int checkMan);
 
 }

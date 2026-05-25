@@ -7,20 +7,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /* Shopping List 抓 shopping_list_id 用於分辨清單，雙PK做 Serializable：id & shopping_list_id*/
 @Entity
+@IdClass(PurchaseItemId.class)
 @Table(name = "shopping_list_items")
 public class PurchaseItem {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 
+	@Id
 	@Column(name = "shopping_list_id")
 	private int listId;
 
@@ -47,7 +49,7 @@ public class PurchaseItem {
 	@Column(name = "is_checked")
 	private boolean check;
 	 
-	@Column(name = "check_at")
+	@Column(name = "checked_at")
 	private LocalDate checkDate;
 	 
 	@Column(name = "checked_by_id")

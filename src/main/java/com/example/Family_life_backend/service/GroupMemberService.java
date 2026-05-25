@@ -1,7 +1,8 @@
 package com.example.Family_life_backend.service;
 
-import java.io.Console;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,14 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
-import com.example.Family_life_backend.entity.GroupMembers;
-import com.example.Family_life_backend.response.BasicResponse;
-import com.example.Family_life_backend.response.GetGroupMemberRes;
-import com.example.Family_life_backend.response.getInvitedMemberRes;
-import com.example.Family_life_backend.response.getNotifyRes;
-import com.example.Family_life_backend.entity.notify;
+
 import com.example.Family_life_backend.request.groupMemberReq;
 import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.getInviteMembersRes;
+import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
+import com.example.Family_life_backend.response.GetGroupMemberRes;
+import com.example.Family_life_backend.response.getNotifyRes;
 
 @Service
 public class GroupMemberService {
@@ -54,7 +55,7 @@ public class GroupMemberService {
 		String type = "invite";
 
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
-		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id(), req.getUser_name(), null);
+		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
 //		groupMemberDao.insert(req.getGroup_id(), req.getUser_id(), 0, req.getUser_name());
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
@@ -62,7 +63,6 @@ public class GroupMemberService {
 	@Transactional
 	public BasicResponse acceptJoinGroup(Long userId, Long groupId, Long notifyId) {
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
-		String group_name = groupDao.getGroupName(groupId);
 		String content = "歡迎" + groupDao.getSelfName(userId) + "加入";
 
 		for (groupMembersDTO member : getGroupMembers) {
@@ -71,7 +71,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, userId, 0, groupDao.getSelfName(userId));
+		groupMemberDao.insert(groupId, userId, 0);
 		notifyDao.isReadNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("accepted", userId, notifyId);
@@ -100,7 +100,6 @@ public class GroupMemberService {
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 		String content = "歡迎" + groupDao.getSelfName(req.getUserId()) + "加入";
-		String group_name = groupDao.getGroupName(groupId);
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
@@ -108,7 +107,7 @@ public class GroupMemberService {
 			}
 		}
 
-		groupMemberDao.insert(groupId, req.getUserId(), 0, groupDao.getSelfName(req.getUserId()));
+		groupMemberDao.insert(groupId, req.getUserId(), 0);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
@@ -128,13 +127,27 @@ public class GroupMemberService {
 		return count;
 	}
 
-	public getInvitedMemberRes getInvitedMemberList(Long group_id) {
-		return new getInvitedMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
+	public getInviteMembersRes getInvitedMemberList(Long group_id) {
+		
+		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getInvitedMemberList(group_id));
 	}
 
 	public GetGroupMemberRes getMemberList(Long groupId) {
 		return new GetGroupMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getMembersByGroupId(groupId));
+	}
+
+	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	public GetGroupIdByUserIdRes getGroupIdList(Long userId) {
+		List<Object[]> list = groupMemberDao.getGroupIdByUserId(userId);
+
+		Map<Long, String> idMap = list.stream()//
+				.filter(row -> row[0] != null)//
+				.collect(Collectors.toMap(//
+						row -> ((Number) row[0]).longValue(),
+						row -> row[1] != null ? row[1].toString() : "未命名群組"//
+				));
+		return new GetGroupIdByUserIdRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), idMap);
 	}
 }

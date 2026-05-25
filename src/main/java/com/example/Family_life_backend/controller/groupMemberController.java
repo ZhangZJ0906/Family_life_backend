@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Family_life_backend.request.groupMemberReq;
 import com.example.Family_life_backend.request.joinGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
+import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
-import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getInviteMembersRes;
 import com.example.Family_life_backend.response.getNotifyRes;
+
 import com.example.Family_life_backend.service.GroupMemberService;
 
 import jakarta.validation.Valid;
@@ -68,7 +70,7 @@ public class groupMemberController {
 	}
 	
 	@GetMapping("get_invited_members")
-	public getInvitedMemberRes getInvitedMembers(@RequestParam("group_id") Long group_id) {
+	public getInviteMembersRes getInvitedMembers(@RequestParam("group_id") Long group_id) {
 		return groupMemberService.getInvitedMemberList(group_id);
 	}
 	
@@ -78,5 +80,11 @@ public class groupMemberController {
 	        @PathVariable("user_id") Long user_id
 	) {
 	    return groupMemberService.removeMember(group_id, user_id);
+	}
+
+	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	@GetMapping("getGroupList")
+	public GetGroupIdByUserIdRes getGroupIdList(@RequestParam("user_Id") Long userId) {
+		return groupMemberService.getGroupIdList(userId);
 	}
 }
