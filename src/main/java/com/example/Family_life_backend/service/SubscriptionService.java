@@ -35,33 +35,38 @@ public class SubscriptionService {
 	private groupDao groupDao;
 
 	// 查詢
-	public SubscriptionRes getByGroup(Integer groupId, Long userId) {
-//	        if (groupId == null || groupId <= 0) {
-//	            return new SubscriptionRes(400, "groupId 不可為空");
-//	        }
+	public SubscriptionRes getByGroup(Integer groupId, Integer userId) {
 
-		List<Subscription> subscriptionList = new ArrayList<Subscription>();
+	    if (userId == null || userId <= 0) {
+	        return new SubscriptionRes(400, "userId 不可為空");
+	    }
 
-		if (groupId == 0) {
-			subscriptionList = subscriptionDao.findBySelfId(userId);
-		} else {
-			subscriptionList = subscriptionDao.findByGroupId(groupId);
+	    List<Subscription> subscriptionList =
+	            subscriptionDao.findByGroupId(userId, groupId);
 
-		}
+	    List<SubscriptionVo> resultList = new ArrayList<>();
 
-		List<SubscriptionVo> resultList = new ArrayList<>();
+	    for (Subscription sub : subscriptionList) {
+	        SubscriptionVo vo = new SubscriptionVo(
+	                sub.getId(),
+	                sub.getGroupId(),
+	                sub.getUserId(),
+	                sub.getName(),
+	                sub.getPrice(),
+	                sub.getBillingCycle(),
+	                sub.getPurchaseDate(),
+	                sub.getTrialEndDate(),
+	                sub.getNextBillingDate(),
+	                sub.getStatus(),
+	                sub.getRemindMessage(),
+	                sub.getNotify() == null ? true : sub.getNotify(),
+	                sub.getNote()
+	        );
 
-		for (Subscription sub : subscriptionList) {
+	        resultList.add(vo);
+	    }
 
-			SubscriptionVo vo = new SubscriptionVo(sub.getId(), sub.getGroupId(), sub.getUserId(), sub.getName(),
-					sub.getPrice(), sub.getBillingCycle(), sub.getPurchaseDate(), sub.getTrialEndDate(),
-					sub.getNextBillingDate(), sub.getStatus(), sub.getRemindMessage(),
-					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote());
-
-			resultList.add(vo);
-		}
-
-		return new SubscriptionRes(200, "查詢成功", resultList);
+	    return new SubscriptionRes(200, "查詢成功", resultList);
 	}
 
 	// 新增

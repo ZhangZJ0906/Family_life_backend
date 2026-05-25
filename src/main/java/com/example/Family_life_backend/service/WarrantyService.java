@@ -32,16 +32,17 @@ public class WarrantyService {
 	@Autowired
 	private groupDao groupDao;
 
-	public WarrantyRes getByGroup(Integer groupId, Long userId) {
-//        if (groupId == null || groupId <= 0) {
-//            return new WarrantyRes(400, "groupId 不可為空");
-//        }
+	public WarrantyRes getByGroup(Integer groupId, Integer userId) {
 
-		if (groupId == 0) {
-			return new WarrantyRes(200, "查詢成功", warrantyDao.findBySelfId(userId));
-		}
+	    if (userId == null || userId <= 0) {
+	        return new WarrantyRes(400, "userId 不可為空");
+	    }
 
-		return new WarrantyRes(200, "查詢成功", warrantyDao.findByGroupId(groupId));
+	    return new WarrantyRes(
+	            200,
+	            "查詢成功",
+	            warrantyDao.findByGroupId(userId, groupId)
+	    );
 	}
 
 	public WarrantyRes add(AddWarrantyReq req) {

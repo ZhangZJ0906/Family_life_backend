@@ -16,14 +16,20 @@ import jakarta.transaction.Transactional;
 public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 
 	//查詢
-	@Query(value = "SELECT * FROM warranties WHERE group_id = :groupId ORDER BY warranty_end_date ASC",
-	        nativeQuery = true)
-	List<Warranty> findByGroupId(@Param("groupId") Integer groupId);
-	
-	//查詢自己
-    @Query(value = "SELECT * FROM warranties WHERE group_id = 0 and user_id = :userId ORDER BY warranty_end_date  ASC",
-            nativeQuery = true)
-    List<Warranty> findBySelfId(@Param("userId") Long userId);
+	@Query(value = """
+		    SELECT *
+		    FROM warranties
+		    WHERE (
+		        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
+		        OR
+		        (:groupId IS NOT NULL AND group_id = :groupId)
+		    )
+		    ORDER BY warranty_end_date ASC
+		""", nativeQuery = true)
+		List<Warranty> findByGroupId(
+		        @Param("userId") Integer userId,
+		        @Param("groupId") Integer groupId
+		);
 
 	 //新增
 	 @Modifying

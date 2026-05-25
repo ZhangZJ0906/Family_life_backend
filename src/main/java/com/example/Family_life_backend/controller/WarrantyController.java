@@ -24,10 +24,12 @@ public class WarrantyController {
     private WarrantyService warrantyService;
 
     @GetMapping("/getByGroup")
-    public WarrantyRes getByGroup(@RequestParam("groupId") Integer groupId, @RequestParam("userId") Long userId) {
+    public WarrantyRes getByGroup(
+            @RequestParam("userId") Integer userId,
+            @RequestParam(value = "groupId", required = false) Integer groupId) {
+
         return warrantyService.getByGroup(groupId, userId);
     }
-
     @PostMapping("/add")
     public WarrantyRes add(@RequestBody AddWarrantyReq req) {
         return warrantyService.add(req);

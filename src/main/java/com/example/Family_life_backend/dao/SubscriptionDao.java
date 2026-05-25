@@ -17,14 +17,20 @@ import com.example.Family_life_backend.entity.Warranty;
 @Repository
 public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 
-    // 依群組查詢訂閱
-    @Query(value = "SELECT * FROM subscriptions WHERE group_id = :groupId ORDER BY next_billing_date ASC", nativeQuery = true)
-    List<Subscription> findByGroupId(@Param("groupId") Integer groupId);
-    
-    //查詢自己
-    @Query(value = "SELECT * FROM subscriptions WHERE group_id = 0 and user_id = :userId ORDER BY next_billing_date ASC",
-            nativeQuery = true)
-    List<Subscription> findBySelfId(@Param("userId") Long userId);
+	@Query(value = """
+		    SELECT *
+		    FROM subscriptions
+		    WHERE (
+		        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
+		        OR
+		        (:groupId IS NOT NULL AND group_id = :groupId)
+		    )
+		    ORDER BY next_billing_date ASC
+		""", nativeQuery = true)
+		List<Subscription> findByGroupId(
+		        @Param("userId") Integer userId,
+		        @Param("groupId") Integer groupId
+		);
 
     // 新增訂閱
     @Modifying
