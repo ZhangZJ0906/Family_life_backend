@@ -2,11 +2,16 @@ package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
+import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.MedicineDao;
+import com.example.Family_life_backend.dao.groupDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.request.AddMedicineReq;
 import com.example.Family_life_backend.request.UpdateMedicineReq;
 import com.example.Family_life_backend.response.MedicineRes;
@@ -16,11 +21,27 @@ public class MedicineService {
 
     @Autowired
     private MedicineDao medicineDao;
+    
+    @Autowired
+	private ItemsDao itemDao;
+    
+    @Autowired
+	private groupMemberDao groupMemberDao;
 
-    public MedicineRes getByGroup(Integer groupId) {
-        if (groupId == null || groupId <= 0) {
-            return new MedicineRes(400, "groupId 不可為空");
-        }
+	@Autowired
+	private groupDao groupDao;
+
+    public MedicineRes getByGroup(Integer groupId, Long userId) {
+//        if (groupId == null || groupId <= 0) {
+//            return new MedicineRes(400, "groupId 不可為空");
+//        }
+    	if(groupId == 0) {
+    		return new MedicineRes(
+                    200,
+                    "查詢成功",
+                    medicineDao.findBySelfId(userId)
+            );
+    	}
 
         return new MedicineRes(
                 200,
@@ -84,6 +105,17 @@ public class MedicineService {
         	        status,
         	        remindMessage
         );
+        
+        List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+
+		if (req.getGroupId() != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "group", false);
+				}
+			}
+		}
 
         return new MedicineRes(200, "新增成功");
     }

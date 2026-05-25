@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.LocationDao;
+import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Categories;
 import com.example.Family_life_backend.entity.Items;
@@ -33,6 +35,10 @@ public class ItemsService {
 	private LocationDao locationDao;
 	@Autowired
 	private CategoiesDao categoiesDao;
+
+	@Autowired
+	private groupDao groupDao;
+
 	@Autowired
 	private groupMemberDao groupMemberDao;
 
@@ -55,6 +61,7 @@ public class ItemsService {
 			if (list == null) {
 				return new GetItemsRes("失敗", 400);
 			}
+
 		} else if (groupId == 0) { // 私人物品
 			list = itemDao.getSelfItem(userId);
 		}
@@ -94,6 +101,17 @@ public class ItemsService {
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 				finalSafeQuantity, status, remindMessage);
+
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+
+		if (finalGroupId != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "group", false);
+				}
+			}
+		}
 
 		return new AddItemsInfoRes("成功", 200);
 	}

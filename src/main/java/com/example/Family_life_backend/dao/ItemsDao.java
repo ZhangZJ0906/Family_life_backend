@@ -58,6 +58,16 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("status") String status,
 	        @Param("remindMessage") String remindMessage
 	);
+	
+	//通知
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void addGroupItemNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
 
 	/* 更新 */
 	@Modifying
