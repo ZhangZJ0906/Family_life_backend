@@ -22,6 +22,13 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			    )
 			""", nativeQuery = true)
 	public List<Items> getItemByGroupId(@Param("groupId") Integer groupId, @Param("userId") Integer userId);
+	
+	@Query(value = """
+		    SELECT * FROM items
+		    WHERE group_id = 0 and created_by_id = :userId
+		""", nativeQuery = true)
+	public List<Items> getSelfItem(@Param("userId") Integer userId);
+	
 	@Query(value = "select * from items where id in (:id)", nativeQuery = true)
 	public List<Items> getItemById(@Param("id") List<Long> id);
 
@@ -29,9 +36,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO items "
-	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, status) "
+	        + "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, remind_message) "
 	        + "VALUES "
-	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :status)",
+	        + "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, ；remindMessage)",
 	        nativeQuery = true)
 	int insertItemNative(
 	        @Param("groupId") Integer groupId,
@@ -47,7 +54,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("note") String note,
 	        @Param("userId") Integer userId,
 	        @Param("unitPrice") int unitPrice,
-	        @Param("status") String status
+	        @Param("safeQuantity") Integer safeQuantity,
+	        @Param("status") String status,
+	        @Param("remindMessage") String remindMessage
 	);
 
 	/* 更新 */
@@ -65,8 +74,12 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        + "expire_date = :expireDate, "
 	        + "notify = :notify, "
 	        + "note = :note, "
-			+ "unit_price = :unitPrice, " + "status = :status, "
-	        + "WHERE id = :id", nativeQuery = true)
+	        + "unit_price = :unitPrice, "
+	        + "safe_quantity = :safeQuantity, "
+	        + "status = :status, "
+	        + "remind_message = :remindMessage "
+	        + "WHERE id = :id",
+	        nativeQuery = true)
 	int updateItem(
 	        @Param("id") int id,
 	        @Param("groupId") Integer groupId,
@@ -81,9 +94,10 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("notify") Boolean notify,
 	        @Param("note") String note,
 	        @Param("unitPrice") int unitPrice,
-	        @Param("status") String status
+	        @Param("safeQuantity") Integer safeQuantity,
+	        @Param("status") String status,
+	        @Param("remindMessage") String remindMessage
 	);
-
 	/* 刪除 */
 	@Modifying
 	@Transactional

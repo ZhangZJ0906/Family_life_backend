@@ -30,6 +30,9 @@ public class ItemsController {
 	@GetMapping(value = "/getItems")
 	public GetItemsRes getItems(@RequestParam(value = "groupId", required = false) Integer groupId,
 			@RequestParam(value = "userId", required = false) Integer userId) {
+		System.out.println("UID:" + userId);
+		System.out.println("GID:" + groupId);
+
 		return itemsService.getItems(groupId, userId);
 	};
 

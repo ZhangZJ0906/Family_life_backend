@@ -59,12 +59,13 @@ public class Items {
 	
 	@Column(name = "status")
 	private String status;
-
-
+	
+	@Column(name = "remind_message")
+	private String remindMessage;
 
 	public Items(int id, int groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
 			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
-			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status) {
+			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status,String remindMessage) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -83,6 +84,7 @@ public class Items {
 		this.note = note;
 		this.createdAt = createdAt;
 		this.status = status;
+		this.remindMessage = remindMessage;
 	}
 
 	public int getUnitPrice() {
@@ -228,5 +230,13 @@ public class Items {
 	public void setStatus(String status) {
 	    this.status = status;
 	  }
+	
+	public String getRemindMessage() {
+	    return remindMessage;
+	}
+
+	public void setRemindMessage(String remindMessage) {
+	    this.remindMessage = remindMessage;
+	}
 
 }

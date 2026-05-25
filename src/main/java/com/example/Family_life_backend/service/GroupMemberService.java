@@ -14,12 +14,13 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+
 import com.example.Family_life_backend.request.groupMemberReq;
 import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.getInviteMembersRes;
 import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
-import com.example.Family_life_backend.response.getInvitedMemberRes;
 import com.example.Family_life_backend.response.getNotifyRes;
 
 @Service
@@ -54,7 +55,7 @@ public class GroupMemberService {
 		String type = "invite";
 
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
-		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id(), req.getUser_name(), null);
+		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
 //		groupMemberDao.insert(req.getGroup_id(), req.getUser_id(), 0, req.getUser_name());
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
@@ -62,7 +63,6 @@ public class GroupMemberService {
 	@Transactional
 	public BasicResponse acceptJoinGroup(Long userId, Long groupId, Long notifyId) {
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
-		String group_name = groupDao.getGroupName(groupId);
 		String content = "歡迎" + groupDao.getSelfName(userId) + "加入";
 
 		for (groupMembersDTO member : getGroupMembers) {
@@ -100,7 +100,6 @@ public class GroupMemberService {
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 		String content = "歡迎" + groupDao.getSelfName(req.getUserId()) + "加入";
-		String group_name = groupDao.getGroupName(groupId);
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
@@ -128,8 +127,9 @@ public class GroupMemberService {
 		return count;
 	}
 
-	public getInvitedMemberRes getInvitedMemberList(Long group_id) {
-		return new getInvitedMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
+	public getInviteMembersRes getInvitedMemberList(Long group_id) {
+		
+		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getInvitedMemberList(group_id));
 	}
 
