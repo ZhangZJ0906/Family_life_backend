@@ -35,15 +35,7 @@ public class SubscriptionService {
 
 	        for (Subscription sub : subscriptionList) {
 
-	            String status = getSubscriptionStatus(
-	                    sub.getTrialEndDate(),
-	                    sub.getNextBillingDate()
-	            );
-
-	            String remindMessage = getSubscriptionRemindMessage(
-	                    sub.getTrialEndDate(),
-	                    sub.getNextBillingDate()
-	            );
+	          
 
 	            SubscriptionVo vo = new SubscriptionVo(
 	                    sub.getId(),
@@ -55,8 +47,8 @@ public class SubscriptionService {
 	                    sub.getPurchaseDate(),
 	                    sub.getTrialEndDate(),
 	                    sub.getNextBillingDate(),
-	                    status,
-	                    remindMessage,
+	                    sub.getStatus(),
+	                    sub.getRemindMessage(),
 	                    sub.getNotify() == null ? true : sub.getNotify(),
 	                    sub.getNote()		
 	            );
@@ -96,7 +88,16 @@ public class SubscriptionService {
 	        if (nextBillingDate == null) {
 	            return new SubscriptionRes(400, "試用結束日不可為空");
 	        }
+	        
+	        String status = getSubscriptionStatus(
+	                req.getTrialEndDate(),
+	                nextBillingDate
+	        );
 
+	        String remindMessage = getSubscriptionRemindMessage(
+	                req.getTrialEndDate(),
+	                nextBillingDate
+	        );
 	        subscriptionDao.addSubscription(
 	                req.getGroupId(),
 	                req.getUserId(),
@@ -107,7 +108,9 @@ public class SubscriptionService {
 	                req.getPurchaseDate(),
 	                req.getTrialEndDate(),
 	                req.getNotify() == null ? true : req.getNotify(),
-	                req.getNote()
+	                req.getNote(),
+	                status,
+	                remindMessage
 	        );
 
 	        return new SubscriptionRes(200, "新增成功");
@@ -127,7 +130,16 @@ public class SubscriptionService {
 	        if (nextBillingDate == null) {
 	            return new SubscriptionRes(400, "試用結束日不可為空");
 	        }
+	        
+	        String status = getSubscriptionStatus(
+	                req.getTrialEndDate(),
+	                nextBillingDate
+	        );
 
+	        String remindMessage = getSubscriptionRemindMessage(
+	                req.getTrialEndDate(),
+	                nextBillingDate
+	        );
 	        int result = subscriptionDao.updateSubscription(
 	                req.getId(),
 	                req.getGroupId(),
@@ -139,7 +151,9 @@ public class SubscriptionService {
 	                req.getPurchaseDate(),
 	                req.getTrialEndDate(),
 	                req.getNotify() == null ? true : req.getNotify(),
-	                req.getNote()
+	                req.getNote(),
+	                status,
+	                remindMessage
 	        );
 
 	        if (result == 0) {
@@ -202,7 +216,11 @@ public class SubscriptionService {
 	        if (trialEndDate != null && !today.isAfter(trialEndDate)) {
 	            long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
 
-	            return "試用剩餘 " + daysLeft + " 天";
+	            if (daysLeft <= 3) {
+	                return "試用剩餘 " + daysLeft + " 天";
+	            }
+
+	            return "";
 	        }
 
 	        if (nextBillingDate != null) {
@@ -212,10 +230,14 @@ public class SubscriptionService {
 	                return "扣款日已過 " + Math.abs(daysLeft) + " 天";
 	            }
 
-	            return "距離扣款剩餘 " + daysLeft + " 天";
+	            if (daysLeft <= 3) {
+	                return "距離扣款剩餘 " + daysLeft + " 天";
+	            }
+
+	            return "";
 	        }
 
-	        return "尚未設定提醒日期";
+	        return "";
 	    }
 	    
 	 // 依照試用結束日 + 扣款週期，自動計算下次扣款日

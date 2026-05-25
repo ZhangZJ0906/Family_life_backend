@@ -24,9 +24,9 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO subscriptions "
-            + "(group_id, user_id, name, price, billing_cycle, next_billing_date, purchase_date, trial_end_date, notify, note, created_at) "
+            + "(group_id, user_id, name, price, billing_cycle, next_billing_date, purchase_date, trial_end_date, notify, note,  status, remind_message, created_at) "
             + "VALUES "
-            + "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, NOW())",
+            + "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, :status, :remindMessage, NOW())",
             nativeQuery = true)
     int addSubscription(
             @Param("groupId") Integer groupId,
@@ -38,7 +38,9 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
             @Param("purchaseDate") LocalDate purchaseDate,
             @Param("trialEndDate") LocalDate trialEndDate,
             @Param("notify") Boolean notify,
-            @Param("note") String note
+            @Param("note") String note,
+            @Param("status") String status,
+            @Param("remindMessage") String remindMessage
     );
 
     // 修改訂閱
@@ -54,7 +56,9 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
             + "purchase_date = :purchaseDate, "
             + "trial_end_date = :trialEndDate, "
             + "notify = :notify, "
-            + "note = :note "
+            + "note = :note, "
+            + "status = :status, "
+            + "remind_message = :remindMessage "
             + "WHERE id = :id",
             nativeQuery = true)
     int updateSubscription(
@@ -68,7 +72,9 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
             @Param("purchaseDate") LocalDate purchaseDate,
             @Param("trialEndDate") LocalDate trialEndDate,
             @Param("notify") Boolean notify,
-            @Param("note") String note
+            @Param("note") String note,
+            @Param("status") String status,
+            @Param("remindMessage") String remindMessage
     );
 
     // 刪除訂閱
