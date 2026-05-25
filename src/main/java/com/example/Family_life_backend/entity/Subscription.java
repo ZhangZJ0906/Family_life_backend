@@ -50,6 +50,13 @@ public class Subscription {
     
     @Column(name = "note")
     private String note;
+    
+    
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "remind_message")
+    private String remindMessage;
 
     public Integer getId() {
         return id;
@@ -96,5 +103,21 @@ public class Subscription {
 }
     public String getNote() {
         return note;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRemindMessage() {
+        return remindMessage;
+    }
+
+    public void setRemindMessage(String remindMessage) {
+        this.remindMessage = remindMessage;
     }
 }
