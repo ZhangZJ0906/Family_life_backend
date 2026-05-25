@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.Family_life_backend.entity.Medicine;
 import com.example.Family_life_backend.entity.Warranty;
 
 import jakarta.transaction.Transactional;
@@ -18,6 +19,11 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	@Query(value = "SELECT * FROM warranties WHERE group_id = :groupId ORDER BY warranty_end_date ASC",
 	        nativeQuery = true)
 	List<Warranty> findByGroupId(@Param("groupId") Integer groupId);
+	
+	//查詢自己
+    @Query(value = "SELECT * FROM warranties WHERE group_id = 0 and user_id = :userId ORDER BY warranty_end_date  ASC",
+            nativeQuery = true)
+    List<Warranty> findBySelfId(@Param("userId") Long userId);
 
 	 //新增
 	 @Modifying
@@ -46,7 +52,6 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	         @Param("remindMessage") String remindMessage
 	 );
 
-	    
 	// 修改
 	 @Modifying
 	 @Transactional

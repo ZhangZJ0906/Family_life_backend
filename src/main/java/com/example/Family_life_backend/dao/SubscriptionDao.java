@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Family_life_backend.entity.Subscription;
+import com.example.Family_life_backend.entity.Warranty;
 
 @Repository
 public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
@@ -19,6 +20,11 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
     // 依群組查詢訂閱
     @Query(value = "SELECT * FROM subscriptions WHERE group_id = :groupId ORDER BY next_billing_date ASC", nativeQuery = true)
     List<Subscription> findByGroupId(@Param("groupId") Integer groupId);
+    
+    //查詢自己
+    @Query(value = "SELECT * FROM subscriptions WHERE group_id = 0 and user_id = :userId ORDER BY next_billing_date ASC",
+            nativeQuery = true)
+    List<Subscription> findBySelfId(@Param("userId") Long userId);
 
     // 新增訂閱
     @Modifying
