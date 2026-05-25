@@ -162,7 +162,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			 JOIN users u
 			     ON gm.user_id = u.user_id
 			 WHERE gm.group_id = ?1
-			groupMembersDTO """, nativeQuery = true)
+			""", nativeQuery = true)
 	public List<groupMembersDTO> getMembersByGroupId(Long group_id);
 
 	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
