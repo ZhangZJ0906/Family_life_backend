@@ -43,9 +43,7 @@ public class ItemsService {
 	private groupMemberDao groupMemberDao;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
-	    if (userId == null || userId <= 0) {
-	        return new GetItemsRes("失敗 user Id 錯誤", 400);
-	    }
+
 
 	    List<Items> list = new ArrayList<>();
 
@@ -86,7 +84,7 @@ public class ItemsService {
 
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
-		Integer finalGroupId = req.getGroupId();
+		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
@@ -100,32 +98,19 @@ public class ItemsService {
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 				finalSafeQuantity, status, remindMessage);
 
-		// 只有群組物品才發通知
-		if (finalGroupId != null) {
-		    List<groupMembersDTO> getGroupMembers =
-		            groupMemberDao.getMembersByGroupId(Long.valueOf(finalGroupId));
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
 
-		    String content =
-		            groupDao.getSelfName(Long.valueOf(req.getUserId())) +
-		            "已新增" +
-		            req.getName() +
-		            "清單";
+		if (finalGroupId != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
+				}
+			}
+		}
 
-		    for (groupMembersDTO member : getGroupMembers) {
-		        if (member.getUser_id() != Long.valueOf(req.getUserId())) {
-		            itemDao.addGroupItemNotify(
-		                    Long.valueOf(finalGroupId),
-		                    member.getUser_id(),
-		                    content,
-		                    "group",
-		                    false
-		            );
-		        }
-		}
-		}
 		return new AddItemsInfoRes("成功", 200);
 	}
-
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
 		Integer finalGroupId = req.getGroupId();
