@@ -34,6 +34,7 @@ public class UserService {
 	@Autowired
 	private groupDao groupDao;
 
+	
 	/* 註冊 */
 	public BasicRes addInfo(AddInfoReq req) {
 

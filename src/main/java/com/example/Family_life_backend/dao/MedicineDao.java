@@ -14,14 +14,20 @@ import com.example.Family_life_backend.entity.Medicine;
 public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 
 	//查詢群組
-    @Query(value = "SELECT * FROM medicines WHERE group_id = :groupId ORDER BY expire_date ASC",
-            nativeQuery = true)
-    List<Medicine> findByGroupId(@Param("groupId") Integer groupId);
-    
-  //查詢自己
-    @Query(value = "SELECT * FROM medicines WHERE group_id = 0 and user_id = :userId ORDER BY expire_date ASC",
-            nativeQuery = true)
-    List<Medicine> findBySelfId(@Param("userId") Long userId);
+	@Query(value = """
+		    SELECT *
+		    FROM medicines
+		    WHERE (
+		        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
+		        OR
+		        (:groupId IS NOT NULL AND group_id = :groupId)
+		    )
+		    ORDER BY expire_date ASC
+		""", nativeQuery = true)
+		List<Medicine> findByGroupId(
+		        @Param("userId") Integer userId,
+		        @Param("groupId") Integer groupId
+		);
 
     //新增
     @Modifying

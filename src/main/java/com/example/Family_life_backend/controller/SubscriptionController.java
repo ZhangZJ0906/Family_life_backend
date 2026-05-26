@@ -26,7 +26,10 @@ public class SubscriptionController {
 
     // 查詢某群組的訂閱
     @GetMapping("/getByGroup")
-    public SubscriptionRes getByGroup(@RequestParam("groupId") Integer groupId, @RequestParam("userId") Long userId) {
+    public SubscriptionRes getByGroup(
+            @RequestParam("userId") Integer userId,
+            @RequestParam(value = "groupId", required = false) Integer groupId) {
+
         return subscriptionService.getByGroup(groupId, userId);
     }
 

@@ -27,15 +27,16 @@ public class ItemsController {
 	@Autowired
 	private ItemsService itemsService;
 
-	@GetMapping(value = "/getItems")
-	public GetItemsRes getItems(@RequestParam(value = "groupId", required = false) Integer groupId,
-			@RequestParam(value = "userId", required = false) Integer userId) {
-		System.out.println("UID:" + userId);
-		System.out.println("GID:" + groupId);
+	@GetMapping("/getItems")
+	public GetItemsRes getItems(
+	        @RequestParam("userId") Integer userId,
+	        @RequestParam(value = "groupId", required = false) Integer groupId) {
 
-		return itemsService.getItems(groupId, userId);
-	};
+	    System.out.println("UID:" + userId);
+	    System.out.println("GID:" + groupId);
 
+	    return itemsService.getItems(groupId, userId);
+	}
 	@PostMapping("/add")
 	public AddItemsInfoRes addItem(@Valid @RequestBody ItemAddInfoReq req) {
 

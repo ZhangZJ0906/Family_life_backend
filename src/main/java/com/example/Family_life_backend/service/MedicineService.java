@@ -31,24 +31,20 @@ public class MedicineService {
 	@Autowired
 	private groupDao groupDao;
 
-    public MedicineRes getByGroup(Integer groupId, Long userId) {
-//        if (groupId == null || groupId <= 0) {
-//            return new MedicineRes(400, "groupId 不可為空");
-//        }
-    	if(groupId == 0) {
-    		return new MedicineRes(
-                    200,
-                    "查詢成功",
-                    medicineDao.findBySelfId(userId)
-            );
-    	}
+    public MedicineRes getByGroup(Integer groupId, Integer userId) {
 
-        return new MedicineRes(
-                200,
-                "查詢成功",
-                medicineDao.findByGroupId(groupId)
-        );
-    }
+
+    	    if (userId == null || userId <= 0) {
+    	        return new MedicineRes(400, "userId 不可為空");
+    	    }
+
+    	    return new MedicineRes(
+    	            200,
+    	            "查詢成功",
+    	            medicineDao.findByGroupId(userId, groupId)
+    	    );
+    	}
+    
 
     public MedicineRes add(AddMedicineReq req) {
         if (req.getGroupId() == null || req.getGroupId() <= 0) {
