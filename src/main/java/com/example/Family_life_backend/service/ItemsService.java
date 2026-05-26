@@ -108,7 +108,7 @@ public class ItemsService {
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "group", false);
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
 				}
 			}
 		}

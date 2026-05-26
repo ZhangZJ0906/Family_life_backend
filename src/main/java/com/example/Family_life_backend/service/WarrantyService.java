@@ -80,7 +80,7 @@ public class WarrantyService {
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "group", false);
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist", false);
 				}
 			}
 		}
