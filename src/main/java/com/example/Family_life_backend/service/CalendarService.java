@@ -20,9 +20,7 @@ public class CalendarService {
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
 
-		if (req.getGroupId() == null) {
-			return new CalendarRes(400, "groupId 不可為空");
-		}
+		
 
 		if (req.getCreatedBy() == null) {
 			return new CalendarRes(400, "createdBy 不可為空");
