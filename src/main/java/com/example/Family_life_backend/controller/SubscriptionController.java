@@ -43,9 +43,9 @@ public class SubscriptionController {
     }
 
     // 刪除訂閱
- // 使用 DELETE 刪除訂閱
+    // 使用 DELETE 刪除訂閱
     @DeleteMapping("/delete")
-    public SubscriptionRes delete(@RequestParam("id") Integer id) {
-        return subscriptionService.delete(id);
+    public SubscriptionRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return subscriptionService.delete(id, userId);
     }
 }

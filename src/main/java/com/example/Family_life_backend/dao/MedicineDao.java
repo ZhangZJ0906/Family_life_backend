@@ -18,10 +18,20 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
             nativeQuery = true)
     List<Medicine> findByGroupId(@Param("groupId") Integer groupId);
     
-  //查詢自己
+    //查詢所屬群組
+    @Query(value = "SELECT group_id FROM medicines WHERE id = :Id",
+            nativeQuery = true)
+    Long getThisGroup(@Param("Id") Integer Id);
+    
+    //查詢自己
     @Query(value = "SELECT * FROM medicines WHERE group_id = 0 and user_id = :userId ORDER BY expire_date ASC",
             nativeQuery = true)
     List<Medicine> findBySelfId(@Param("userId") Long userId);
+    
+    //找藥名
+    @Query(value = "SELECT name FROM medicines WHERE id = :Id",
+            nativeQuery = true)
+    String getMedicineNameById(@Param("Id") Integer Id);
 
     //新增
     @Modifying
