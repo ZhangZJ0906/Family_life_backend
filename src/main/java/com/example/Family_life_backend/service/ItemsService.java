@@ -43,9 +43,6 @@ public class ItemsService {
 	private groupMemberDao groupMemberDao;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
-		if (userId == null || userId <= 0) {
-			return new GetItemsRes("失敗 user Id 錯誤", 400);
-		}
 
 		List<Items> list = new ArrayList<Items>();
 		// 群組模式驗成員
