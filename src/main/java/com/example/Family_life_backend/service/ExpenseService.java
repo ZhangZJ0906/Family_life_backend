@@ -31,7 +31,7 @@ public class ExpenseService {
 //沒有group 用自己去查
 	public GetExpenseInfoRes getExpenseInfo(Long groupId, Long userId) {
 		// 私人
-		if (groupId == null) {
+		if (groupId == 0L) {
 			if (userId == null || userId <= 0) {
 				return new GetExpenseInfoRes("userId 錯誤", 400);
 			}
