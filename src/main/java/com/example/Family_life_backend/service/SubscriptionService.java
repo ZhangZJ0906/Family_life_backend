@@ -72,9 +72,6 @@ public class SubscriptionService {
 	// 新增
 	public SubscriptionRes add(AddSubscriptionReq req) {
 
-		if (req.getUserId() == null || req.getUserId() <= 0) {
-			return new SubscriptionRes(400, "userId 不可為空");
-		}
 
 		if (req.getName() == null || req.getName().isBlank()) {
 			return new SubscriptionRes(400, "訂閱名稱不可為空");
@@ -107,7 +104,7 @@ public class SubscriptionService {
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "group", false);
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist", false);
 				}
 			}
 		}
@@ -117,10 +114,7 @@ public class SubscriptionService {
 
 	// 修改
 	public SubscriptionRes update(UpdateSubscriptionReq req) {
-		if (req.getId() == null || req.getId() <= 0) {
-			return new SubscriptionRes(400, "id 不可為空");
-		}
-
+		
 		LocalDate nextBillingDate = calculateNextBillingDate(req.getTrialEndDate(), req.getBillingCycle());
 
 		if (nextBillingDate == null) {
@@ -130,6 +124,8 @@ public class SubscriptionService {
 		String status = getSubscriptionStatus(req.getTrialEndDate(), nextBillingDate);
 
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
+		
+		System.out.println(req.getPrice());
 		int result = subscriptionDao.updateSubscription(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getPrice(), req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
 				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage);

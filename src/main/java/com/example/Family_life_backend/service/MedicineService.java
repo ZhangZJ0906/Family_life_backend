@@ -70,9 +70,6 @@ public class MedicineService {
         if (req.getUnit() == null || req.getUnit().isBlank()) {
             return new MedicineRes(400, "單位不可為空");
         }
-
-        
-
         Integer quantity = req.getQuantity() != null ? req.getQuantity() : 0;
         Integer safeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
         String status = calcMedicineStatus(quantity, safeQuantity, req.getExpireDate());
@@ -108,7 +105,7 @@ public class MedicineService {
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "group", false);
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist", false);
 				}
 			}
 		}
@@ -117,9 +114,6 @@ public class MedicineService {
     }
 
     public MedicineRes update(UpdateMedicineReq req) {
-        if (req.getId() == null || req.getId() <= 0) {
-            return new MedicineRes(400, "id 不可為空");
-        }
 
         if (req.getName() == null || req.getName().isBlank()) {
             return new MedicineRes(400, "藥品名稱不可為空");
