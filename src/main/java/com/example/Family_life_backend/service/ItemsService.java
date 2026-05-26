@@ -44,42 +44,43 @@ public class ItemsService {
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
+		List<Items> list = new ArrayList<Items>();
+		// 群組模式驗成員
+		if (groupId != 0) {
+			int isMember = groupMemberDao.checkUserIdExistInGroup(Long.valueOf(groupId), Long.valueOf(userId));
+			if (isMember <= 0) {
+				return new GetItemsRes("你不是該群組成員", 400);
+			}
 
-	    List<Items> list = new ArrayList<>();
+			// 後續還要加上 使用者查詢
+			list = itemDao.getItemByGroupId(groupId, userId);
 
-	    // groupId == null 代表私人物品，不需要驗群組成員
-	    if (groupId == null) {
-	        list = itemDao.getItemByGroupId(null, userId);
-	    } else {
-	        // groupId != null 代表群組物品，要驗證使用者是不是群組成員
-	        int isMember = groupMemberDao.checkUserIdExistInGroup(
-	                Long.valueOf(groupId),
-	                Long.valueOf(userId)
-	        );
+			if (list == null) {
+				return new GetItemsRes("失敗", 400);
+			}
 
-	        if (isMember <= 0) {
-	            return new GetItemsRes("你不是該群組成員", 400);
-	        }
+		} else if (groupId == 0) { // 私人物品
+			list = itemDao.getSelfItem(userId);
+		}
 
-	        list = itemDao.getItemByGroupId(groupId, userId);
-	    }
+		// 2. 查詢資料庫取得位置資訊
+		List<Location> locData = locationDao.getItemLocationList();
+		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
 
-	    List<Location> locData = locationDao.getItemLocationList();
-	    List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
+		// 3. 將 List<Object[]> 轉成 Map<Integer, String>，方便前端使用
+		Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(//
+				Location::getId, //
+				Location::getName, //
+				(existing, replacement) -> existing // 預防 existing 為舊的 replacement維新的 當新的等於舊的會去取舊的
+		));
+		Map<Integer, String> categoriesMap = categoriesData.stream().collect(Collectors.toMap(//
+				Categories::getCategoryId, Categories::getCategoryName, (existing, replacement) -> existing));
 
-	    Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(
-	            Location::getId,
-	            Location::getName,
-	            (existing, replacement) -> existing
-	    ));
+		System.out.println("locationMap: " + locationMap);
+		System.out.println("categoriesMap: " + categoriesMap);
 
-	    Map<Integer, String> categoriesMap = categoriesData.stream().collect(Collectors.toMap(
-	            Categories::getCategoryId,
-	            Categories::getCategoryName,
-	            (existing, replacement) -> existing
-	    ));
+		return new GetItemsRes("成功", 200, list, locationMap, categoriesMap);
 
-	    return new GetItemsRes("成功", 200, list, locationMap, categoriesMap);
 	}
 
 	@Transactional
