@@ -123,11 +123,12 @@ public class ItemsService {
 
 		return new AddItemsInfoRes("成功", 200);
 	}
-
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
+
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 		String oldItemName = itemDao.getItemNameById((long) req.getId());
+
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;

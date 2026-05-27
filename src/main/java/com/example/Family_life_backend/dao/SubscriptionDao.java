@@ -9,14 +9,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Family_life_backend.entity.Subscription;
-import com.example.Family_life_backend.entity.Warranty;
 
 @Repository
 public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 
+	@Query(value = """
+		    SELECT *
+		    FROM subscriptions
+		    WHERE (
+		        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
+		        OR
+		        (:groupId IS NOT NULL AND group_id = :groupId)
+		    )
+		    ORDER BY next_billing_date ASC
+		""", nativeQuery = true)
+		List<Subscription> findByGroupId(
+		        @Param("userId") Integer userId,
+		        @Param("groupId") Integer groupId
+		);
 	// 依群組查詢訂閱
 	@Query(value = "SELECT * FROM subscriptions WHERE group_id = :groupId ORDER BY next_billing_date ASC", nativeQuery = true)
 	List<Subscription> findByGroupId(@Param("groupId") Integer groupId);

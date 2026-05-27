@@ -39,7 +39,6 @@ public class ExpiryScheduleService {
         updateMedicineStatus();
         updateWarrantyStatus();
         updateSubscriptionStatus();
-
         System.out.println("所有到期狀態更新完成");
     }
 

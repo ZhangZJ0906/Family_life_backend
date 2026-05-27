@@ -38,10 +38,22 @@ public class MedicineService {
 	@Autowired
 	private NotifySocketService notifySocketService;
 
+    public MedicineRes getByGroup(Integer groupId, Integer userId) {
+
+
+    	    if (userId == null || userId <= 0) {
+    	        return new MedicineRes(400, "userId 不可為空");
+    	    }
+
+    	    return new MedicineRes(
+    	            200,
+    	            "查詢成功",
+    	            medicineDao.findByGroupId(userId, groupId)
+    	    );
+    	}
+    
 	public MedicineRes getByGroup(Integer groupId, Long userId) {
-//        if (groupId == null || groupId <= 0) {
-//            return new MedicineRes(400, "groupId 不可為空");
-//        }
+
 		if (groupId == 0) {
 			return new MedicineRes(200, "查詢成功", medicineDao.findBySelfId(userId));
 		}
@@ -50,6 +62,10 @@ public class MedicineService {
 	}
 
 	public MedicineRes add(AddMedicineReq req) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/ZJ
 
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new MedicineRes(400, "userId 不可為空");
