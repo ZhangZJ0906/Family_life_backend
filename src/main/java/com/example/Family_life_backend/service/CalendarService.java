@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CalendarDao;
+import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Calendar;
@@ -26,6 +27,12 @@ public class CalendarService {
 
 	@Autowired
 	private groupDao groupDao;
+
+	@Autowired
+	private NotifyDao notifyDao;
+
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
@@ -61,6 +68,11 @@ public class CalendarService {
 				if (member.getUser_id() != (long) req.getCreatedBy()) {
 					calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "calendar",
 							false);
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -97,6 +109,10 @@ public class CalendarService {
 					if (member.getUser_id() != (long) req.getCreatedBy()) {
 						calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "update",
 								false);
+						// 🔥 正確：要重新查 unread count
+						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+						notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 					}
 				}
 			}
@@ -116,6 +132,10 @@ public class CalendarService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				calendarDao.insertCalendarEventNotify(groupId, member.getUser_id(), content, "update", false);
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
 
