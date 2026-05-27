@@ -30,8 +30,11 @@ public class UserInfo {
 	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "is_notify")
-	private boolean notify;
+	@Column(name = "is_notify_by_enddate")
+	private boolean notifyByEndDate;
+	
+	@Column(name = "is_notify_by_email")
+	private boolean notifyByEmail;
 
 	@Column(name = "created_at")
 	private LocalDate createdDate;
@@ -79,12 +82,20 @@ public class UserInfo {
 		this.avatar = avatar;
 	}
 
-	public boolean isNotify() {
-		return notify;
+	public boolean isNotifyByEndDate() {
+		return notifyByEndDate;
 	}
 
-	public void setNotify(boolean notify) {
-		this.notify = notify;
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
+	}
+
+	public boolean isNotifyByEmail() {
+		return notifyByEmail;
+	}
+
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 	public LocalDate getCreatedDate() {

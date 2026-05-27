@@ -29,7 +29,7 @@ public class UserInfoRes {
 		this.userName = userInfo.getUserName();
 		this.email = userInfo.getEmail();
 		this.avatar = userInfo.getAvatar();
-		this.notify = userInfo.isNotify();
+		this.notify = userInfo.isNotifyByEndDate() || userInfo.isNotifyByEmail();
 		this.createdDate = userInfo.getCreatedDate();
 		this.updateDate = userInfo.getUpdateDate();
 	}

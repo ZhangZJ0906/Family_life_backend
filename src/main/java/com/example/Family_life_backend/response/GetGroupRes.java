@@ -6,6 +6,8 @@ import com.example.Family_life_backend.entity.group;
 
 public class GetGroupRes extends BasicResponse{
 	private List<group> groupList;
+	
+	private List<Integer> publicInventory;
 
 	public List<group> getGroupList() {
 		return groupList;
@@ -14,7 +16,14 @@ public class GetGroupRes extends BasicResponse{
 	public void setGroupList(List<group> groupList) {
 		this.groupList = groupList;
 	}
-	
+
+	public List<Integer> getPublicInventory() {
+		return publicInventory;
+	}
+
+	public void setPublicInventory(List<Integer> publicInventory) {
+		this.publicInventory = publicInventory;
+	}
 
 	public GetGroupRes() {
 		super();
@@ -26,9 +35,10 @@ public class GetGroupRes extends BasicResponse{
 		// TODO Auto-generated constructor stub
 	}
 
-	public GetGroupRes(String message, int code, List<group> groupList) {
+	public GetGroupRes(String message, int code, List<group> groupList, List<Integer> publicInventory) {
 		super(message, code);
 		this.groupList = groupList;
+		this.publicInventory = publicInventory;
 	}
 	
 	

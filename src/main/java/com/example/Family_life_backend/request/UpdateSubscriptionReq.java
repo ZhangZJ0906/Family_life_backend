@@ -2,12 +2,14 @@ package com.example.Family_life_backend.request;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+
 public class UpdateSubscriptionReq {
 
 	private Integer id;
     private Integer groupId;
     private Integer userId;
-    private String name;
+	private String name;
     private Integer price;
     private String billingCycle;
     private LocalDate nextBillingDate;
@@ -15,7 +17,8 @@ public class UpdateSubscriptionReq {
     private LocalDate trialEndDate;
     private Boolean notify;
     private String note;
-    
+    private String status;
+    private String remindMessage;
 
     public Integer getId() {
         return id;
@@ -36,6 +39,10 @@ public class UpdateSubscriptionReq {
     public Integer getPrice() {
         return price;
     }
+
+    public void setPrice(Integer price) {
+		this.price = price;
+	}
 
     public String getBillingCycle() {
         return billingCycle;
@@ -59,4 +66,22 @@ public class UpdateSubscriptionReq {
     public String getNote() {
         return note;
     }
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getRemindMessage() {
+		return remindMessage;
+	}
+
+	public void setRemindMessage(String remindMessage) {
+		this.remindMessage = remindMessage;
+	}
+    
+    
 }

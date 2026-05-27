@@ -11,9 +11,11 @@ public class UpdateUserInfoReq {
 
 	private String userName;
 
-	private String avatar;
+	private String email;
 
-	private boolean notify;
+	private boolean notifyByEndDate;
+
+	private boolean notifyByEmail;
 
 	public int getUserId() {
 		return userId;
@@ -31,20 +33,28 @@ public class UpdateUserInfoReq {
 		this.userName = userName;
 	}
 
-	public String getAvatar() {
-		return avatar;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public boolean isNotify() {
-		return notify;
+	public boolean isNotifyByEndDate() {
+		return notifyByEndDate;
 	}
 
-	public void setNotify(boolean notify) {
-		this.notify = notify;
+	public void setNotifyByEndDate(boolean notifyByEndDate) {
+		this.notifyByEndDate = notifyByEndDate;
+	}
+
+	public boolean isNotifyByEmail() {
+		return notifyByEmail;
+	}
+
+	public void setNotifyByEmail(boolean notifyByEmail) {
+		this.notifyByEmail = notifyByEmail;
 	}
 
 }

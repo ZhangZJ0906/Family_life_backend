@@ -2,16 +2,19 @@ package com.example.Family_life_backend.request;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class CalendarReq {
 
 	private Long groupId;
-
+	@NotNull(message = "createdBy 不可為空")
 	private Long createdBy;
-	
+	@NotBlank(message = "活動名稱不可為空")
 	private String title;
 	
 	private String description;
-	
+	@NotNull(message = "活動時間不可為空")
 	private LocalDateTime eventTime;
 	
 	private LocalDateTime endTime;

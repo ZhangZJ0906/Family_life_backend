@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "invited_members")
@@ -18,10 +19,10 @@ public class invitedMembers {
 	@Column(name = "user_id")
 	private Long user_id;
 
-	@Column(name = "name", nullable = false)
-	private String user_name;
-	
-	@Column(name = "avatar", nullable = false)
+	@Transient
+	private String name;
+
+	@Transient
 	private String avatar;
 
 	public Long getGroup_id() {
@@ -40,12 +41,12 @@ public class invitedMembers {
 		this.user_id = user_id;
 	}
 
-	public String getUser_name() {
-		return user_name;
+	public String getName() {
+		return name;
 	}
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getAvatar() {
@@ -61,12 +62,12 @@ public class invitedMembers {
 		// TODO Auto-generated constructor stub
 	}
 
-	public invitedMembers(Long group_id, Long user_id, String user_name, String avatar) {
+	public invitedMembers(Long group_id, Long user_id, String name, String avatar) {
 		super();
 		this.group_id = group_id;
 		this.user_id = user_id;
-		this.user_name = user_name;
+		this.name = name;
 		this.avatar = avatar;
 	}
-	
+
 }

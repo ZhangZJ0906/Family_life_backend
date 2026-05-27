@@ -43,8 +43,11 @@ public class ItemAddInfoReq {
 	@NotNull(message = "購買日期為必填")
 	@PastOrPresent(message = "購買日期不能是未來")
 	private LocalDate purchaseDate;
+
 	@FutureOrPresent(message = "到期日期不能早於今天")
 	private LocalDate expireDate;
+
+	private Integer safeQuantity;
 
 	private Boolean notify = false;
 
@@ -159,9 +162,17 @@ public class ItemAddInfoReq {
 		this.unitPrice = unitPrice;
 	}
 
+	public Integer getSafeQuantity() {
+		return safeQuantity;
+	}
+
+	public void setSafeQuantity(Integer saveQuantity) {
+		this.safeQuantity = saveQuantity;
+	}
+
 	public ItemAddInfoReq(int userId, Integer groupId, Integer categoryId, String name, Integer quantity, String unit,
 			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
-			String note) {
+			String note, Integer safeQuantity) {
 		super();
 		this.userId = userId;
 		this.groupId = groupId;
@@ -176,6 +187,7 @@ public class ItemAddInfoReq {
 		this.expireDate = expireDate;
 		this.notify = notify;
 		this.note = note;
+		this.safeQuantity = safeQuantity;
 	}
 
 }

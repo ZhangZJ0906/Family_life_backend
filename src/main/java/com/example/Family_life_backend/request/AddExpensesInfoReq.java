@@ -23,7 +23,7 @@ public class AddExpensesInfoReq {
 
 	// 非必填欄位，允許為 null
 	private Long relatedItemId;
-
+	@NotNull(message = "消費紀錄  不可為空")
 	private String relatedItemName;
 
 	@NotNull(message = "記帳日期不可為空")
