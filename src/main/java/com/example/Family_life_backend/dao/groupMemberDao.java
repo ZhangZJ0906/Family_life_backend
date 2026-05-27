@@ -129,7 +129,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update')
+			  AND n.type in ('group', 'update' , 'itemlist', 'calendar')
 
 			ORDER BY sendDate DESC;
 		    """, nativeQuery = true)

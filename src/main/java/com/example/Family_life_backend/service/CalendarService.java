@@ -1,12 +1,16 @@
 package com.example.Family_life_backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CalendarDao;
+import com.example.Family_life_backend.dao.groupDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Calendar;
 import com.example.Family_life_backend.request.CalendarReq;
 import com.example.Family_life_backend.response.CalendarRes;
@@ -16,6 +20,12 @@ public class CalendarService {
 
 	@Autowired
 	private CalendarDao calendarDao;
+
+	@Autowired
+	private groupMemberDao groupMemberDao;
+
+	@Autowired
+	private groupDao groupDao;
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
@@ -33,13 +43,24 @@ public class CalendarService {
 		if (req.getEventTime() == null) {
 			return new CalendarRes(400, "活動時間不可為空");
 		}
-
 		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
 			return new CalendarRes(400, "開始時間不可大於結束時間");
 		}
 
 		int result = calendarDao.insertCalendarEvent(req.getGroupId(), req.getCreatedBy(), req.getTitle(),
 				req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore());
+
+		// 建立行事曆通知給特定群組成員
+		if (req.getGroupId() != 0) {
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
+			String content = groupDao.getSelfName((long) req.getCreatedBy()) + "已新增" + req.getTitle();
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getCreatedBy()) {
+					calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "calendar",
+							false);
+				}
+			}
+		}
 
 		if (result > 0) {
 			return new CalendarRes(200, "新增成功");
@@ -51,10 +72,6 @@ public class CalendarService {
 	// 修改事件
 	public CalendarRes update(Long id, CalendarReq req) {
 
-		if (req.getEventTime() == null) {
-			return new CalendarRes(400, "活動開始時間不可為空");
-		}
-
 		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
 			return new CalendarRes(400, "開始時間不可大於結束時間");
 		}
@@ -63,6 +80,20 @@ public class CalendarService {
 				req.getEndTime(), req.getNotifyBefore());
 
 		if (result > 0) {
+			// 發修改通知
+			if (req.getGroupId() != 0) {
+				String oldCalendarTitle = calendarDao.getCalendarNameById(id);
+				List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
+				String content = groupDao.getSelfName((long) req.getCreatedBy()) + "修改" + oldCalendarTitle + "行事曆";
+
+				for (groupMembersDTO member : getGroupMembers) {
+					if (member.getUser_id() != (long) req.getCreatedBy()) {
+						calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "update",
+								false);
+					}
+				}
+			}
+
 			return new CalendarRes(200, "修改成功");
 		}
 
@@ -70,7 +101,16 @@ public class CalendarService {
 	}
 
 	// 刪除事件
-	public CalendarRes delete(Long id) {
+	public CalendarRes delete(Long id, Long userId, Long groupId) {
+		String oldCalendarTitle = calendarDao.getCalendarNameById(id);
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
+		String content = groupDao.getSelfName(userId) + "刪除" + oldCalendarTitle;
+
+		for (groupMembersDTO member : getGroupMembers) {
+			if (member.getUser_id() != userId) {
+				calendarDao.insertCalendarEventNotify(groupId, member.getUser_id(), content, "update", false);
+			}
+		}
 
 		int result = calendarDao.deleteCalendarEvent(id);
 
@@ -83,7 +123,10 @@ public class CalendarService {
 
 	// 查詢某一個家庭群組的所有行事曆事件
 	public CalendarRes getByGroup(Long groupId) {
-		List<Calendar> list = calendarDao.findByGroupIdOrderByEventTimeAsc(groupId);
+		List<Calendar> list = new ArrayList<Calendar>();
+		if (groupId != 0) {
+			list = calendarDao.findByGroupIdOrderByEventTimeAsc(groupId);
+		}
 		return new CalendarRes(200, "查詢成功", list);
 	}
 
@@ -91,7 +134,7 @@ public class CalendarService {
 	public CalendarRes getCalendarEvents(Long groupId, Long userId) {
 
 		// 私人活動
-		if (groupId == null) {
+		if (groupId == 0) {
 			if (userId == null || userId <= 0) {
 				return new CalendarRes(400, "userId 錯誤");
 			}

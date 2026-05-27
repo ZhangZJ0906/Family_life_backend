@@ -9,7 +9,7 @@ public class UpdateSubscriptionReq {
 	private Integer id;
     private Integer groupId;
     private Integer userId;
-    private String name;
+	private String name;
     private Integer price;
     private String billingCycle;
     private LocalDate nextBillingDate;
@@ -39,6 +39,10 @@ public class UpdateSubscriptionReq {
     public Integer getPrice() {
         return price;
     }
+
+    public void setPrice(Integer price) {
+		this.price = price;
+	}
 
     public String getBillingCycle() {
         return billingCycle;

@@ -17,6 +17,8 @@ public class ItemUpdateReq {
 
 	@NotNull(message = "分類 ID 為必填")
 	private Integer categoryId;
+	
+	private Long userId;
 
 	@NotBlank(message = "物品名稱不能為空")
 	@Size(max = 50, message = "名稱長度不能超過 50 個字")
@@ -80,6 +82,14 @@ public class ItemUpdateReq {
 
 	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public Integer getCategoryId() {
@@ -168,12 +178,13 @@ public class ItemUpdateReq {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemUpdateReq(int id, Integer groupId, Integer categoryId, String name, Integer quantity, String unit,
+	public ItemUpdateReq(int id, Integer groupId, Long userId, Integer categoryId, String name, Integer quantity, String unit,
 			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
 			String note,  Integer safeQuantity) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
+		this.userId = userId;
 		this.categoryId = categoryId;
 		this.name = name;
 		this.quantity = quantity;

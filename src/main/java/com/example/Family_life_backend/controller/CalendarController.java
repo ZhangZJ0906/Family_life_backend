@@ -16,6 +16,8 @@ import com.example.Family_life_backend.request.CalendarReq;
 import com.example.Family_life_backend.response.CalendarRes;
 import com.example.Family_life_backend.service.CalendarService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/calendar")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -26,7 +28,7 @@ public class CalendarController {
 
 	// 新增事件
 	@PostMapping("/create")
-	public CalendarRes create(@RequestBody CalendarReq req) {
+	public CalendarRes create(@Valid @RequestBody CalendarReq req) {
 		return calendarService.create(req);
 	}
 
@@ -55,8 +57,8 @@ public class CalendarController {
 	}
 
 	// 刪除事件
-	@DeleteMapping("/{id}")
-	public CalendarRes delete(@PathVariable("id") Long id) {
-		return calendarService.delete(id);
+	@DeleteMapping("/{id}/{userId}/{groupId}")
+	public CalendarRes delete(@PathVariable("id") Long id, @PathVariable("userId") Long userId, @PathVariable("groupId") Long groupId) {
+		return calendarService.delete(id, userId, groupId);
 	}
 }

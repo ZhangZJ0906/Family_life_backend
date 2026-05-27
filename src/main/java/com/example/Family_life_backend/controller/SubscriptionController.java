@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddSubscriptionReq;
-import com.example.Family_life_backend.request.DeleteSubscriptionReq;
 import com.example.Family_life_backend.request.UpdateSubscriptionReq;
 import com.example.Family_life_backend.response.SubscriptionRes;
 import com.example.Family_life_backend.service.SubscriptionService;
@@ -46,9 +45,9 @@ public class SubscriptionController {
     }
 
     // 刪除訂閱
- // 使用 DELETE 刪除訂閱
+    // 使用 DELETE 刪除訂閱
     @DeleteMapping("/delete")
-    public SubscriptionRes delete(@RequestParam("id") Integer id) {
-        return subscriptionService.delete(id);
+    public SubscriptionRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return subscriptionService.delete(id, userId);
     }
 }
