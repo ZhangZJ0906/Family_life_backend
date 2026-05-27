@@ -99,10 +99,10 @@ public class ItemsService {
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 				finalSafeQuantity, status, remindMessage);
 
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
-
 		if (finalGroupId != 0) {
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
@@ -114,7 +114,10 @@ public class ItemsService {
 	}
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
-		Integer finalGroupId = req.getGroupId();
+
+		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
+		String oldItemName = itemDao.getItemNameById((long) req.getId());
+
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
@@ -123,16 +126,27 @@ public class ItemsService {
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
-		itemDao.updateItem(req.getId(), finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(),
-				req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice(), finalSafeQuantity,
-				status, remindMessage);
+		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
+				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
+				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
+
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "清單改成" + req.getName();
+
+		if (finalGroupId != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+				}
+			}
+		}
 
 		return new BasicRes("成功", 200);
 	}
 
 	@Transactional
-	public BasicRes deleteItem(List<Integer> id) {
+	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
 			return new BasicRes("失敗：請提供要刪除的 ID 清單", 400);
 		}
@@ -142,7 +156,21 @@ public class ItemsService {
 			}
 		}
 
+		for (Integer i : id) {
+			Long finalGroupId = itemDao.getGroupIdById((long) i);
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
+			String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) i) + "刪除";
+			if (finalGroupId != 0) {
+				for (groupMembersDTO member : getGroupMembers) {
+					if (member.getUser_id() != userId) {
+						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					}
+				}
+			}
+		}
+
 		itemDao.deleteItemById(id);
+
 		return new BasicRes("成功", 200);
 
 	}

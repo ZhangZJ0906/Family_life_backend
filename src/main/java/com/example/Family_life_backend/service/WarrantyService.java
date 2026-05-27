@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
@@ -90,6 +91,8 @@ public class WarrantyService {
 
 	public WarrantyRes update(UpdateWarrantyReq req) {
 
+		String oldName = warrantyDao.getNameById(req.getId());
+		
 		if (req.getProductName() == null || req.getProductName().isBlank()) {
 			return new WarrantyRes(400, "產品名稱不可為空");
 		}
@@ -112,6 +115,17 @@ public class WarrantyService {
 				req.getBrand(), req.getModel(), req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(),
 				req.getStoreName(), req.getPrice() != null ? req.getPrice() : 0,
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
+		
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "改成" + req.getProductName();
+		
+		if (req.getGroupId() != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long)req.getGroupId(), member.getUser_id(), content, "update", false);
+				}
+			}
+		}
 
 		if (result == 0) {
 			return new WarrantyRes(404, "查無此保固資料");
@@ -120,7 +134,20 @@ public class WarrantyService {
 		return new WarrantyRes(200, "修改成功");
 	}
 
-	public WarrantyRes delete(Integer id) {
+	@Transactional
+	public WarrantyRes delete(Integer id, Long userId) {
+		
+		Long finalGroupId = itemDao.getGroupIdById((long) id);
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
+		String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) id) + "刪除";
+		if (finalGroupId != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != userId) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update",
+							false);
+				}
+			}
+		}
 
 		int result = warrantyDao.deleteWarranty(id);
 
