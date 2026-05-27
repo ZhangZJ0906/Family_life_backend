@@ -10,14 +10,17 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ExpenseDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
+import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Expense;
 import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.entity.UserInfo;
 import com.example.Family_life_backend.request.AddExpensesInfoReq;
+import com.example.Family_life_backend.request.DeleteExpensesReq;
 import com.example.Family_life_backend.request.UpdateExpensesInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetExpenseInfoRes;
@@ -30,7 +33,8 @@ public class ExpenseService {
 	private groupMemberDao groupMemberDao;
 	@Autowired
 	private ItemsDao itemsDao;
-
+	@Autowired
+	private groupDao groupDao;
 	@Autowired
 	private UserInfoDao userDao;
 
@@ -67,8 +71,7 @@ public class ExpenseService {
 					user -> {
 						user.setPwd(null); // 💡 直接把密碼欄位清空
 						return user;
-					},
-					(existing, replacement) -> existing));
+					}, (existing, replacement) -> existing));
 		}
 
 		return buildRes(result, userMap);
@@ -90,13 +93,13 @@ public class ExpenseService {
 					(existing, replacement) -> existing));
 		}
 
-
 		return new GetExpenseInfoRes("成功", 200, result, itemMap, userMap);
 	}
 
 	public BasicRes addExpenseInfo(AddExpensesInfoReq req) {
 		expenseDao.insertExpense(req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
 				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
+		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
 		return new BasicRes("成功", 200);
 	}
 
@@ -104,14 +107,31 @@ public class ExpenseService {
 
 		expenseDao.updateExpense(req.getId(), req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
 				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
+		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "更新");
 		return new BasicRes("成功", 200);
 	}
 
-	public BasicRes deleteExpenseInfo(List<Integer> id) {
-		if (id == null || id.isEmpty()) {
-			return new BasicRes("id 參數錯誤", 400);
-		}
-		expenseDao.deleteExpense(id);
+	public BasicRes deleteExpenseInfo(DeleteExpensesReq req) {
+
+		expenseDao.deleteExpense(req.getId());
+		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "刪除");
 		return new BasicRes("成功", 200);
+	}
+
+	// 通知 2026-05-27 by ZJ
+	private void sendNotifyForGroupMember(Long groupId, Long userId, String type) {
+
+		// ✅ 先擋 null，再比較數值
+		if (groupId == null || groupId == 0L) {
+			return; // 私人消費，不發通知，直接結束
+		}
+
+		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
+		String content = groupDao.getSelfName(userId) + type + "了一筆消費";
+		for (groupMembersDTO member : members) {
+			if (!member.getUser_id().equals(userId)) {
+				expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+			}
+		}
 	}
 }

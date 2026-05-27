@@ -1,7 +1,5 @@
 package com.example.Family_life_backend.controller;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddExpensesInfoReq;
+import com.example.Family_life_backend.request.DeleteExpensesReq;
 import com.example.Family_life_backend.request.UpdateExpensesInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetExpenseInfoRes;
@@ -47,9 +46,9 @@ public class ExpenseController {
 	}
 
 	@PostMapping("/deleteInfo")
-	public BasicRes deleteExpenseInfo(@RequestBody ArrayList<Integer> id) {
+	public BasicRes deleteExpenseInfo(@Valid @RequestBody DeleteExpensesReq req) {
 
-		return expenseService.deleteExpenseInfo(id);
+		return expenseService.deleteExpenseInfo(req);
 	}
 
 }
