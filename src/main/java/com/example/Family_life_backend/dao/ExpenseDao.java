@@ -22,7 +22,7 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 			""", nativeQuery = true)
 	public List<Expense> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
-	@Query(value = "Select * from expenses where user_id = :userId and group_id is null", nativeQuery = true)
+	@Query(value = "Select * from expenses where user_id = :userId and group_id =0", nativeQuery = true)
 	public List<Expense> findPersonalExpenses(@Param("userId") Long userId);
 
 	@Modifying
