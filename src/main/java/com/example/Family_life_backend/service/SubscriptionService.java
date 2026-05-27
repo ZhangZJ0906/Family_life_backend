@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
+import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.SubscriptionDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
@@ -33,6 +34,12 @@ public class SubscriptionService {
 
 	@Autowired
 	private groupDao groupDao;
+
+	@Autowired
+	private NotifyDao notifyDao;
+
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	// 查詢
 	public SubscriptionRes getByGroup(Integer groupId, Long userId) {
@@ -100,6 +107,10 @@ public class SubscriptionService {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
 							false);
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -134,6 +145,10 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -158,6 +173,10 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
