@@ -14,6 +14,7 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.LocationDao;
+import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Categories;
@@ -41,6 +42,12 @@ public class ItemsService {
 
 	@Autowired
 	private groupMemberDao groupMemberDao;
+
+	@Autowired
+	private NotifyDao notifyDao;
+
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
@@ -106,6 +113,10 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -138,6 +149,10 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -164,6 +179,10 @@ public class ItemsService {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
 						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+						// 🔥 正確：要重新查 unread count
+						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+						notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 					}
 				}
 			}

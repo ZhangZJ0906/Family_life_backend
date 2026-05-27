@@ -34,6 +34,9 @@ public class GroupMemberService {
 	@Autowired
 	private NotifyDao notifyDao;
 
+	@Autowired
+	private NotifySocketService notifySocketService;
+
 	@Transactional
 	public BasicResponse invite(groupMemberReq req) {
 		if (groupMemberDao.checkUserIdExistInGroup(req.getGroup_id(), req.getUser_id()) != 0) {
@@ -56,7 +59,11 @@ public class GroupMemberService {
 
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
 		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
-//		groupMemberDao.insert(req.getGroup_id(), req.getUser_id(), 0, req.getUser_name());
+
+		// 🔥 正確：要重新查 unread count
+		int unreadCount = notifyDao.countUnreadByUserId(req.getUser_id());
+
+		notifySocketService.pushUnreadCount(req.getUser_id(), unreadCount);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
@@ -68,6 +75,10 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
 
@@ -104,6 +115,10 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
 
@@ -128,7 +143,7 @@ public class GroupMemberService {
 	}
 
 	public getInviteMembersRes getInvitedMemberList(Long group_id) {
-		
+
 		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getInvitedMemberList(group_id));
 	}
@@ -145,8 +160,7 @@ public class GroupMemberService {
 		Map<Long, String> idMap = list.stream()//
 				.filter(row -> row[0] != null)//
 				.collect(Collectors.toMap(//
-						row -> ((Number) row[0]).longValue(),
-						row -> row[1] != null ? row[1].toString() : "未命名群組"//
+						row -> ((Number) row[0]).longValue(), row -> row[1] != null ? row[1].toString() : "未命名群組"//
 				));
 		return new GetGroupIdByUserIdRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), idMap);
 	}

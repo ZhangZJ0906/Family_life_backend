@@ -38,6 +38,9 @@ public class groupService {
 
 	@Autowired
 	private GroupRepository groupRepository;
+	
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	@Transactional
 	public BasicResponse create(CreateGroupReq req) {
@@ -113,6 +116,14 @@ public class groupService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
+					
+					// 🔥 正確：要重新查 unread count
+			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+			        notifySocketService.pushUnreadCount(
+			                member.getUser_id(),
+			                unreadCount
+			        );
 				}
 			}
 
