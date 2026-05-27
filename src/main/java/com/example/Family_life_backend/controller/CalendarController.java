@@ -57,8 +57,8 @@ public class CalendarController {
 	}
 
 	// 刪除事件
-	@DeleteMapping("/{id}")
-	public CalendarRes delete(@PathVariable("id") Long id) {
-		return calendarService.delete(id);
+	@DeleteMapping("/{id}/{userId}/{groupId}")
+	public CalendarRes delete(@PathVariable("id") Long id, @PathVariable("userId") Long userId, @PathVariable("groupId") Long groupId) {
+		return calendarService.delete(id, userId, groupId);
 	}
 }

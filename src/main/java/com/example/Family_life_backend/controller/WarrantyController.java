@@ -41,7 +41,7 @@ public class WarrantyController {
     }
 
     @DeleteMapping("/delete")
-    public WarrantyRes delete(@RequestParam("id") Integer id) {
-        return warrantyService.delete(id);
+    public WarrantyRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return warrantyService.delete(id, userId);
     }
 }

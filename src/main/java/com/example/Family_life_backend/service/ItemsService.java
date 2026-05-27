@@ -43,50 +43,49 @@ public class ItemsService {
 	private groupMemberDao groupMemberDao;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
-	    if (userId == null || userId <= 0) {
-	        return new GetItemsRes("失敗 user Id 錯誤", 400);
-	    }
 
-	    List<Items> list = new ArrayList<>();
+		List<Items> list = new ArrayList<Items>();
+		// 群組模式驗成員
+		if (groupId != 0) {
+			int isMember = groupMemberDao.checkUserIdExistInGroup(Long.valueOf(groupId), Long.valueOf(userId));
+			if (isMember <= 0) {
+				return new GetItemsRes("你不是該群組成員", 400);
+			}
 
-	    // groupId == null 代表私人物品，不需要驗群組成員
-	    if (groupId == null) {
-	        list = itemDao.getItemByGroupId(null, userId);
-	    } else {
-	        // groupId != null 代表群組物品，要驗證使用者是不是群組成員
-	        int isMember = groupMemberDao.checkUserIdExistInGroup(
-	                Long.valueOf(groupId),
-	                Long.valueOf(userId)
-	        );
+			// 後續還要加上 使用者查詢
+			list = itemDao.getItemByGroupId(groupId, userId);
 
-	        if (isMember <= 0) {
-	            return new GetItemsRes("你不是該群組成員", 400);
-	        }
+			if (list == null) {
+				return new GetItemsRes("失敗", 400);
+			}
 
-	        list = itemDao.getItemByGroupId(groupId, userId);
-	    }
+		} else if (groupId == 0) { // 私人物品
+			list = itemDao.getSelfItem(userId);
+		}
 
-	    List<Location> locData = locationDao.getItemLocationList();
-	    List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
+		// 2. 查詢資料庫取得位置資訊
+		List<Location> locData = locationDao.getItemLocationList();
+		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
 
-	    Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(
-	            Location::getId,
-	            Location::getName,
-	            (existing, replacement) -> existing
-	    ));
+		// 3. 將 List<Object[]> 轉成 Map<Integer, String>，方便前端使用
+		Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(//
+				Location::getId, //
+				Location::getName, //
+				(existing, replacement) -> existing // 預防 existing 為舊的 replacement維新的 當新的等於舊的會去取舊的
+		));
+		Map<Integer, String> categoriesMap = categoriesData.stream().collect(Collectors.toMap(//
+				Categories::getCategoryId, Categories::getCategoryName, (existing, replacement) -> existing));
 
-	    Map<Integer, String> categoriesMap = categoriesData.stream().collect(Collectors.toMap(
-	            Categories::getCategoryId,
-	            Categories::getCategoryName,
-	            (existing, replacement) -> existing
-	    ));
+		System.out.println("locationMap: " + locationMap);
+		System.out.println("categoriesMap: " + categoriesMap);
 
-	    return new GetItemsRes("成功", 200, list, locationMap, categoriesMap);
+		return new GetItemsRes("成功", 200, list, locationMap, categoriesMap);
+
 	}
 
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
-		Integer finalGroupId = req.getGroupId();
+		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
@@ -100,35 +99,25 @@ public class ItemsService {
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 				finalSafeQuantity, status, remindMessage);
 
-		// 只有群組物品才發通知
-		if (finalGroupId != null) {
-		    List<groupMembersDTO> getGroupMembers =
-		            groupMemberDao.getMembersByGroupId(Long.valueOf(finalGroupId));
+		if (finalGroupId != 0) {
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
 
-		    String content =
-		            groupDao.getSelfName(Long.valueOf(req.getUserId())) +
-		            "已新增" +
-		            req.getName() +
-		            "清單";
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
+				}
+			}
+		}
 
-		    for (groupMembersDTO member : getGroupMembers) {
-		        if (member.getUser_id() != Long.valueOf(req.getUserId())) {
-		            itemDao.addGroupItemNotify(
-		                    Long.valueOf(finalGroupId),
-		                    member.getUser_id(),
-		                    content,
-		                    "group",
-		                    false
-		            );
-		        }
-		}
-		}
 		return new AddItemsInfoRes("成功", 200);
 	}
-
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
-		Integer finalGroupId = req.getGroupId();
+
+		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
+		String oldItemName = itemDao.getItemNameById((long) req.getId());
+
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
@@ -137,16 +126,27 @@ public class ItemsService {
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
-		itemDao.updateItem(req.getId(), finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(),
-				req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUnitPrice(), finalSafeQuantity,
-				status, remindMessage);
+		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
+				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
+				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
+
+		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "清單改成" + req.getName();
+
+		if (finalGroupId != 0) {
+			for (groupMembersDTO member : getGroupMembers) {
+				if (member.getUser_id() != (long) req.getUserId()) {
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+				}
+			}
+		}
 
 		return new BasicRes("成功", 200);
 	}
 
 	@Transactional
-	public BasicRes deleteItem(List<Integer> id) {
+	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
 			return new BasicRes("失敗：請提供要刪除的 ID 清單", 400);
 		}
@@ -156,7 +156,21 @@ public class ItemsService {
 			}
 		}
 
+		for (Integer i : id) {
+			Long finalGroupId = itemDao.getGroupIdById((long) i);
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
+			String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) i) + "刪除";
+			if (finalGroupId != 0) {
+				for (groupMembersDTO member : getGroupMembers) {
+					if (member.getUser_id() != userId) {
+						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					}
+				}
+			}
+		}
+
 		itemDao.deleteItemById(id);
+
 		return new BasicRes("成功", 200);
 
 	}

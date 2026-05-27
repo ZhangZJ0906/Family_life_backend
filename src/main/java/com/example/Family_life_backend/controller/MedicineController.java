@@ -42,7 +42,7 @@ public class MedicineController {
     }
 
     @DeleteMapping("/delete")
-    public MedicineRes delete(@RequestParam("id") Integer id) {
-        return medicineService.delete(id);
+    public MedicineRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return medicineService.delete(id, userId);
     }
 }
