@@ -99,10 +99,10 @@ public class ItemsService {
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 				finalSafeQuantity, status, remindMessage);
 
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
-
 		if (finalGroupId != 0) {
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
@@ -162,8 +162,7 @@ public class ItemsService {
 			if (finalGroupId != 0) {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
-						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update",
-								false);
+						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
 					}
 				}
 			}
