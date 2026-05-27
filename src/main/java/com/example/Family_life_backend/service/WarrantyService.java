@@ -34,20 +34,13 @@ public class WarrantyService {
 	@Autowired
 	private groupDao groupDao;
 
-<<<<<<< HEAD
 	@Autowired
 	private NotifyDao notifyDao;
 
 	@Autowired
 	private NotifySocketService notifySocketService;
 
-	public WarrantyRes getByGroup(Integer groupId, Long userId) {
-//        if (groupId == null || groupId <= 0) {
-//            return new WarrantyRes(400, "groupId 不可為空");
-//        }
-=======
 	public WarrantyRes getByGroup(Integer groupId, Integer userId) {
->>>>>>> origin/ZJ
 
 	    if (userId == null || userId <= 0) {
 	        return new WarrantyRes(400, "userId 不可為空");

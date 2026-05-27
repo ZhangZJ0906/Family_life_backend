@@ -62,10 +62,6 @@ public class MedicineService {
 	}
 
 	public MedicineRes add(AddMedicineReq req) {
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/ZJ
 
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new MedicineRes(400, "userId 不可為空");
