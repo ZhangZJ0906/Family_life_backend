@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CalendarDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Calendar;
@@ -20,7 +21,13 @@ import com.example.Family_life_backend.response.CalendarRes;
 public class CalendarService {
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
 	private CalendarDao calendarDao;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
 
 	@Autowired
 	private groupMemberDao groupMemberDao;
@@ -36,8 +43,6 @@ public class CalendarService {
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
-
-		
 
 		if (req.getCreatedBy() == null) {
 			return new CalendarRes(400, "createdBy 不可為空");
@@ -66,6 +71,9 @@ public class CalendarService {
 					calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "calendar",
 							false);
 
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -102,6 +110,11 @@ public class CalendarService {
 					if (member.getUser_id() != (long) req.getCreatedBy()) {
 						calendarDao.insertCalendarEventNotify(req.getGroupId(), member.getUser_id(), content, "update",
 								false);
+
+						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+						}
+
 						// 🔥 正確：要重新查 unread count
 						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -125,6 +138,10 @@ public class CalendarService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				calendarDao.insertCalendarEventNotify(groupId, member.getUser_id(), content, "update", false);
+
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+				}
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

@@ -40,14 +40,27 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "update users set name = ?2, email = ?3, avatar = ?4, is_notify_by_enddate = ?5, is_notify_by_email = ?6, updated_at = ?7 where user_id = ?1", nativeQuery = true)
-	public void updateInfo(int userId, String userName, String email, String avatar, boolean NotifyByEndDate, boolean NotifyByEmail, String updateDate);
-	
-	//拿個資
+	public void updateInfo(int userId, String userName, String email, String avatar, boolean NotifyByEndDate,
+			boolean NotifyByEmail, String updateDate);
+
+	// 拿個資
 	@Query(value = "select * from users where user_id = :userId", nativeQuery = true)
-	public UserInfo getSelfInfoById(@Param("userId")Long userId);
-	
+	public UserInfo getSelfInfoById(@Param("userId") Long userId);
+
 	// 拿個資 多人
 	@Query(value = "select * from users where user_id in (:userId)", nativeQuery = true)
 	public List<UserInfo> getSelfInfoByIds(@Param("userId") List<Long> userId);
+
+	//拿email
+	@Query(value = "select email from users where user_id = :userId", nativeQuery = true)
+	public String getEmailById(@Param("userId") Long userId);
+	
+	// 拿endDate通知
+	@Query(value = "select is_notify_by_enddate from users where user_id = :userId", nativeQuery = true)
+	public boolean getEndDateNotifyById(@Param("userId") Long userId);
+
+	// 拿email通知
+	@Query(value = "select is_notify_by_email from users where user_id = :userId", nativeQuery = true)
+	public boolean getEmailNotifyById(@Param("userId") Long userId);
 
 }

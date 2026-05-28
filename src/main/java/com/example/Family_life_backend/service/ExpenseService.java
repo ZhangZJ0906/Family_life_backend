@@ -28,6 +28,12 @@ import com.example.Family_life_backend.response.GetExpenseInfoRes;
 @Service
 public class ExpenseService {
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	@Autowired
 	private ExpenseDao expenseDao;
 	@Autowired
 	private groupMemberDao groupMemberDao;
@@ -100,6 +106,10 @@ public class ExpenseService {
 		expenseDao.insertExpense(req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
 				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
 		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
+		
+		if (userInfoDao.getEmailNotifyById(req.getUserId()) == true) {
+			emailService.sendMail(userInfoDao.getEmailById(req.getUserId()), "群組通知", "新增");
+		}
 		return new BasicRes("成功", 200);
 	}
 
@@ -131,6 +141,10 @@ public class ExpenseService {
 		for (groupMembersDTO member : members) {
 			if (!member.getUser_id().equals(userId)) {
 				expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+				}
 			}
 		}
 	}

@@ -21,6 +21,7 @@ import com.example.Family_life_backend.request.UpdateUserAllReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.getUserInfoRes;
+import com.example.Family_life_backend.service.EmailService;
 import com.example.Family_life_backend.service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
@@ -75,4 +79,17 @@ public class UserController {
 	public getUserInfoRes getSelfInfo(@RequestParam("userId") Long userId) {
 		return userService.getUserInfo(userId);
 	}
+	
+//	//船mail
+//	@GetMapping("/test-mail")
+//	public String testMail(@RequestParam("Email") String email) {
+//		
+//	    emailService.sendMail(
+//	        email,
+//	        "測試信",
+//	        "Spring Boot Gmail 發信成功"
+//	    );
+//
+//	    return "OK";
+//	}
 }

@@ -7,6 +7,7 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.SubscriptionDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.request.AddSubscriptionReq;
@@ -22,6 +23,12 @@ import com.example.Family_life_backend.vo.SubscriptionVo;
 
 @Service
 public class SubscriptionService {
+
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
 
 	@Autowired
 	private SubscriptionDao subscriptionDao;
@@ -44,36 +51,24 @@ public class SubscriptionService {
 	// 查詢
 	public SubscriptionRes getByGroup(Integer groupId, Integer userId) {
 
-	    if (userId == null || userId <= 0) {
-	        return new SubscriptionRes(400, "userId 不可為空");
-	    }
+		if (userId == null || userId <= 0) {
+			return new SubscriptionRes(400, "userId 不可為空");
+		}
 
-	    List<Subscription> subscriptionList =
-	            subscriptionDao.findByGroupId(userId, groupId);
+		List<Subscription> subscriptionList = subscriptionDao.findByGroupId(userId, groupId);
 
-	    List<SubscriptionVo> resultList = new ArrayList<>();
+		List<SubscriptionVo> resultList = new ArrayList<>();
 
-	    for (Subscription sub : subscriptionList) {
-	        SubscriptionVo vo = new SubscriptionVo(
-	                sub.getId(),
-	                sub.getGroupId(),
-	                sub.getUserId(),
-	                sub.getName(),
-	                sub.getPrice(),
-	                sub.getBillingCycle(),
-	                sub.getPurchaseDate(),
-	                sub.getTrialEndDate(),
-	                sub.getNextBillingDate(),
-	                sub.getStatus(),
-	                sub.getRemindMessage(),
-	                sub.getNotify() == null ? true : sub.getNotify(),
-	                sub.getNote()
-	        );
+		for (Subscription sub : subscriptionList) {
+			SubscriptionVo vo = new SubscriptionVo(sub.getId(), sub.getGroupId(), sub.getUserId(), sub.getName(),
+					sub.getPrice(), sub.getBillingCycle(), sub.getPurchaseDate(), sub.getTrialEndDate(),
+					sub.getNextBillingDate(), sub.getStatus(), sub.getRemindMessage(),
+					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote());
 
-	        resultList.add(vo);
-	    }
+			resultList.add(vo);
+		}
 
-	    return new SubscriptionRes(200, "查詢成功", resultList);
+		return new SubscriptionRes(200, "查詢成功", resultList);
 	}
 
 	// 新增
@@ -112,6 +107,11 @@ public class SubscriptionService {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
 							false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -150,6 +150,11 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -178,6 +183,11 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

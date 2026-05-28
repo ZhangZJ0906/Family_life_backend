@@ -11,6 +11,7 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.MedicineDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.request.AddMedicineReq;
@@ -19,6 +20,11 @@ import com.example.Family_life_backend.response.MedicineRes;
 
 @Service
 public class MedicineService {
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
 
 	@Autowired
 	private MedicineDao medicineDao;
@@ -31,27 +37,22 @@ public class MedicineService {
 
 	@Autowired
 	private groupDao groupDao;
-	
+
 	@Autowired
 	private NotifyDao notifyDao;
-	
+
 	@Autowired
 	private NotifySocketService notifySocketService;
 
-    public MedicineRes getByGroup(Integer groupId, Integer userId) {
+	public MedicineRes getByGroup(Integer groupId, Integer userId) {
 
+		if (userId == null || userId <= 0) {
+			return new MedicineRes(400, "userId 不可為空");
+		}
 
-    	    if (userId == null || userId <= 0) {
-    	        return new MedicineRes(400, "userId 不可為空");
-    	    }
+		return new MedicineRes(200, "查詢成功", medicineDao.findByGroupId(userId, groupId));
+	}
 
-    	    return new MedicineRes(
-    	            200,
-    	            "查詢成功",
-    	            medicineDao.findByGroupId(userId, groupId)
-    	    );
-    	}
-    
 	public MedicineRes getByGroup(Integer groupId, Long userId) {
 
 		if (groupId == 0) {
@@ -103,14 +104,15 @@ public class MedicineService {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
 							false);
+
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
 					
 					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -158,13 +160,15 @@ public class MedicineService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -188,13 +192,15 @@ public class MedicineService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
