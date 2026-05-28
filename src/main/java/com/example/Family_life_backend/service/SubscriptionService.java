@@ -105,7 +105,7 @@ public class SubscriptionService {
 				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到訂閱清單";
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -144,7 +144,7 @@ public class SubscriptionService {
 				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "改成" + req.getName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將訂閱" + oldName + "改成" + req.getName();
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -173,7 +173,7 @@ public class SubscriptionService {
 
 		Long finalGroupId = subscriptionDao.getGroupId(id);
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-		String content = groupDao.getSelfName(userId) + "已將" + subscriptionDao.getOldNameById(id) + "刪除";
+		String content = groupDao.getSelfName(userId) + "已將訂閱" + subscriptionDao.getOldNameById(id) + "刪除";
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {

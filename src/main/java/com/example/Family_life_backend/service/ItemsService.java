@@ -108,7 +108,7 @@ public class ItemsService {
 
 		if (finalGroupId != 0) {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到一般用品清單";
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
@@ -143,7 +143,7 @@ public class ItemsService {
 				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "清單改成" + req.getName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
 
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -174,7 +174,7 @@ public class ItemsService {
 		for (Integer i : id) {
 			Long finalGroupId = itemDao.getGroupIdById((long) i);
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-			String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) i) + "刪除";
+			String content = groupDao.getSelfName(userId) + "已將一般用品" + itemDao.getItemNameById((long) i) + "刪除";
 			if (finalGroupId != 0) {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {

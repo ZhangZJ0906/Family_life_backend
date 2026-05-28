@@ -96,7 +96,7 @@ public class MedicineService {
 				remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到藥品清單";
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -152,7 +152,7 @@ public class MedicineService {
 				remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "清單改成" + req.getName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "藥品清單改成" + req.getName();
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -183,7 +183,7 @@ public class MedicineService {
 
 		Long finalGroupId = medicineDao.getThisGroup(id);
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-		String content = groupDao.getSelfName(userId) + "已將" + medicineDao.getMedicineNameById(id) + "刪除";
+		String content = groupDao.getSelfName(userId) + "已將藥品" + medicineDao.getMedicineNameById(id) + "刪除";
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {

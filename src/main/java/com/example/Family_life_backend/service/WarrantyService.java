@@ -84,7 +84,7 @@ public class WarrantyService {
 				req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "清單";
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -129,7 +129,7 @@ public class WarrantyService {
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "改成" + req.getProductName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固" + oldName + "改成" + req.getProductName();
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
@@ -155,7 +155,7 @@ public class WarrantyService {
 
 		Long finalGroupId = itemDao.getGroupIdById((long) id);
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-		String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) id) + "刪除";
+		String content = groupDao.getSelfName(userId) + "已將保固" + itemDao.getItemNameById((long) id) + "刪除";
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
