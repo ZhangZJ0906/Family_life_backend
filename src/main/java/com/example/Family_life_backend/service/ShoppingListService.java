@@ -192,4 +192,30 @@ public class ShoppingListService {
 
 		return purchaseItemList;
 	}
+	
+	
+	public BasicRes updateItem(AddPurchaseItemReq req) {
+	    PurchaseItemVo vo = req.getPurchaseItemVoList().get(0);
+	    PurchaseItemId id = new PurchaseItemId(vo.getId(), req.getListId());
+
+	    PurchaseItem item = purchaseItemDao.findById(id).orElse(null);
+	    if (item == null) {
+	        return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(), ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
+	    }
+
+	    item.setUserId(vo.getUserId());
+	    item.setCategoryId(vo.getCategoryId());
+	    item.setItem(vo.getItem());
+	    item.setQuantity(vo.getQuantity());
+
+	    purchaseItemDao.save(item);
+	    return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+	}
+	
+	
+	
+	
+	
+	
+	
 }
