@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddSubscriptionReq;
-import com.example.Family_life_backend.request.DeleteSubscriptionReq;
 import com.example.Family_life_backend.request.UpdateSubscriptionReq;
 import com.example.Family_life_backend.response.SubscriptionRes;
 import com.example.Family_life_backend.service.SubscriptionService;

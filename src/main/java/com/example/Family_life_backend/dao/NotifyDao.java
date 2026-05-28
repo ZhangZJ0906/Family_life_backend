@@ -57,4 +57,9 @@ public interface NotifyDao extends JpaRepository<notify, Long>{
 		    select count(*) from notify where get_user_id = :getUserId
 		""", nativeQuery = true)
 	public int getNotifyCount(@Param("getUserId") Long getUserId);
+	
+	@Query(value = """
+		    select count(*) from notify where get_user_id = :getUserId and is_read = 0
+		""", nativeQuery = true)
+	public int countUnreadByUserId(@Param("getUserId") Long getUserId);
 }

@@ -7,7 +7,6 @@ import com.example.Family_life_backend.entity.ShoppingList;
 import com.example.Family_life_backend.vo.PurchaseItemVo;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public class CreateListReq {
@@ -17,7 +16,6 @@ public class CreateListReq {
 	private ShoppingList shoppingList;
 
 	@Valid
-	@NotEmpty(message = ValidMessage.PURCHASEITEMVO_IS_EMPTY)
 	private List<PurchaseItemVo> purchaseItemVoList;
 
 	public ShoppingList getShoppingList() {

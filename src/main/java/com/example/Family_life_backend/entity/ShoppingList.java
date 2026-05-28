@@ -19,7 +19,7 @@ public class ShoppingList {
 	@Column(name = "id")
 	private int id;
 	
-	@Column(name = "group_id")
+	@Column(name = "group_id", nullable = true)
 	private Integer group_id;
 
 	@NotBlank
