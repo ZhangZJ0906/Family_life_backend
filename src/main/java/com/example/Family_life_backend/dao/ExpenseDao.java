@@ -48,7 +48,7 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 	@Transactional
 	@Query(value = "delete from expenses   where id in (:id) ", nativeQuery = true)
 	public void deleteExpense(@Param("id") List<Integer> id);
-	
+
 	// 通知 2026-05-27 by ZJ
 		@Modifying
 		@Transactional
@@ -61,8 +61,4 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 
 
 }
-
-
-	
-
 

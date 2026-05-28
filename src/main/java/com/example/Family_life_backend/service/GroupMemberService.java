@@ -12,6 +12,7 @@ import com.example.Family_life_backend.DTO.UserNotifyDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 
@@ -25,6 +26,12 @@ import com.example.Family_life_backend.response.getNotifyRes;
 
 @Service
 public class GroupMemberService {
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
 	@Autowired
 	private groupMemberDao groupMemberDao;
 
@@ -60,6 +67,10 @@ public class GroupMemberService {
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
 		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
 
+		if (userInfoDao.getEmailNotifyById(req.getUser_id()) == true) {
+			emailService.sendMail(userInfoDao.getEmailById(req.getUser_id()), "邀請通知", content);
+		}
+
 		// 🔥 正確：要重新查 unread count
 		int unreadCount = notifyDao.countUnreadByUserId(req.getUser_id());
 
@@ -75,6 +86,11 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+				}
+
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -115,6 +131,11 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+				}
+				
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

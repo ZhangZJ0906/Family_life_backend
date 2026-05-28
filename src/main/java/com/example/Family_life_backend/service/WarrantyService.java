@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.WarrantyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
@@ -22,6 +23,12 @@ import com.example.Family_life_backend.response.WarrantyRes;
 @Service
 public class WarrantyService {
 
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+	
 	@Autowired
 	private WarrantyDao warrantyDao;
 
@@ -84,13 +91,18 @@ public class WarrantyService {
 				req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "清單";
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
 							false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -129,12 +141,17 @@ public class WarrantyService {
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "改成" + req.getProductName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固" + oldName + "改成" + req.getProductName();
 
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -155,11 +172,15 @@ public class WarrantyService {
 
 		Long finalGroupId = itemDao.getGroupIdById((long) id);
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-		String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) id) + "刪除";
+		String content = groupDao.getSelfName(userId) + "已將保固" + itemDao.getItemNameById((long) id) + "刪除";
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
