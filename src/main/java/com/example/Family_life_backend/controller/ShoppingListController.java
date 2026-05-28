@@ -58,6 +58,11 @@ public class ShoppingListController {
 	public BasicRes addItems(@Valid @RequestBody AddPurchaseItemReq req) {
 		return shoppingListService.addItems(req);
 	}
+	
+	@PostMapping("/items/update")
+	public BasicRes updateItem(@Valid @RequestBody AddPurchaseItemReq req) {
+	    return shoppingListService.updateItem(req);
+	}
 
 	@PostMapping("/items/delete")
 	public BasicRes deleteItem(
