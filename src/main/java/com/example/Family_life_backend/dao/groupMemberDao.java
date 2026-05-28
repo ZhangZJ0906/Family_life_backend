@@ -14,7 +14,6 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.DTO.invitedMembersDTO;
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.GroupMembersId;
-import com.example.Family_life_backend.entity.invitedMembers;
 
 @Repository
 public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembersId> {
@@ -129,7 +128,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update' , 'itemlist', 'calendar')
+			  AND n.type in ('group', 'update' , 'itemlist', 'calendar','expense')
 
 			ORDER BY sendDate DESC;
 		    """, nativeQuery = true)
