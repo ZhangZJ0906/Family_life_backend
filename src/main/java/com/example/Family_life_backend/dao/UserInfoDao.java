@@ -1,5 +1,7 @@
 package com.example.Family_life_backend.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +18,8 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	/* 註冊 */
 	@Modifying
 	@Transactional
-	@Query(value = "insert ignore into users( name, email, password, avatar, created_at)"//
+	@Query(value = "insert ignore into users(email, name, password, avatar, created_at)"//
+
 			+ "values (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
 	public void insert(String email, String userName, String pwd, //
 			String avatar, String createdDate);
@@ -44,4 +47,8 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Query(value = "select * from users where user_id = :userId", nativeQuery = true)
 	public UserInfo getSelfInfoById(@Param("userId")Long userId);
 	
+	// 拿個資 多人
+	@Query(value = "select * from users where user_id in (:userId)", nativeQuery = true)
+	public List<UserInfo> getSelfInfoByIds(@Param("userId") List<Long> userId);
+
 }

@@ -42,6 +42,20 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	int updateCalendarEvent(Long id, String title, String description, LocalDateTime eventTime, LocalDateTime endTime,
 			Integer notifyBefore);
 
+	// 找行事曆名字
+	@Query(value = "select title from calendar_events where id = :id", nativeQuery = true)
+	public String getCalendarNameById(@Param("id") Long id);
+
+	// 通知
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void insertCalendarEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+
 	// 刪除事件
 	@Transactional
 	@Modifying
@@ -72,7 +86,7 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 			""", nativeQuery = true)
 	public List<Calendar> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
-// 查私人 2026-05-24 by ZJ
-	@Query(value = "Select * from calendar_events where created_by = :userId and group_id is null", nativeQuery = true)
+	// 查私人 2026-05-24 by ZJ
+	@Query(value = "Select * from calendar_events where created_by = :userId and group_id = 0", nativeQuery = true)
 	public List<Calendar> findPersonalExpenses(@Param("userId") Long userId);
 }

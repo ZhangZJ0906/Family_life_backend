@@ -14,12 +14,13 @@ import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+
 import com.example.Family_life_backend.request.groupMemberReq;
 import com.example.Family_life_backend.request.joinGroupReq;
+import com.example.Family_life_backend.response.getInviteMembersRes;
 import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
-import com.example.Family_life_backend.response.getInvitedMemberRes;
 import com.example.Family_life_backend.response.getNotifyRes;
 
 @Service
@@ -32,6 +33,9 @@ public class GroupMemberService {
 
 	@Autowired
 	private NotifyDao notifyDao;
+
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	@Transactional
 	public BasicResponse invite(groupMemberReq req) {
@@ -54,20 +58,27 @@ public class GroupMemberService {
 		String type = "invite";
 
 		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
-		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id(), req.getUser_name(), null);
-//		groupMemberDao.insert(req.getGroup_id(), req.getUser_id(), 0, req.getUser_name());
+		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
+
+		// 🔥 正確：要重新查 unread count
+		int unreadCount = notifyDao.countUnreadByUserId(req.getUser_id());
+
+		notifySocketService.pushUnreadCount(req.getUser_id(), unreadCount);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
 	@Transactional
 	public BasicResponse acceptJoinGroup(Long userId, Long groupId, Long notifyId) {
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
-		String group_name = groupDao.getGroupName(groupId);
 		String content = "歡迎" + groupDao.getSelfName(userId) + "加入";
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
 
@@ -100,11 +111,14 @@ public class GroupMemberService {
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 		String content = "歡迎" + groupDao.getSelfName(req.getUserId()) + "加入";
-		String group_name = groupDao.getGroupName(groupId);
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
 
@@ -128,8 +142,9 @@ public class GroupMemberService {
 		return count;
 	}
 
-	public getInvitedMemberRes getInvitedMemberList(Long group_id) {
-		return new getInvitedMemberRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
+	public getInviteMembersRes getInvitedMemberList(Long group_id) {
+
+		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
 				groupMemberDao.getInvitedMemberList(group_id));
 	}
 
@@ -145,8 +160,7 @@ public class GroupMemberService {
 		Map<Long, String> idMap = list.stream()//
 				.filter(row -> row[0] != null)//
 				.collect(Collectors.toMap(//
-						row -> ((Number) row[0]).longValue(),
-						row -> row[1] != null ? row[1].toString() : "未命名群組"//
+						row -> ((Number) row[0]).longValue(), row -> row[1] != null ? row[1].toString() : "未命名群組"//
 				));
 		return new GetGroupIdByUserIdRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), idMap);
 	}

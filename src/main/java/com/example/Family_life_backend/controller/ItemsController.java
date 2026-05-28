@@ -24,15 +24,20 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/item")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ItemsController {
+	
 	@Autowired
 	private ItemsService itemsService;
 
-	@GetMapping(value = "/getItems")
-	public GetItemsRes getItems(@RequestParam(value = "groupId", required = false) Integer groupId,
-			@RequestParam(value = "userId", required = false) Integer userId) {
-		return itemsService.getItems(groupId, userId);
-	};
+	@GetMapping("/getItems")
+	public GetItemsRes getItems(
+	        @RequestParam("userId") Integer userId,
+	        @RequestParam(value = "groupId", required = false) Integer groupId) {
 
+	    System.out.println("UID:" + userId);
+	    System.out.println("GID:" + groupId);
+
+	    return itemsService.getItems(groupId, userId);
+	}
 	@PostMapping("/add")
 	public AddItemsInfoRes addItem(@Valid @RequestBody ItemAddInfoReq req) {
 
@@ -46,8 +51,8 @@ public class ItemsController {
 	}
 
 	@PostMapping("/delete")
-	public BasicRes deleteItem(@RequestBody List<Integer> id) {
+	public BasicRes deleteItem(@RequestBody List<Integer> id, @RequestParam(value = "userId", required = false) Long userId) {
 
-		return itemsService.deleteItem(id);
+		return itemsService.deleteItem(id, userId);
 	}
 }

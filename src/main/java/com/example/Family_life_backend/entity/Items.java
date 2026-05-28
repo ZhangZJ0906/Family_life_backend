@@ -16,7 +16,7 @@ public class Items {
 	private int id;
 
 	@Column(name = "group_id")
-	private int groupId;
+	private Integer groupId;
 
 	@Column(name = "category_id")
 	private int categoryId;
@@ -63,9 +63,7 @@ public class Items {
 	@Column(name = "remind_message")
 	private String remindMessage;
 
-
-
-	public Items(int id, int groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
+	public Items(int id, Integer groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
 			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
 			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status,String remindMessage) {
 		super();
@@ -113,12 +111,12 @@ public class Items {
 		this.id = id;
 	}
 
-	public int getGroupId() {
-		return groupId;
+	public Integer getGroupId() {
+	    return groupId;
 	}
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
+	public void setGroupId(Integer groupId) {
+	    this.groupId = groupId;
 	}
 
 	public int getCategoryId() {

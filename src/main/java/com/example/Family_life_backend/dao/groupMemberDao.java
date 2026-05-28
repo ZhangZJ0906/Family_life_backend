@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.Family_life_backend.DTO.UserNotifyDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
+import com.example.Family_life_backend.DTO.invitedMembersDTO;
 import com.example.Family_life_backend.entity.GroupMembers;
 import com.example.Family_life_backend.entity.GroupMembersId;
-import com.example.Family_life_backend.entity.invitedMembers;
 
 @Repository
 public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembersId> {
@@ -21,11 +21,10 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into invited_members (user_id, group_id, name, avatar) values (:getUserId, :groupId, :name, :avatar)
-			""", nativeQuery = true)
-	public void addToInviteMember(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId,
-			@Param("name") String name, @Param("avatar") String avatar);
-
+		    insert into invited_members (user_id, group_id) values (:getUserId, :groupId)
+		""", nativeQuery = true)
+	public void addToInviteMember(@Param("getUserId") Long getUserId,  @Param("groupId") Long groupId);
+	
 	@Query(value = "select count(*) from invited_members where user_id = :getUserId and group_id = :groupId", nativeQuery = true)
 	public int isInvite(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId);
 
@@ -132,15 +131,28 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update')
+			  AND n.type in ('group', 'update' , 'itemlist', 'calendar','expense')
 
 			ORDER BY sendDate DESC;
-			   """, nativeQuery = true)
-	public List<UserNotifyDTO> getNotifyList(@Param("user_id") Long user_id);
-
-	@Query(value = "select * from invited_members where group_id = :groupId", nativeQuery = true)
-	public List<invitedMembers> getInvitedMemberList(@Param("groupId") Long groupId);
-
+		    """, nativeQuery = true)
+		public List<UserNotifyDTO> getNotifyList(
+		    @Param("user_id") Long user_id
+		);
+	
+	
+	@Query(value = """
+		    SELECT
+	        im.group_id as group_id,
+	        im.user_id as user_id,
+	        u.name as name,
+	        u.avatar as avatar
+	    FROM invited_members im
+	    JOIN users u
+	        ON im.user_id = u.user_id
+	    WHERE im.group_id = ?1
+	    """, nativeQuery = true)
+	public List<invitedMembersDTO> getInvitedMemberList(@Param("groupId") Long groupId);
+			
 	@Query(value = """
 			 SELECT
 			     gm.group_id as group_id,
@@ -152,7 +164,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			 JOIN users u
 			     ON gm.user_id = u.user_id
 			 WHERE gm.group_id = ?1
-			groupMembersDTO """, nativeQuery = true)
+			""", nativeQuery = true)
 	public List<groupMembersDTO> getMembersByGroupId(Long group_id);
 
 	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */

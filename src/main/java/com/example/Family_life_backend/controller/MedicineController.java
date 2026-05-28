@@ -24,8 +24,11 @@ public class MedicineController {
     private MedicineService medicineService;
 
     @GetMapping("/getByGroup")
-    public MedicineRes getByGroup(@RequestParam("groupId") Integer groupId) {
-        return medicineService.getByGroup(groupId);
+    public MedicineRes getByGroup(
+            @RequestParam("userId") Integer userId,
+            @RequestParam(value = "groupId", required = false) Integer groupId) {
+
+        return medicineService.getByGroup(groupId, userId);
     }
 
     @PostMapping("/add")
@@ -39,7 +42,7 @@ public class MedicineController {
     }
 
     @DeleteMapping("/delete")
-    public MedicineRes delete(@RequestParam("id") Integer id) {
-        return medicineService.delete(id);
+    public MedicineRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return medicineService.delete(id, userId);
     }
 }

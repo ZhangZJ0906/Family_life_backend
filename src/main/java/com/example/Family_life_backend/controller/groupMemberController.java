@@ -16,8 +16,9 @@ import com.example.Family_life_backend.request.joinGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
 import com.example.Family_life_backend.response.GetGroupIdByUserIdRes;
 import com.example.Family_life_backend.response.GetGroupMemberRes;
-import com.example.Family_life_backend.response.getInvitedMemberRes;
+import com.example.Family_life_backend.response.getInviteMembersRes;
 import com.example.Family_life_backend.response.getNotifyRes;
+
 import com.example.Family_life_backend.service.GroupMemberService;
 
 import jakarta.validation.Valid;
@@ -69,7 +70,7 @@ public class groupMemberController {
 	}
 	
 	@GetMapping("get_invited_members")
-	public getInvitedMemberRes getInvitedMembers(@RequestParam("group_id") Long group_id) {
+	public getInviteMembersRes getInvitedMembers(@RequestParam("group_id") Long group_id) {
 		return groupMemberService.getInvitedMemberList(group_id);
 	}
 	

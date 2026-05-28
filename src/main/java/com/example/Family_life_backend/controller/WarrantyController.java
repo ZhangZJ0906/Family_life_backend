@@ -24,10 +24,12 @@ public class WarrantyController {
     private WarrantyService warrantyService;
 
     @GetMapping("/getByGroup")
-    public WarrantyRes getByGroup(@RequestParam("groupId") Integer groupId) {
-        return warrantyService.getByGroup(groupId);
-    }
+    public WarrantyRes getByGroup(
+            @RequestParam("userId") Integer userId,
+            @RequestParam(value = "groupId", required = false) Integer groupId) {
 
+        return warrantyService.getByGroup(groupId, userId);
+    }
     @PostMapping("/add")
     public WarrantyRes add(@RequestBody AddWarrantyReq req) {
         return warrantyService.add(req);
@@ -39,7 +41,7 @@ public class WarrantyController {
     }
 
     @DeleteMapping("/delete")
-    public WarrantyRes delete(@RequestParam("id") Integer id) {
-        return warrantyService.delete(id);
+    public WarrantyRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+        return warrantyService.delete(id, userId);
     }
 }

@@ -35,24 +35,23 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	/* 註冊 */
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
 		return userService.addInfo(req);
 	}
 
-	/* 登入 */
-	@GetMapping("/login")
-	public getUserInfoRes login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
-
+	@GetMapping(value = "/login")
+	public getUserInfoRes login(
+			@RequestParam("email") String email,
+			@RequestParam("password") String pwd) {
 		return userService.login(email, pwd);
 	}
 
-	/* 更改密碼 */
 	@PostMapping("/chang_pwd")
 	public BasicRes updatePwd(@Valid @RequestBody ChangePwdReq req) {
 		return userService.changePwd(req);
 	}
+
 
 	/* 變更資料 */
 	@PostMapping(value = "/update_info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -61,23 +60,14 @@ public class UserController {
 			@RequestPart(value = "avatar", required = false) MultipartFile avatar) throws Exception {
 
 		ObjectMapper mapper = new ObjectMapper();
-
-		// JSON -> DTO
 		UpdateUserInfoReq userInfo = mapper.readValue(userInfoJson, UpdateUserInfoReq.class);
-
-		// JSON -> List
 		List<PublicInventoryItem> list = mapper.readValue(publicInventoryJson,
 				new TypeReference<List<PublicInventoryItem>>() {
 				});
 
-		// 組 req
 		UpdateUserAllReq req = new UpdateUserAllReq();
-
 		req.setUserInfo(userInfo);
 		req.setPublicInventoryList(list);
-
-		System.out.println(userInfoJson);
-		System.out.println(avatar);
 
 		return userService.updateInfo(req, avatar);
 	}

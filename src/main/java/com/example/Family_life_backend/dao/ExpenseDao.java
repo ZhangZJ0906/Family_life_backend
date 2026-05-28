@@ -22,7 +22,7 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 			""", nativeQuery = true)
 	public List<Expense> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
-	@Query(value = "Select * from expenses where user_id = :userId and group_id is null", nativeQuery = true)
+	@Query(value = "Select * from expenses where user_id = :userId and group_id =0", nativeQuery = true)
 	public List<Expense> findPersonalExpenses(@Param("userId") Long userId);
 
 	@Modifying
@@ -48,4 +48,15 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 	@Transactional
 	@Query(value = "delete from expenses   where id in (:id) ", nativeQuery = true)
 	public void deleteExpense(@Param("id") List<Integer> id);
+
+	// 通知 2026-05-27 by ZJ
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void insertExpensesEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+
 }
