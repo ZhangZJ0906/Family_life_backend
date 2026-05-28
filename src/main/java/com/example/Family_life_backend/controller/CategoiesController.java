@@ -13,10 +13,13 @@ import com.example.Family_life_backend.service.CategoiesServices;
 @RequestMapping(value = "/categories")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CategoiesController {
+	
 	@Autowired
 	private CategoiesServices categoiesServices;
+	
 	@GetMapping(value = "/get")
 	public GetCatgoiesRes getAll() {
 		return categoiesServices.getall();
 	}
+	
 }

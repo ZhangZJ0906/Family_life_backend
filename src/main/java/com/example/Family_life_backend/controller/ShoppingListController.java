@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.entity.PurchaseItem;
+import com.example.Family_life_backend.entity.ShoppingList;
 import com.example.Family_life_backend.request.AddPurchaseItemReq;
 import com.example.Family_life_backend.request.CreateListReq;
 import com.example.Family_life_backend.response.BasicRes;
@@ -27,46 +28,47 @@ public class ShoppingListController {
 	@Autowired
 	private ShoppingListService shoppingListService;
 
-	/* 新增購物清單 */
 	@PostMapping("/create")
 	public BasicRes create(@Valid @RequestBody CreateListReq req) {
 		return shoppingListService.create(req);
 	}
 
-	/* 刪除購物清單 */
+	// Frontend shopping-list page uses this endpoint to render "my lists".
+	@GetMapping
+	public List<ShoppingList> getLists(@RequestParam("createrId") int createrId) {
+		return shoppingListService.getLists(createrId);
+	}
+
 	@PostMapping("/delete")
 	public BasicRes delete(@RequestParam("listId") int listId) {
 		return shoppingListService.delete(listId);
 	}
 
-	/* 變更購物清單 */
 	@PostMapping("/update")
 	public BasicRes updateList(@RequestBody CreateListReq req) {
 		return shoppingListService.updateList(req);
 	}
 
-	/* 查看購物項目 */
 	@GetMapping("/items")
-	public List<PurchaseItem> getItems(@RequestParam ("listId") int listId) {
+	public List<PurchaseItem> getItems(@RequestParam("listId") int listId) {
 		return shoppingListService.getItems(listId);
 	}
 
-	/* 在已有的購物清單裡增加購物項目 */
 	@PostMapping("/items/add")
 	public BasicRes addItems(@Valid @RequestBody AddPurchaseItemReq req) {
 		return shoppingListService.addItems(req);
 	}
 
-	/* 刪除購物清單裡的購物項目 */
 	@PostMapping("/items/delete")
-	public BasicRes deleteItem(@RequestParam("listId") int listId,
+	public BasicRes deleteItem(
+			@RequestParam("listId") int listId,
 			@RequestParam("itemId") int itemId) {
 		return shoppingListService.deleteItem(listId, itemId);
 	}
 
-	/* 勾選 / 取消勾選購物項目 */
 	@PostMapping("/items/check")
-	public BasicRes updateCheck(@RequestParam("listId") int listId,
+	public BasicRes updateCheck(
+			@RequestParam("listId") int listId,
 			@RequestParam("itemId") int itemId,
 			@RequestParam("check") boolean check,
 			@RequestParam("checkMan") int checkMan) {

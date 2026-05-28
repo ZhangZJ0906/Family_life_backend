@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/item")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ItemsController {
+	
 	@Autowired
 	private ItemsService itemsService;
 

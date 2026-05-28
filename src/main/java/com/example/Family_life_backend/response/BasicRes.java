@@ -12,6 +12,12 @@ public class BasicRes {
 		this.code = code;
 	}
 
+	public BasicRes(int code, String message) {
+		super();
+		this.message = message;
+		this.code = code;
+	}
+
 	public BasicRes() {
 		super();
 		// TODO Auto-generated constructor stub

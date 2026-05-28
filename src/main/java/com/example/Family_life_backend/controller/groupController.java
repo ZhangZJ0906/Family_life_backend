@@ -28,7 +28,7 @@ public class groupController {
 	@Autowired
 	private groupService groupService;
 	
-	@PostMapping("create")
+	@PostMapping("/create")
 	public BasicResponse create(@Valid @RequestBody CreateGroupReq req) {
 		return groupService.create(req);
 	}

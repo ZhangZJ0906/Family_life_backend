@@ -37,6 +37,19 @@ public class CalendarService {
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
 
+		
+
+		if (req.getCreatedBy() == null) {
+			return new CalendarRes(400, "createdBy 不可為空");
+		}
+
+		if (req.getTitle() == null || req.getTitle().isBlank()) {
+			return new CalendarRes(400, "活動名稱不可為空");
+		}
+
+		if (req.getEventTime() == null) {
+			return new CalendarRes(400, "活動時間不可為空");
+		}
 		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
 			return new CalendarRes(400, "開始時間不可大於結束時間");
 		}
