@@ -78,6 +78,21 @@ public class UserController {
 		return userService.getUserInfo(userId);
 	}
 
+	
+//	//船mail
+//	@GetMapping("/test-mail")
+//	public String testMail(@RequestParam("Email") String email) {
+//		
+//	    emailService.sendMail(
+//	        email,
+//	        "測試信",
+//	        "Spring Boot Gmail 發信成功"
+//	    );
+//
+//	    return "OK";
+//	}
+
+
 //確認Email 2026-05-28 by ZJ
 	@GetMapping("/checkEmail")
 	public BasicRes checkEmail(@RequestParam("email") String email) {
