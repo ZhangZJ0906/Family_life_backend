@@ -50,13 +50,15 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 	public void deleteExpense(@Param("id") List<Integer> id);
 
 	// 通知 2026-05-27 by ZJ
-	@Modifying
-	@Transactional
-	@Query(value = """
-			    insert into notify (send_id, get_user_id, content, type, is_read)
-			    values (:sendId, :getUserId, :content, :type, :isRead)
-			""", nativeQuery = true)
-	public void insertExpensesEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+		@Modifying
+		@Transactional
+		@Query(value = """
+				    insert into notify (send_id, get_user_id, content, type, is_read)
+				    values (:sendId, :getUserId, :content, :type, :isRead)
+				""", nativeQuery = true)
+		public void insertExpensesEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+				@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+
 
 }
+
