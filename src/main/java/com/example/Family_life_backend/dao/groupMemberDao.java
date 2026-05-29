@@ -182,5 +182,19 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 
 			""", nativeQuery = true)
 	public List<Object[]> getGroupIdByUserId(@Param("userId") Long userID);
+	
+	// 檢查使用者是否存在於指定群組
+	@Query(value = """
+	    SELECT COUNT(*)
+	    FROM group_members
+	    WHERE group_id = :groupId
+	      AND user_id = :userId
+	    """, nativeQuery = true)
+	int countByGroupIdAndUserId(
+	    @Param("groupId") Long groupId,
+	    @Param("userId") Long userId
+	);
+	
+	
 
 }

@@ -16,31 +16,68 @@ import com.example.Family_life_backend.entity.Calendar;
 public interface CalendarDao extends JpaRepository<Calendar, Long> {
 
 	// 新增事件
-	@Transactional
 	@Modifying
+	@Transactional
 	@Query(value = """
-			INSERT INTO calendar_events
-			(group_id, created_by, title, description, event_time, end_time, notify_before, created_at)
-			VALUES
-			(?1, ?2, ?3, ?4, ?5, ?6, ?7, NOW())
-			""", nativeQuery = true)
-	int insertCalendarEvent(Long groupId, Long createdBy, String title, String description, LocalDateTime eventTime,
-			LocalDateTime endTime, Integer notifyBefore);
+	    INSERT INTO calendar_events
+	    (
+	        group_id,
+	        created_by,
+	        assigned_user_id,
+	        title,
+	        description,
+	        event_time,
+	        end_time,
+	        notify_before,
+	        created_at
+	    )
+	    VALUES
+	    (
+	        :groupId,
+	        :createdBy,
+	        :assignedUserId,
+	        :title,
+	        :description,
+	        :eventTime,
+	        :endTime,
+	        :notifyBefore,
+	        NOW()
+	    )
+	    """, nativeQuery = true)
+	int insertCalendarEvent(
+	    @Param("groupId") Long groupId,
+	    @Param("createdBy") Long createdBy,
+	    @Param("assignedUserId") Long assignedUserId,
+	    @Param("title") String title,
+	    @Param("description") String description,
+	    @Param("eventTime") LocalDateTime eventTime,
+	    @Param("endTime") LocalDateTime endTime,
+	    @Param("notifyBefore") Integer notifyBefore
+	);
 
 	// 更新事件
-	@Transactional
 	@Modifying
+	@Transactional
 	@Query(value = """
-			UPDATE calendar_events
-			SET title = ?2,
-			    description = ?3,
-			    event_time = ?4,
-			    end_time = ?5,
-			    notify_before = ?6
-			WHERE id = ?1
-			""", nativeQuery = true)
-	int updateCalendarEvent(Long id, String title, String description, LocalDateTime eventTime, LocalDateTime endTime,
-			Integer notifyBefore);
+	    UPDATE calendar_events
+	    SET
+	        title = :title,
+	        description = :description,
+	        event_time = :eventTime,
+	        end_time = :endTime,
+	        notify_before = :notifyBefore,
+	        assigned_user_id = :assignedUserId
+	    WHERE id = :id
+	    """, nativeQuery = true)
+	int updateCalendarEvent(
+	    @Param("id") Long id,
+	    @Param("title") String title,
+	    @Param("description") String description,
+	    @Param("eventTime") LocalDateTime eventTime,
+	    @Param("endTime") LocalDateTime endTime,
+	    @Param("notifyBefore") Integer notifyBefore,
+	    @Param("assignedUserId") Long assignedUserId
+	);
 
 	// 找行事曆名字
 	@Query(value = "select title from calendar_events where id = :id", nativeQuery = true)
@@ -87,6 +124,37 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	public List<Calendar> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
 	// 查私人 2026-05-24 by ZJ
-	@Query(value = "Select * from calendar_events where created_by = :userId and group_id = 0", nativeQuery = true)
-	public List<Calendar> findPersonalExpenses(@Param("userId") Long userId);
+	@Query(value = """
+		    SELECT *
+		    FROM calendar_events
+		    WHERE group_id = 0
+		      AND assigned_user_id = :userId
+		    ORDER BY event_time ASC
+		    """, nativeQuery = true)
+		List<Calendar> findPersonalExpenses(@Param("userId") Long userId);
+	
+	// 查詢某群組中，指派給指定使用者的活動
+	@Query(value = """
+	    SELECT *
+	    FROM calendar_events
+	    WHERE group_id = :groupId
+	      AND assigned_user_id = :userId
+	    ORDER BY event_time ASC
+	    """, nativeQuery = true)
+	List<Calendar> findByGroupIdAndAssignedUserIdOrderByEventTimeAsc(
+	        @Param("groupId") Long groupId,
+	        @Param("userId") Long userId
+	);
+	
+	// 查詢私人行事曆
+	@Query(value = """
+	    SELECT *
+	    FROM calendar_events
+	    WHERE group_id = 0
+	      AND assigned_user_id = :userId
+	    ORDER BY event_time ASC
+	    """, nativeQuery = true)
+	List<Calendar> findPrivateCalendarByUserId(
+	    @Param("userId") Long userId
+	);
 }

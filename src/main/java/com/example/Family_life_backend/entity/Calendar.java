@@ -11,7 +11,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "calender_events")
+@Table(name = "calendar_events")
 public class Calendar {
 
 	@Id
@@ -41,6 +41,9 @@ public class Calendar {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    
+    @Column(name = "assigned_user_id")
+    private Long assignedUserId;
 
     @PrePersist
     public void onCreate() {
@@ -109,6 +112,14 @@ public class Calendar {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+    
+    public Long getAssignedUserId() {
+        return assignedUserId;
+    }
+
+    public void setAssignedUserId(Long assignedUserId) {
+        this.assignedUserId = assignedUserId;
     }
 	
 }

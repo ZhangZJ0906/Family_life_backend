@@ -20,6 +20,8 @@ public class CalendarReq {
 	private LocalDateTime endTime;
 	
 	private Integer notifyBefore;
+	
+	private Long assignedUserId;
 
 	public Long getGroupId() {
 		return groupId;
@@ -75,5 +77,13 @@ public class CalendarReq {
 
 	public void setNotifyBefore(Integer notifyBefore) {
 		this.notifyBefore = notifyBefore;
+	}
+	
+	public Long getAssignedUserId() {
+	    return assignedUserId;
+	}
+
+	public void setAssignedUserId(Long assignedUserId) {
+	    this.assignedUserId = assignedUserId;
 	}
 }
