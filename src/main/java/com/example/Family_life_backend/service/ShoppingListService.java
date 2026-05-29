@@ -121,7 +121,7 @@ public class ShoppingListService {
 	}
 
 	public List<ShoppingList> getLists(int userId) {
-	    return shoppingListDao.findVisibleListsByUserId(userId);
+	    return shoppingListDao.findVisibleListsByUserId((long)userId);
 	}
 
 	public List<PurchaseItem> getItems(int listId) {
