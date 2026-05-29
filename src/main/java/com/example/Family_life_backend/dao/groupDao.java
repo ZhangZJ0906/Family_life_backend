@@ -27,7 +27,7 @@ public interface groupDao extends JpaRepository<group, Long> {
 
 	@Query(value = "select group_name from `groups` where group_id = :groupId", nativeQuery = true)
 	public String getSelfGroupNameById(@Param("groupId") Long groupId);
-
+	
 	@Query(value = """
 			    SELECT g.*
 			    FROM `groups` g

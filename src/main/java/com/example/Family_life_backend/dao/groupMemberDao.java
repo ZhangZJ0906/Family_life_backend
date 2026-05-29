@@ -21,12 +21,13 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-		    insert into invited_members (user_id, group_id) values (:getUserId, :groupId)
-		""", nativeQuery = true)
-	public void addToInviteMember(@Param("getUserId") Long getUserId,  @Param("groupId") Long groupId);
-	
-	@Query(value = "select count(*) from invited_members where user_id = :getUserId and group_id = :groupId", nativeQuery = true)
-	public int isInvite(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId);
+			    insert into invited_members (user_id, group_id) values (:getUserId, :groupId)
+			""", nativeQuery = true)
+	public void addToInviteMember(@Param("getUserId") Long getUserId, @Param("groupId") Long groupId);
+
+	@Query(value = "select count(*) from invited_members im join users u on im.user_id = u.user_id"
+			+ " where u.email = :Email and im.group_id = :groupId", nativeQuery = true)
+	public int isInvite(@Param("Email") String email, @Param("groupId") Long groupId);
 
 	@Modifying
 	@Transactional
@@ -55,15 +56,23 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			""", nativeQuery = true)
 	public int checkUserIdExistInGroup(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
+	@Query(value = """
+			    select count(*)
+			    from group_members gm join users u on gm.user_id = u.user_id
+			    where gm.group_id = :groupId
+			    and u.email = :Email
+			""", nativeQuery = true)
+	public int checkUserExistInGroupByEmail(@Param("groupId") Long groupId, @Param("Email") String email);
+
 	@Query(value = "select name from users where user_id = :userId", nativeQuery = true)
 	public String invitedUserName(@Param("userId") Long userId);
 
 	@Query(value = """
 			    select count(*)
 			    from users
-			    where user_id = :userId
+			    where email = :Email
 			""", nativeQuery = true)
-	public int checkUserIdExist(@Param("userId") Long userId);
+	public int checkUserEmailExist(@Param("Email") String Email);
 
 	@Modifying
 	@Transactional
@@ -131,25 +140,22 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			  AND n.type in ('group', 'update' , 'itemlist', 'calendar','expense')
 
 			ORDER BY sendDate DESC;
-		    """, nativeQuery = true)
-		public List<UserNotifyDTO> getNotifyList(
-		    @Param("user_id") Long user_id
-		);
-	
-	
+			   """, nativeQuery = true)
+	public List<UserNotifyDTO> getNotifyList(@Param("user_id") Long user_id);
+
 	@Query(value = """
-		    SELECT
-	        im.group_id as group_id,
-	        im.user_id as user_id,
-	        u.name as name,
-	        u.avatar as avatar
-	    FROM invited_members im
-	    JOIN users u
-	        ON im.user_id = u.user_id
-	    WHERE im.group_id = ?1
-	    """, nativeQuery = true)
+			 SELECT
+			    im.group_id as group_id,
+			    im.user_id as user_id,
+			    u.name as name,
+			    u.avatar as avatar
+			FROM invited_members im
+			JOIN users u
+			    ON im.user_id = u.user_id
+			WHERE im.group_id = ?1
+			""", nativeQuery = true)
 	public List<invitedMembersDTO> getInvitedMemberList(@Param("groupId") Long groupId);
-			
+
 	@Query(value = """
 			 SELECT
 			     gm.group_id as group_id,

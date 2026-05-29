@@ -51,6 +51,10 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Query(value = "select * from users where user_id in (:userId)", nativeQuery = true)
 	public List<UserInfo> getSelfInfoByIds(@Param("userId") List<Long> userId);
 
+	//拿UID
+	@Query(value = "select user_id from users where email = :Email", nativeQuery = true)
+	public Long getUIDByEmail(@Param("Email") String Email);
+	
 	//拿email
 	@Query(value = "select email from users where user_id = :userId", nativeQuery = true)
 	public String getEmailById(@Param("userId") Long userId);

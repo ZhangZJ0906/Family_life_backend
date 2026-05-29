@@ -46,18 +46,20 @@ public class GroupMemberService {
 
 	@Transactional
 	public BasicResponse invite(groupMemberReq req) {
-		if (groupMemberDao.checkUserIdExistInGroup(req.getGroup_id(), req.getUser_id()) != 0) {
+
+		if (groupMemberDao.checkUserExistInGroupByEmail(req.getGroup_id(), req.getEmail()) != 0) {
 			return new BasicResponse(replyMsg.USER_ID_EXIST.getMessage(), replyMsg.USER_ID_EXIST.getCode());
 		}
 
-		if (groupMemberDao.checkUserIdExist(req.getUser_id()) == 0) {
+		if (groupMemberDao.checkUserEmailExist(req.getEmail()) == 0) {
 			return new BasicResponse(replyMsg.USER_ID_NOT_EXIST.getMessage(), replyMsg.USER_ID_NOT_EXIST.getCode());
 		}
 
-		if (groupMemberDao.isInvite(req.getUser_id(), req.getGroup_id()) != 0) {
+		if (groupMemberDao.isInvite(req.getEmail(), req.getGroup_id()) != 0) {
 			return new BasicResponse(replyMsg.MEMBER_IS_INVITED.getMessage(), replyMsg.MEMBER_IS_INVITED.getCode());
 		}
 
+		req.setUser_id(userInfoDao.getUIDByEmail(req.getEmail()));
 		req.setUser_name(groupMemberDao.invitedUserName(req.getUser_id()));
 
 		String sendName = groupDao.getSelfName(req.getSendUserId());
@@ -86,7 +88,7 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
-				
+
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 				}
@@ -131,11 +133,11 @@ public class GroupMemberService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
 				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
-				
+
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 				}
-				
+
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
