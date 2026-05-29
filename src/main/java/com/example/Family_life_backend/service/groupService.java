@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
+import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
@@ -48,6 +49,9 @@ public class groupService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	@Autowired
+	private ItemsDao itemsDao;
 
 	@Transactional
 	public BasicResponse create(CreateGroupReq req) {
@@ -147,10 +151,14 @@ public class groupService {
 
 	}
 
+	/* 刪除群組前，先將User本人勾選物品轉成私人*/
 	@Transactional
 	public BasicResponse deleteGroup(Long group_id) {
-		groupMemberDao.deleteByGroupId(group_id);
-		groupDao.deleteGroup(group_id);
-		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
+	    itemsDao.moveGroupItemsToPrivate(group_id);
+
+	    groupMemberDao.deleteByGroupId(group_id);
+	    groupDao.deleteGroup(group_id);
+
+	    return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 }

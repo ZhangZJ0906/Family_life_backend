@@ -123,4 +123,19 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Transactional
 	@Query(value = "delete from items where id  in (?)", nativeQuery = true)
 	public void deleteItemById(List<Integer> id);
+	
+	/* 群組刪除後，物品轉私人 */
+	@Modifying
+	@Transactional
+	@Query(value = """
+	    UPDATE items
+	    SET group_id = 0
+	    WHERE group_id = :groupId
+	""", nativeQuery = true)
+	int moveGroupItemsToPrivate(@Param("groupId") Long groupId);
+	
+	
+	
+	
+	
 }
