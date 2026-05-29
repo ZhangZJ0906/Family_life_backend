@@ -58,25 +58,20 @@ public class ShoppingListController {
 	public BasicRes addItems(@Valid @RequestBody AddPurchaseItemReq req) {
 		return shoppingListService.addItems(req);
 	}
-	
+
 	@PostMapping("/items/update")
 	public BasicRes updateItem(@Valid @RequestBody AddPurchaseItemReq req) {
-	    return shoppingListService.updateItem(req);
+		return shoppingListService.updateItem(req);
 	}
 
 	@PostMapping("/items/delete")
-	public BasicRes deleteItem(
-			@RequestParam("listId") int listId,
-			@RequestParam("itemId") int itemId) {
+	public BasicRes deleteItem(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId) {
 		return shoppingListService.deleteItem(listId, itemId);
 	}
 
 	@PostMapping("/items/check")
-	public BasicRes updateCheck(
-			@RequestParam("listId") int listId,
-			@RequestParam("itemId") int itemId,
-			@RequestParam("check") boolean check,
-			@RequestParam("checkMan") int checkMan) {
+	public BasicRes updateCheck(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId,
+			@RequestParam("check") boolean check, @RequestParam("checkMan") int checkMan) {
 		return shoppingListService.updateCheck(listId, itemId, check, checkMan);
 	}
 
