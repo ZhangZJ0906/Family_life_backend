@@ -45,5 +45,9 @@ public interface PurchaseItemDao extends JpaRepository<PurchaseItem, PurchaseIte
 			""", nativeQuery = true)
 	public void sendPurchaseReqToAnotherNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
 			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+	
+	//拿刪除指定Item名字
+	@Query(value = "select item_name from shopping_list_items where id = :ItemId and shopping_list_id = :listId", nativeQuery = true)
+	public String getItemNameById(@Param("listId") Long ListId, @Param("ItemId") Long ItemId);
 
 }

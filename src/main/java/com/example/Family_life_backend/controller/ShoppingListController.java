@@ -65,8 +65,9 @@ public class ShoppingListController {
 	}
 
 	@PostMapping("/items/delete")
-	public BasicRes deleteItem(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId) {
-		return shoppingListService.deleteItem(listId, itemId);
+	public BasicRes deleteItem(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId, 
+			@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
+		return shoppingListService.deleteItem(listId, itemId, userId, groupId);
 	}
 
 	@PostMapping("/items/check")

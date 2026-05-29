@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constants.ReplyMessage;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.PurchaseItemDao;
 import com.example.Family_life_backend.dao.ShoppingListDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.PurchaseItem;
 import com.example.Family_life_backend.entity.PurchaseItemId;
 import com.example.Family_life_backend.entity.ShoppingList;
@@ -45,6 +47,9 @@ public class ShoppingListService {
 
 	@Autowired
 	private groupDao groupDao;
+
+	@Autowired
+	private groupMemberDao groupMemebrDao;
 
 	@Autowired
 	private NotifySocketService notifySocketService;
@@ -147,12 +152,35 @@ public class ShoppingListService {
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
-	public BasicRes deleteItem(int listId, int itemId) {
+	public BasicRes deleteItem(int listId, int itemId, int userId, int groupId) {
 		PurchaseItemId purchaseItemId = new PurchaseItemId(itemId, listId);
 		if (!purchaseItemDao.existsById(purchaseItemId)) {
 			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
+
+		// 發送通知
+		List<groupMembersDTO> getGroupMembers = groupMemebrDao.getMembersByGroupId((long)groupId);
+		String DeletedName = purchaseItemDao.getItemNameById((long) listId, (long) itemId);
+		String sendName = groupDao.getSelfName((long) userId);
+		String content = sendName + "已將" + DeletedName + "購買請求刪除";
+		// 不要傳給自己或私人通知
+
+		for (groupMembersDTO member : getGroupMembers) {
+			if ((long) userId != member.getUser_id() && groupId != 0) {
+				purchaseItemDao.sendPurchaseReqToAnotherNotify((long)groupId, member.getUser_id(), content, "group", false);
+
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "邀請通知", content);
+				}
+
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
+			}
+		}
+		
 
 		purchaseItemDao.deleteById(purchaseItemId);
 
@@ -214,7 +242,7 @@ public class ShoppingListService {
 				purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), content, "group", false);
 
 				if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
-					emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "邀請通知", content);
+					emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知", content);
 				}
 
 				// 🔥 正確：要重新查 unread count
@@ -241,7 +269,7 @@ public class ShoppingListService {
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
-		Long OldGetterId = (long)item.getUserId();//拿原先轉給的成員ID
+		Long OldGetterId = (long) item.getUserId();// 拿原先轉給的成員ID
 		item.setUserId(vo.getUserId());
 		item.setCategoryId(vo.getCategoryId());
 		item.setItem(vo.getItem());
@@ -253,17 +281,17 @@ public class ShoppingListService {
 		String contentToOldGetter = sendName + "已將" + vo.getItem() + "購買請求轉給" + getName;
 		String contentToNewGetter = sendName + "已將" + vo.getItem() + "購買請求轉給你";
 
+		purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group", false);
+
 		if ((long) req.getCreaterId() != (long) vo.getUserId() && groupID != 0L) {
-			purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group",
-					false);
-			
+
 			purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), contentToNewGetter, "group",
 					false);
 
 			if (userInfoDao.getEmailNotifyById(OldGetterId) == true) {
 				emailService.sendMail(userInfoDao.getEmailById(OldGetterId), "群組通知", contentToOldGetter);
 			}
-			
+
 			if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
 				emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知", contentToNewGetter);
 			}
