@@ -58,6 +58,10 @@ public class CalendarService {
 		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
 			return new CalendarRes(400, "開始時間不可大於結束時間");
 		}
+		
+		if (req.getEventTime().toLocalDate().isBefore(java.time.LocalDate.now())) {
+		    return new CalendarRes(400, "開始日期不可早於今天");
+		}
 
 		int result = calendarDao.insertCalendarEvent(req.getGroupId(), req.getCreatedBy(), req.getTitle(),
 				req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore());
@@ -98,6 +102,10 @@ public class CalendarService {
 
 		int result = calendarDao.updateCalendarEvent(id, req.getTitle(), req.getDescription(), req.getEventTime(),
 				req.getEndTime(), req.getNotifyBefore());
+		
+		if (req.getEventTime().toLocalDate().isBefore(java.time.LocalDate.now())) {
+		    return new CalendarRes(400, "開始日期不可早於今天");
+		}
 
 		if (result > 0) {
 			// 發修改通知
