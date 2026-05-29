@@ -101,8 +101,8 @@ public class ShoppingListService {
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
-	public List<ShoppingList> getLists(int createrId) {
-		return shoppingListDao.findByCreaterId(createrId);
+	public List<ShoppingList> getLists(int userId) {
+	    return shoppingListDao.findVisibleListsByUserId(userId);
 	}
 
 	public List<PurchaseItem> getItems(int listId) {

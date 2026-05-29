@@ -35,8 +35,8 @@ public class ShoppingListController {
 
 	// Frontend shopping-list page uses this endpoint to render "my lists".
 	@GetMapping
-	public List<ShoppingList> getLists(@RequestParam("createrId") int createrId) {
-		return shoppingListService.getLists(createrId);
+	public List<ShoppingList> getLists(@RequestParam("userId") int userId) {
+	    return shoppingListService.getLists(userId);
 	}
 
 	@PostMapping("/delete")
