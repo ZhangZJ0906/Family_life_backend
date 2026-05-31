@@ -17,6 +17,10 @@ public class Calendar {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	
+	@Column(name = "event_batch_id")
+	private String eventBatchId;
+
 
     @Column(name = "group_id")
     private Long groupId;
@@ -44,6 +48,8 @@ public class Calendar {
     
     @Column(name = "assigned_user_id")
     private Long assignedUserId;
+    
+   
 
     @PrePersist
     public void onCreate() {
@@ -52,6 +58,14 @@ public class Calendar {
 
     public Long getId() {
         return id;
+    }
+    
+    public String getEventBatchId() {
+        return eventBatchId;
+    }
+
+    public void setEventBatchId(String eventBatchId) {
+        this.eventBatchId = eventBatchId;
     }
 
     public Long getGroupId() {

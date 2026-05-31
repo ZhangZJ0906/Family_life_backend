@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,11 @@ public class CalendarReq {
 	private Integer notifyBefore;
 	
 	private Long assignedUserId;
+	
+	private String eventBatchId;
+	
+	// 複選指派成員 ID 清單
+	private List<Long> assignedUserIds;
 
 	public Long getGroupId() {
 		return groupId;
@@ -29,6 +35,14 @@ public class CalendarReq {
 
 	public void setGroupId(Long groupId) {
 		this.groupId = groupId;
+	}
+	
+	public String getEventBatchId() {
+	    return eventBatchId;
+	}
+
+	public void setEventBatchId(String eventBatchId) {
+	    this.eventBatchId = eventBatchId;
 	}
 
 	public Long getCreatedBy() {
@@ -85,5 +99,13 @@ public class CalendarReq {
 
 	public void setAssignedUserId(Long assignedUserId) {
 	    this.assignedUserId = assignedUserId;
+	}
+	
+	public List<Long> getAssignedUserIds() {
+	    return assignedUserIds;
+	}
+
+	public void setAssignedUserIds(List<Long> assignedUserIds) {
+	    this.assignedUserIds = assignedUserIds;
 	}
 }

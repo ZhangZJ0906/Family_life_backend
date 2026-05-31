@@ -21,6 +21,7 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	@Query(value = """
 	    INSERT INTO calendar_events
 	    (
+	        event_batch_id,
 	        group_id,
 	        created_by,
 	        assigned_user_id,
@@ -33,6 +34,7 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	    )
 	    VALUES
 	    (
+	        :eventBatchId,
 	        :groupId,
 	        :createdBy,
 	        :assignedUserId,
@@ -45,6 +47,7 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	    )
 	    """, nativeQuery = true)
 	int insertCalendarEvent(
+	    @Param("eventBatchId") String eventBatchId,
 	    @Param("groupId") Long groupId,
 	    @Param("createdBy") Long createdBy,
 	    @Param("assignedUserId") Long assignedUserId,
@@ -54,7 +57,6 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	    @Param("endTime") LocalDateTime endTime,
 	    @Param("notifyBefore") Integer notifyBefore
 	);
-
 	// 更新事件
 	@Modifying
 	@Transactional
@@ -156,5 +158,47 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	    """, nativeQuery = true)
 	List<Calendar> findPrivateCalendarByUserId(
 	    @Param("userId") Long userId
+	);
+	
+	// 依照單筆活動 id 找出同批活動識別碼
+	@Query(value = """
+	    SELECT event_batch_id
+	    FROM calendar_events
+	    WHERE id = :id
+	    """, nativeQuery = true)
+	String findEventBatchIdById(@Param("id") Long id);
+
+
+	// 查詢同一批活動目前指派了哪些成員
+	@Query(value = """
+	    SELECT assigned_user_id
+	    FROM calendar_events
+	    WHERE event_batch_id = :eventBatchId
+	    ORDER BY assigned_user_id ASC
+	    """, nativeQuery = true)
+	List<Long> findAssignedUserIdsByEventBatchId(
+	    @Param("eventBatchId") String eventBatchId
+	);
+
+
+	// 刪除同一批活動
+	@Modifying
+	@Transactional
+	@Query(value = """
+	    DELETE FROM calendar_events
+	    WHERE event_batch_id = :eventBatchId
+	    """, nativeQuery = true)
+	int deleteByEventBatchId(@Param("eventBatchId") String eventBatchId);
+
+
+	// 依照批次 ID 查詢同一批活動
+	@Query(value = """
+	    SELECT *
+	    FROM calendar_events
+	    WHERE event_batch_id = :eventBatchId
+	    ORDER BY assigned_user_id ASC
+	    """, nativeQuery = true)
+	List<Calendar> findByEventBatchId(
+	    @Param("eventBatchId") String eventBatchId
 	);
 }
