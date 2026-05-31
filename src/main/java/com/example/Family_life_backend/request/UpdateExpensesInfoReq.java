@@ -16,7 +16,8 @@ public class UpdateExpensesInfoReq {
 
 	@NotNull(message = "userId 不可為空") // 修正：Long 必須用 @NotNull
 	private Long userId;
-
+	@NotNull(message = "operationUser 不可為空")
+	private Long operationUser;
 	@NotNull(message = "價格不可為空") // 改用 Integer 才能判斷是否未傳
 	@Min(value = 0, message = "價格不能小於 0") // 依業務邏輯調整，通常價格不能為負數
 	private Integer price;
@@ -37,12 +38,14 @@ public class UpdateExpensesInfoReq {
 
 	private LocalDateTime createdAt;
 
-	public UpdateExpensesInfoReq(Long groupId, Integer id, Long userId, Integer price, Integer categoryId,
-			Long relatedItemId, String relatedItemName, LocalDate expenseDate, String note, LocalDateTime createdAt) {
+	public UpdateExpensesInfoReq(Long groupId, Integer id, Long userId, Long operationUser, Integer price,
+			Integer categoryId, Long relatedItemId, String relatedItemName, LocalDate expenseDate, String note,
+			LocalDateTime createdAt) {
 		super();
 		this.groupId = groupId;
 		this.id = id;
 		this.userId = userId;
+		this.operationUser = operationUser;
 		this.price = price;
 		this.categoryId = categoryId;
 		this.relatedItemId = relatedItemId;
@@ -135,6 +138,14 @@ public class UpdateExpensesInfoReq {
 	public UpdateExpensesInfoReq() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Long getOperationUser() {
+		return operationUser;
+	}
+
+	public void setOperationUser(Long operationUser) {
+		this.operationUser = operationUser;
 	}
 
 }

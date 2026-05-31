@@ -106,7 +106,7 @@ public class ExpenseService {
 		expenseDao.insertExpense(req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
 				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
 		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
-		
+
 		if (userInfoDao.getEmailNotifyById(req.getUserId()) == true) {
 			emailService.sendMail(userInfoDao.getEmailById(req.getUserId()), "群組通知", "新增");
 		}
@@ -117,7 +117,7 @@ public class ExpenseService {
 
 		expenseDao.updateExpense(req.getId(), req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
 				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
-		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "更新");
+		sendNotifyForGroupMember(req.getGroupId(), req.getOperationUser(), "更新");
 		return new BasicRes("成功", 200);
 	}
 
@@ -131,13 +131,13 @@ public class ExpenseService {
 	// 通知 2026-05-27 by ZJ
 	private void sendNotifyForGroupMember(Long groupId, Long userId, String type) {
 
-		// ✅ 先擋 null，再比較數值
 		if (groupId == null || groupId == 0L) {
 			return; // 私人消費，不發通知，直接結束
 		}
 
 		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
 		String content = groupDao.getSelfName(userId) + type + "了一筆消費";
+		System.out.println(groupDao.getSelfName(userId));
 		for (groupMembersDTO member : members) {
 			if (!member.getUser_id().equals(userId)) {
 				expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
