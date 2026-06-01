@@ -156,7 +156,7 @@ public class ExpiryScheduleService {
             if (sub.getTrialEndDate() != null && !today.isAfter(sub.getTrialEndDate())) {
                 long daysLeft = ChronoUnit.DAYS.between(today, sub.getTrialEndDate());
 
-                if (daysLeft <= 3) {
+                if (daysLeft <= 30) {
                     status = "試用即將結束";
                     remindMessage = "試用剩餘 " + daysLeft + " 天";
                 } else {
@@ -170,7 +170,7 @@ public class ExpiryScheduleService {
                 if (daysLeft < 0) {
                     status = "已逾期扣款";
                     remindMessage = "扣款日已過 " + Math.abs(daysLeft) + " 天";
-                } else if (daysLeft <= 3) {
+                } else if (daysLeft <= 30) {
                     status = "即將扣款";
                     remindMessage = "距離扣款剩餘 " + daysLeft + " 天";
                 } else {
