@@ -226,64 +226,71 @@ public class SubscriptionService {
 
 	// 判斷訂閱狀態
 	private String getSubscriptionStatus(LocalDate trialEndDate, LocalDate nextBillingDate) {
-		LocalDate today = LocalDate.now();
+	    LocalDate today = LocalDate.now();
 
-		if (trialEndDate != null && !today.isAfter(trialEndDate)) {
-			long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+	    // 1. 還在試用期間
+	    if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+	        long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
 
-			if (daysLeft <= 3) {
-				return "試用即將結束";
-			}
+	        // 試用剩 30 天內
+	        if (daysLeft <= 30) {
+	            return "試用即將結束";
+	        }
 
-			return "試用中";
-		}
+	        return "試用中";
+	    }
 
-		if (nextBillingDate != null) {
-			long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+	    // 2. 已過試用期，看下次扣款日
+	    if (nextBillingDate != null) {
+	        long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
 
-			if (daysLeft < 0) {
-				return "已逾期扣款";
-			}
+	        // 扣款日已過
+	        if (daysLeft < 0) {
+	            return "已逾期扣款";
+	        }
 
-			if (daysLeft <= 3) {
-				return "即將扣款";
-			}
+	        // 距離扣款 30 天內
+	        if (daysLeft <= 30) {
+	            return "即將扣款";
+	        }
 
-			return "正常";
-		}
+	        return "正常";
+	    }
 
-		return "未設定";
+	    return "未設定";
 	}
 
 	// 產生提醒文字
 	private String getSubscriptionRemindMessage(LocalDate trialEndDate, LocalDate nextBillingDate) {
-		LocalDate today = LocalDate.now();
+	    LocalDate today = LocalDate.now();
 
-		if (trialEndDate != null && !today.isAfter(trialEndDate)) {
-			long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+	    // 1. 還在試用期間
+	    if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+	        long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
 
-			if (daysLeft <= 3) {
-				return "試用剩餘 " + daysLeft + " 天";
-			}
+	        if (daysLeft <= 30) {
+	            return "試用剩餘 " + daysLeft + " 天";
+	        }
 
-			return "";
-		}
+	        return "";
+	    }
 
-		if (nextBillingDate != null) {
-			long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+	    // 2. 已過試用期，看下次扣款日
+	    if (nextBillingDate != null) {
+	        long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
 
-			if (daysLeft < 0) {
-				return "扣款日已過 " + Math.abs(daysLeft) + " 天";
-			}
+	        if (daysLeft < 0) {
+	            return "扣款日已過 " + Math.abs(daysLeft) + " 天";
+	        }
 
-			if (daysLeft <= 3) {
-				return "距離扣款剩餘 " + daysLeft + " 天";
-			}
+	        if (daysLeft <= 30) {
+	            return "距離扣款剩餘 " + daysLeft + " 天";
+	        }
 
-			return "";
-		}
+	        return "";
+	    }
 
-		return "";
+	    return "";
 	}
 
 	// 依照試用結束日 + 扣款週期，自動計算下次扣款日
