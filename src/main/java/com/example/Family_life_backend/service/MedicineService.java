@@ -16,6 +16,8 @@ import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.request.AddMedicineReq;
 import com.example.Family_life_backend.request.UpdateMedicineReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.MedicineRes;
 
 @Service
@@ -180,6 +182,13 @@ public class MedicineService {
 		return new MedicineRes(200, "修改成功");
 	}
 
+// 更新notify
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+
+
+		medicineDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
+	}
 	public MedicineRes delete(Integer id, Long userId) {
 		if (id == null || id <= 0) {
 			return new MedicineRes(400, "id 不可為空");

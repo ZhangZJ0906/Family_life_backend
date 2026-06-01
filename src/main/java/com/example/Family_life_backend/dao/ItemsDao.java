@@ -118,6 +118,11 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	        @Param("status") String status,
 	        @Param("remindMessage") String remindMessage
 	);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE items SET notify = :notify  WHERE id = :id", nativeQuery = true)
+	public void updateNotifyById(@Param("id") Integer id, @Param("notify") boolean notify);
 	/* 刪除 */
 	@Modifying
 	@Transactional

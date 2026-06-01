@@ -17,7 +17,9 @@ import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Subscription;
 import com.example.Family_life_backend.request.AddSubscriptionReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.request.UpdateSubscriptionReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.SubscriptionRes;
 import com.example.Family_life_backend.vo.SubscriptionVo;
 
@@ -189,6 +191,11 @@ public class SubscriptionService {
 		return new SubscriptionRes(200, "修改成功");
 	}
 
+	// 更新notify
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+		subscriptionDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
+	}
 	// 刪除訂閱
 	public SubscriptionRes delete(Integer id, Long userId) {
 		if (id == null || id <= 0) {

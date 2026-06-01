@@ -23,6 +23,7 @@ import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.entity.Location;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
@@ -177,6 +178,10 @@ public class ItemsService {
 		return new BasicRes("成功", 200);
 	}
 
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+		itemDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
+	}
 	@Transactional
 	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
