@@ -137,7 +137,47 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update' , 'itemlist', 'calendar','expense')
+			  AND n.type in ('group', 'update' , 'itemlist', 'expense')
+			  
+			UNION ALL
+
+			  SELECT
+			    n.notify_id AS id,
+			    n.send_id AS sendUserId,
+			    n.get_user_id AS getUserId,
+			    n.content AS content,
+			    n.type AS type,
+			    n.is_read AS isRead,
+			    n.send_date AS sendDate,
+			    n.target_group_id AS targetGroupId,
+			    n.status AS status,
+			    g.group_name AS name,
+			    g.avatar AS avatar
+			FROM notify n
+			JOIN `groups` g
+			    ON n.send_id = g.group_id
+			WHERE n.get_user_id = :user_id
+			  AND n.type in ('calendar')
+			  
+			UNION ALL
+			  
+			SELECT
+			    n.notify_id AS id,
+			    n.get_user_id sendUserId,
+			    n.get_user_id AS getUserId,
+			    n.content AS content,
+			    n.type AS type,
+			    n.is_read AS isRead,
+			    n.send_date AS sendDate,
+			    n.target_group_id AS targetGroupId,
+			    n.status AS status,
+			    u.name AS name,
+			    u.avatar AS avatar
+			FROM notify n
+			JOIN users u
+			    ON n.send_id = u.user_id
+			WHERE n.get_user_id = :user_id
+			  AND n.type in ('calendar_self')
 
 			ORDER BY sendDate DESC;
 			   """, nativeQuery = true)
