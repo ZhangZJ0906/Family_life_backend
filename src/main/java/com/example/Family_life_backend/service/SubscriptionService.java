@@ -1,5 +1,10 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +15,10 @@ import com.example.Family_life_backend.dao.SubscriptionDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+import com.example.Family_life_backend.entity.Subscription;
 import com.example.Family_life_backend.request.AddSubscriptionReq;
 import com.example.Family_life_backend.request.UpdateSubscriptionReq;
 import com.example.Family_life_backend.response.SubscriptionRes;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.Family_life_backend.entity.Subscription;
 import com.example.Family_life_backend.vo.SubscriptionVo;
 
 @Service
@@ -51,12 +51,31 @@ public class SubscriptionService {
 	// 查詢
 	public SubscriptionRes getByGroup(Integer groupId, Integer userId) {
 
+		// 1. 基礎防呆檢查
 		if (userId == null || userId <= 0) {
-			return new SubscriptionRes(400, "userId 不可為空");
+			return new SubscriptionRes(400, "userId 錯誤");
 		}
 
-		List<Subscription> subscriptionList = subscriptionDao.findByGroupId(userId, groupId);
 
+
+		List<Subscription> subscriptionList;
+
+		// ================= 情況 A：查私人訂閱 (groupId == 0) =================
+		if (groupId == 0) {
+			// 直接去查個人訂閱，不需要檢查群組權限
+			subscriptionList = subscriptionDao.findBySelfId(Long.valueOf(userId));
+		}
+		// ================= 情況 B：查群組訂閱 (groupId > 0) =================
+		else {
+			// 檢查當前使用者是否真的是該群組的成員
+			int isMember = groupMemberDao.checkUserIdExistInGroup(Long.valueOf(groupId), Long.valueOf(userId));
+			if (isMember <= 0) {
+				return new SubscriptionRes(400, "你不是該群組成員");
+			}
+
+			// 確利是成員後，才放行撈取該群組的訂閱
+			subscriptionList = subscriptionDao.findByGroupId(groupId);
+		}
 		List<SubscriptionVo> resultList = new ArrayList<>();
 
 		for (Subscription sub : subscriptionList) {
