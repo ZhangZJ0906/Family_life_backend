@@ -104,12 +104,18 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			""", nativeQuery = true)
 	int moveGroupItemsToPrivate(@Param("groupId") Long groupId);
 
-	// 到期通知
+	// 登入該page時間
+	@Modifying
+	@Transactional
 	@Query(value = """
-			SELECT *
-			FROM calendar_events
-			WHERE expire_date BETWEEN :now AND DATE_ADD(:now, INTERVAL 7 DAY)
+			update users set login_item_list_page_time = :now where user_id = :userId
 			""", nativeQuery = true)
-	List<Items> findItemToNotify(@Param("now") LocalDateTime now);
+	public void recordLoginItemPageTime(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+
+	// 抓取上次登入page時間
+	@Query(value = """
+			select login_item_list_page_time from users where user_id = :userId
+			""", nativeQuery = true)
+	public LocalDateTime getLoginItemPageTime(@Param("userId") Long userId);
 
 }
