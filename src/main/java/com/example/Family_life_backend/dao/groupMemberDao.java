@@ -157,7 +157,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('calendar')
+			  AND n.type in ('calendar', 'warring')
 			  
 			UNION ALL
 			  
@@ -177,7 +177,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN users u
 			    ON n.send_id = u.user_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('calendar_self')
+			  AND n.type in ('calendar_self', 'warring_self')
 
 			ORDER BY sendDate DESC;
 			   """, nativeQuery = true)

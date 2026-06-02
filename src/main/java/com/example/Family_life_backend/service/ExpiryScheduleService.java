@@ -40,7 +40,7 @@ public class ExpiryScheduleService {
 
 	List<groupMembersDTO> members = new ArrayList<groupMembersDTO>();
 
-	// 每天凌晨 00:00 自動執行
+	// 每天 10:00 自動執行
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void updateAllStatusDaily() {
 		updateItemStatus();
@@ -85,7 +85,7 @@ public class ExpiryScheduleService {
 		// 私人項目
 		if (groupId == 0L) {
 
-			itemsDao.addGroupItemNotify(userId, userId, remindMessage, "warring", false);
+			itemsDao.addGroupItemNotify(userId, userId, remindMessage, "warring_self", false);
 
 			return;
 		}
@@ -114,7 +114,8 @@ public class ExpiryScheduleService {
 					status = "已到期";
 					remindMessage = "已過期 " + Math.abs(daysLeft) + " 天";
 					if (item.getNotify()) {
-						SendWarringNotify(item, null, null, null, status, remindMessage, members);
+						SendWarringNotify(item, null, null, null, status, item.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 
 				} else if (item.getQuantity() != null && item.getSafeQuantity() != null
@@ -123,7 +124,8 @@ public class ExpiryScheduleService {
 					remindMessage = "目前庫存低於安全庫存";
 
 					if (item.getNotify()) {
-						SendWarringNotify(item, null, null, null, status, remindMessage, members);
+						SendWarringNotify(item, null, null, null, status, item.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 
 				} else if (daysLeft <= 7) {
@@ -131,7 +133,8 @@ public class ExpiryScheduleService {
 					remindMessage = "剩餘 " + daysLeft + " 天";
 
 					if (item.getNotify()) {
-						SendWarringNotify(item, null, null, null, status, remindMessage, members);
+						SendWarringNotify(item, null, null, null, status, item.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 
 				}
@@ -160,7 +163,8 @@ public class ExpiryScheduleService {
 					remindMessage = "已過期 " + Math.abs(daysLeft) + " 天";
 
 					if (med.getNotify()) {
-						SendWarringNotify(null, med, null, null, status, remindMessage, members);
+						SendWarringNotify(null, med, null, null, status, med.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 
 				} else if (med.getQuantity() != null && med.getSafeQuantity() != null
@@ -169,7 +173,8 @@ public class ExpiryScheduleService {
 					remindMessage = "目前藥品低於安全庫存";
 
 					if (med.getNotify()) {
-						SendWarringNotify(null, med, null, null, status, remindMessage, members);
+						SendWarringNotify(null, med, null, null, status, med.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 
 				} else if (daysLeft <= 7) {
@@ -177,7 +182,8 @@ public class ExpiryScheduleService {
 					remindMessage = "剩餘 " + daysLeft + " 天";
 
 					if (med.getNotify()) {
-						SendWarringNotify(null, med, null, null, status, remindMessage, members);
+						SendWarringNotify(null, med, null, null, status, med.getName() + remindMessage + "，請盡速處理",
+								members);
 					}
 				}
 			}
@@ -204,14 +210,16 @@ public class ExpiryScheduleService {
 					status = "已過保";
 					remindMessage = "已過保 " + Math.abs(daysLeft) + " 天";
 					if (warranty.getNotify()) {
-						SendWarringNotify(null, null, warranty, null, status, remindMessage, members);
+						SendWarringNotify(null, null, warranty, null, status,
+								warranty.getProductName() + remindMessage + "，請盡速處理", members);
 					}
 
 				} else if (daysLeft <= 7) {
 					status = "即將到期";
 					remindMessage = "保固剩餘 " + daysLeft + " 天";
 					if (warranty.getNotify()) {
-						SendWarringNotify(null, null, warranty, null, status, remindMessage, members);
+						SendWarringNotify(null, null, warranty, null, status,
+								warranty.getProductName() + remindMessage + "，請盡速處理", members);
 					}
 				}
 			}
@@ -238,7 +246,7 @@ public class ExpiryScheduleService {
 					status = "試用即將結束";
 					remindMessage = "試用剩餘 " + daysLeft + " 天";
 					if (sub.getNotify()) {
-						SendWarringNotify(null, null, null, sub, status, remindMessage, members);
+						SendWarringNotify(null, null, null, sub, status, sub.getName() + remindMessage, members);
 					}
 
 				} else {
@@ -253,13 +261,13 @@ public class ExpiryScheduleService {
 					status = "已逾期扣款";
 					remindMessage = "扣款日已過 " + Math.abs(daysLeft) + " 天";
 					if (sub.getNotify()) {
-						SendWarringNotify(null, null, null, sub, status, remindMessage, members);
+						SendWarringNotify(null, null, null, sub, status, sub.getName() + remindMessage, members);
 					}
 				} else if (daysLeft <= 7) {
 					status = "即將扣款";
 					remindMessage = "距離扣款剩餘 " + daysLeft + " 天";
 					if (sub.getNotify()) {
-						SendWarringNotify(null, null, null, sub, status, remindMessage, members);
+						SendWarringNotify(null, null, null, sub, status, sub.getName() + remindMessage, members);
 					}
 				} else {
 					status = "正常";
