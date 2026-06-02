@@ -40,7 +40,7 @@ public class ExpiryScheduleService {
 
 	List<groupMembersDTO> members = new ArrayList<groupMembersDTO>();
 
-	// 每天 10:00 自動執行
+	// 每天 00:00 自動執行
 	@Scheduled(cron = "0 0 0 * * ?")
 	public void updateAllStatusDaily() {
 		updateItemStatus();
