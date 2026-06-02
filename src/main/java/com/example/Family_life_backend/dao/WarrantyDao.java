@@ -71,6 +71,10 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 			@Param("price") Integer price, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE warranties SET notify = :notify  WHERE id = :id", nativeQuery = true)
+	public void updateNotifyById(@Param("id") Integer id, @Param("notify") Boolean notify);
 	// 刪除
 	@Modifying
 	@Transactional

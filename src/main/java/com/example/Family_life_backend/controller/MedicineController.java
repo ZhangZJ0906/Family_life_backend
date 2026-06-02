@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddMedicineReq;
 import com.example.Family_life_backend.request.UpdateMedicineReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.MedicineRes;
 import com.example.Family_life_backend.service.MedicineService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/medicine")
@@ -40,6 +44,11 @@ public class MedicineController {
     public MedicineRes update(@RequestBody UpdateMedicineReq req) {
         return medicineService.update(req);
     }
+
+	@PostMapping("/updateNotify")
+	public BasicRes updateNotify(@Valid @RequestBody UpdateNotifyReq req) {
+		return medicineService.updateNotify(req);
+	}
 
     @DeleteMapping("/delete")
     public MedicineRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {

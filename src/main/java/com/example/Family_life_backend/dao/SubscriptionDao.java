@@ -72,6 +72,10 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE subscriptions SET notify = :notify  WHERE id = :id", nativeQuery = true)
+	public void updateNotifyById(@Param("id") Integer id, @Param("notify") Boolean notify);
 	// 刪除訂閱
 	@Modifying
 	@Transactional

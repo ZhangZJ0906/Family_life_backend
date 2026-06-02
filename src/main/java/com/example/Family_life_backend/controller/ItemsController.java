@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
@@ -48,6 +49,11 @@ public class ItemsController {
 	public BasicRes updateItem(@Valid @RequestBody ItemUpdateReq req) {
 
 		return itemsService.updateItem(req);
+	}
+
+	@PostMapping("/updateNotify")
+	public BasicRes updateNotify(@RequestBody UpdateNotifyReq req) {
+		return itemsService.updateNotify(req);
 	}
 
 	@PostMapping("/delete")

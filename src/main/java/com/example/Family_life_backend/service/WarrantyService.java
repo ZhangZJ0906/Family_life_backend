@@ -17,7 +17,9 @@ import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Warranty;
 import com.example.Family_life_backend.request.AddWarrantyReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.request.UpdateWarrantyReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.WarrantyRes;
 
 @Service
@@ -163,6 +165,11 @@ public class WarrantyService {
 		return new WarrantyRes(200, "修改成功");
 	}
 
+	// 更新notify
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+		warrantyDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
+	}
 	@Transactional
 	public WarrantyRes delete(Integer id, Long userId) {
 		int finalGroupId = 0;

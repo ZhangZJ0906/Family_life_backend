@@ -130,6 +130,11 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
             @Param("status") String status,
             @Param("remindMessage") String remindMessage
     );
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE medicines SET notify = :notify  WHERE id = :id", nativeQuery = true)
+	public void updateNotifyById(@Param("id") Integer id, @Param("notify") Boolean notify);
     //刪除
     @Modifying
     @Transactional
