@@ -17,10 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.Family_life_backend.entity.PublicInventoryItem;
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
+import com.example.Family_life_backend.request.UpdatePasswordReq;
 import com.example.Family_life_backend.request.UpdateUserAllReq;
 import com.example.Family_life_backend.request.UpdateUserInfoReq;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.getUserInfoRes;
+import com.example.Family_life_backend.service.EmailService;
 import com.example.Family_life_backend.service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +36,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
@@ -41,9 +46,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/login")
-	public getUserInfoRes login(
-			@RequestParam("email") String email,
-			@RequestParam("password") String pwd) {
+	public getUserInfoRes login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
 		return userService.login(email, pwd);
 	}
 
@@ -53,16 +56,15 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/update_info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public BasicRes updateInfo(
-			@RequestPart("userInfo") String userInfoJson,
+	public BasicRes updateInfo(@RequestPart("userInfo") String userInfoJson,
 			@RequestPart("publicInventoryList") String publicInventoryJson,
 			@RequestPart(value = "avatar", required = false) MultipartFile avatar) throws Exception {
 
 		ObjectMapper mapper = new ObjectMapper();
 		UpdateUserInfoReq userInfo = mapper.readValue(userInfoJson, UpdateUserInfoReq.class);
-		List<PublicInventoryItem> list = mapper.readValue(
-				publicInventoryJson,
-				new TypeReference<List<PublicInventoryItem>>() {});
+		List<PublicInventoryItem> list = mapper.readValue(publicInventoryJson,
+				new TypeReference<List<PublicInventoryItem>>() {
+				});
 
 		UpdateUserAllReq req = new UpdateUserAllReq();
 		req.setUserInfo(userInfo);
@@ -75,4 +77,33 @@ public class UserController {
 	public getUserInfoRes getSelfInfo(@RequestParam("userId") Long userId) {
 		return userService.getUserInfo(userId);
 	}
+
+	
+//	//船mail
+//	@GetMapping("/test-mail")
+//	public String testMail(@RequestParam("Email") String email) {
+//		
+//	    emailService.sendMail(
+//	        email,
+//	        "測試信",
+//	        "Spring Boot Gmail 發信成功"
+//	    );
+//
+//	    return "OK";
+//	}
+
+
+//確認Email 2026-05-28 by ZJ
+	@GetMapping("/checkEmail")
+	public BasicRes checkEmail(@RequestParam("email") String email) {
+		return userService.checkEmail(email);
+	}
+
+	@PostMapping("/updatePassword")
+	public BasicRes updatePassword(@RequestBody UpdatePasswordReq req) {
+		System.out.println(req.getEmail() + req.getPassword());
+		return userService.updatePassword(req.getEmail(), req.getPassword());
+	}
+
+
 }

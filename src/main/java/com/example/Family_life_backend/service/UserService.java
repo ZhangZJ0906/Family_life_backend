@@ -48,22 +48,17 @@ public class UserService {
 		UserInfo user = userInfoDao.getByEmail(email);
 
 		if (user == null) {
-			return new getUserInfoRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
+			return new getUserInfoRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(),
+					ReplyMessage.EMAIL_NOT_FOUND.getCode());
 		}
 
 		if (!user.getPwd().equals(pwd)) {
 			return new getUserInfoRes(ReplyMessage.PASSWORD_ERROR.getMessage(), ReplyMessage.PASSWORD_ERROR.getCode());
 		}
 
-		return new getUserInfoRes(
-				ReplyMessage.SUCCESS.getMessage(),
-				ReplyMessage.SUCCESS.getCode(),
-				(long) user.getUserId(),
-				user.getUserName(),
-				user.getEmail(),
-				user.getAvatar(),
-				user.isNotifyByEndDate(),
-				user.isNotifyByEmail());
+		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
+				(long) user.getUserId(), user.getUserName(), user.getEmail(), user.getAvatar(),
+				user.isNotifyByEndDate(), user.isNotifyByEmail());
 	}
 
 	public BasicRes changePwd(ChangePwdReq req) {
@@ -73,7 +68,8 @@ public class UserService {
 			return new BasicRes(ReplyMessage.USER_NOT_FOUND.getMessage(), ReplyMessage.USER_NOT_FOUND.getCode());
 		}
 		if (!user.getPwd().equals(req.getOldPwd())) {
-			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getMessage(), ReplyMessage.OLD_PASSWORD_ERROR.getCode());
+			return new BasicRes(ReplyMessage.OLD_PASSWORD_ERROR.getMessage(),
+					ReplyMessage.OLD_PASSWORD_ERROR.getCode());
 		}
 
 		String now = LocalDateTime.now().toString();
@@ -112,19 +108,11 @@ public class UserService {
 		String email = user.getEmail() == null ? userInfo.getEmail() : user.getEmail();
 		String now = LocalDateTime.now().toString();
 
-		userInfoDao.updateInfo(
-				user.getUserId(),
-				userName,
-				email,
-				avatarUrl,
-				user.isNotifyByEndDate(),
-				user.isNotifyByEmail(),
-				now);
+		userInfoDao.updateInfo(user.getUserId(), userName, email, avatarUrl, user.isNotifyByEndDate(),
+				user.isNotifyByEmail(), now);
 
 		for (PublicInventoryItem item : list) {
-			groupDao.updatePublicInventoryToThisGroup(
-					item.getPublicInventory(),
-					item.getGroupId(),
+			groupDao.updatePublicInventoryToThisGroup(item.getPublicInventory(), item.getGroupId(),
 					(long) user.getUserId());
 		}
 
@@ -137,14 +125,33 @@ public class UserService {
 			return new getUserInfoRes(ReplyMessage.USER_NOT_FOUND.getMessage(), ReplyMessage.USER_NOT_FOUND.getCode());
 		}
 
-		return new getUserInfoRes(
-				ReplyMessage.SUCCESS.getMessage(),
-				ReplyMessage.SUCCESS.getCode(),
-				(long) userInfo.getUserId(),
-				userInfo.getUserName(),
-				userInfo.getEmail(),
-				userInfo.getAvatar(),
-				userInfo.isNotifyByEndDate(),
-				userInfo.isNotifyByEmail());
+		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
+				(long) userInfo.getUserId(), userInfo.getUserName(), userInfo.getEmail(), userInfo.getAvatar(),
+				userInfo.isNotifyByEndDate(), userInfo.isNotifyByEmail());
+	}
+
+	// 確認Email 2026-05-28 by ZJ
+	public BasicRes checkEmail(String email) {
+
+		if (email == null || email.isBlank() || !userInfoDao.existsByEmail(email)) {
+			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
+		}
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+	}
+
+	// 更新密碼 2026-05-28 by ZJ
+	public BasicRes updatePassword(String email, String password) {
+		if (email == null || email.isBlank() || !userInfoDao.existsByEmail(email)) {
+			return new BasicRes(ReplyMessage.EMAIL_NOT_FOUND.getMessage(), ReplyMessage.EMAIL_NOT_FOUND.getCode());
+		}
+		System.out.println(password);
+		if (password == null || password.isBlank()) {
+			return new BasicRes(ReplyMessage.PASSWORD_ERROR.getMessage(), ReplyMessage.PASSWORD_ERROR.getCode());
+		}
+		UserInfo user = userInfoDao.getByEmail(email);
+		String now = LocalDateTime.now().toString();
+		Integer id = user.getUserId();
+		userInfoDao.updatePwd(id, password, now);
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 }

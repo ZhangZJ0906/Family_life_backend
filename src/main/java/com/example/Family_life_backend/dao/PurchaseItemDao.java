@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.Family_life_backend.entity.PurchaseItem;
 import com.example.Family_life_backend.entity.PurchaseItemId;
@@ -34,5 +35,19 @@ public interface PurchaseItemDao extends JpaRepository<PurchaseItem, PurchaseIte
 	@Query(value = "update shopping_list_items set"
 			+ " is_checked = ?3, checked_at = ?4, checked_by_id = ?5 where shopping_list_id = ?1 and id = ?2", nativeQuery = true)
 	public void updateCheck(int listId, int itemId, boolean check, LocalDate checkDate, int checkMan);
+	
+	//發送通知
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void sendPurchaseReqToAnotherNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+	
+	//拿刪除指定Item名字
+	@Query(value = "select item_name from shopping_list_items where id = :ItemId and shopping_list_id = :listId", nativeQuery = true)
+	public String getItemNameById(@Param("listId") Long ListId, @Param("ItemId") Long ItemId);
 
 }

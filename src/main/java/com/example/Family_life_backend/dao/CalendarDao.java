@@ -16,31 +16,60 @@ import com.example.Family_life_backend.entity.Calendar;
 public interface CalendarDao extends JpaRepository<Calendar, Long> {
 
 	// 新增事件
-	@Transactional
 	@Modifying
+	@Transactional
 	@Query(value = """
 			INSERT INTO calendar_events
-			(group_id, created_by, title, description, event_time, end_time, notify_before, created_at)
+			(
+			    event_batch_id,
+			    group_id,
+			    created_by,
+			    assigned_user_id,
+			    title,
+			    description,
+			    event_time,
+			    end_time,
+			    notify_before,
+			    created_at
+			)
 			VALUES
-			(?1, ?2, ?3, ?4, ?5, ?6, ?7, NOW())
+			(
+			    :eventBatchId,
+			    :groupId,
+			    :createdBy,
+			    :assignedUserId,
+			    :title,
+			    :description,
+			    :eventTime,
+			    :endTime,
+			    :notifyBefore,
+			    NOW()
+			)
 			""", nativeQuery = true)
-	int insertCalendarEvent(Long groupId, Long createdBy, String title, String description, LocalDateTime eventTime,
-			LocalDateTime endTime, Integer notifyBefore);
+	int insertCalendarEvent(@Param("eventBatchId") String eventBatchId, @Param("groupId") Long groupId,
+			@Param("createdBy") Long createdBy, @Param("assignedUserId") Long assignedUserId,
+			@Param("title") String title, @Param("description") String description,
+			@Param("eventTime") LocalDateTime eventTime, @Param("endTime") LocalDateTime endTime,
+			@Param("notifyBefore") Integer notifyBefore);
 
 	// 更新事件
-	@Transactional
 	@Modifying
+	@Transactional
 	@Query(value = """
 			UPDATE calendar_events
-			SET title = ?2,
-			    description = ?3,
-			    event_time = ?4,
-			    end_time = ?5,
-			    notify_before = ?6
-			WHERE id = ?1
+			SET
+			    title = :title,
+			    description = :description,
+			    event_time = :eventTime,
+			    end_time = :endTime,
+			    notify_before = :notifyBefore,
+			    assigned_user_id = :assignedUserId
+			WHERE id = :id
 			""", nativeQuery = true)
-	int updateCalendarEvent(Long id, String title, String description, LocalDateTime eventTime, LocalDateTime endTime,
-			Integer notifyBefore);
+	int updateCalendarEvent(@Param("id") Long id, @Param("title") String title,
+			@Param("description") String description, @Param("eventTime") LocalDateTime eventTime,
+			@Param("endTime") LocalDateTime endTime, @Param("notifyBefore") Integer notifyBefore,
+			@Param("assignedUserId") Long assignedUserId);
 
 	// 找行事曆名字
 	@Query(value = "select title from calendar_events where id = :id", nativeQuery = true)
@@ -87,6 +116,85 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	public List<Calendar> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
 	// 查私人 2026-05-24 by ZJ
-	@Query(value = "Select * from calendar_events where created_by = :userId and group_id = 0", nativeQuery = true)
-	public List<Calendar> findPersonalExpenses(@Param("userId") Long userId);
+	@Query(value = """
+			SELECT *
+			FROM calendar_events
+			WHERE group_id = 0
+			  AND assigned_user_id = :userId
+			ORDER BY event_time ASC
+			""", nativeQuery = true)
+	List<Calendar> findPersonalExpenses(@Param("userId") Long userId);
+
+	// 查詢某群組中，指派給指定使用者的活動
+	@Query(value = """
+			SELECT *
+			FROM calendar_events
+			WHERE group_id = :groupId
+			  AND assigned_user_id = :userId
+			ORDER BY event_time ASC
+			""", nativeQuery = true)
+	List<Calendar> findByGroupIdAndAssignedUserIdOrderByEventTimeAsc(@Param("groupId") Long groupId,
+			@Param("userId") Long userId);
+
+	// 查詢私人行事曆
+	@Query(value = """
+			SELECT *
+			FROM calendar_events
+			WHERE group_id = 0
+			  AND assigned_user_id = :userId
+			ORDER BY event_time ASC
+			""", nativeQuery = true)
+	List<Calendar> findPrivateCalendarByUserId(@Param("userId") Long userId);
+
+	// 依照單筆活動 id 找出同批活動識別碼
+	@Query(value = """
+			SELECT event_batch_id
+			FROM calendar_events
+			WHERE id = :id
+			""", nativeQuery = true)
+	String findEventBatchIdById(@Param("id") Long id);
+
+	// 查詢同一批活動目前指派了哪些成員
+	@Query(value = """
+			SELECT assigned_user_id
+			FROM calendar_events
+			WHERE event_batch_id = :eventBatchId
+			ORDER BY assigned_user_id ASC
+			""", nativeQuery = true)
+	List<Long> findAssignedUserIdsByEventBatchId(@Param("eventBatchId") String eventBatchId);
+
+	// 刪除同一批活動
+	@Modifying
+	@Transactional
+	@Query(value = """
+			DELETE FROM calendar_events
+			WHERE event_batch_id = :eventBatchId
+			""", nativeQuery = true)
+	int deleteByEventBatchId(@Param("eventBatchId") String eventBatchId);
+
+	// 依照批次 ID 查詢同一批活動
+	@Query(value = """
+			SELECT *
+			FROM calendar_events
+			WHERE event_batch_id = :eventBatchId
+			ORDER BY assigned_user_id ASC
+			""", nativeQuery = true)
+	List<Calendar> findByEventBatchId(@Param("eventBatchId") String eventBatchId);
+
+	//發送到期通知
+	@Query(value = """
+			SELECT * FROM calendar_events
+			WHERE DATE_SUB(event_time, INTERVAL notify_before MINUTE) <= :now
+			and is_send_enddate_notify = 0
+			""", nativeQuery = true)
+	List<Calendar> findEventsToNotify(@Param("now") LocalDateTime now);
+	
+	//已發送通知不再重複送
+	@Modifying
+	@Transactional
+	@Query(value = """
+			update calendar_events set is_send_enddate_notify = 1
+			WHERE id = :eventId
+			""", nativeQuery = true)
+	public void markAsNotified(@Param("eventId") Long eventId);
 }

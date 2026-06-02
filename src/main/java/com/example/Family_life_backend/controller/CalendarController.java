@@ -33,9 +33,12 @@ public class CalendarController {
 	}
 
 	// 查詢某一個家庭群組的所有行事曆事件
-	@GetMapping("/group/{groupId}")
-	public CalendarRes getByGroup(@PathVariable("groupId") Long groupId) {
-		return calendarService.getByGroup(groupId);
+	@GetMapping("/getByGroup")
+	public CalendarRes getByGroup(
+	    @RequestParam("groupId") Long groupId,
+	    @RequestParam("userId") Long userId
+	) {
+	    return calendarService.getByGroup(groupId, userId);
 	}
 
 	// 2026-05- 24 by ZJ 新get 資訊
@@ -49,6 +52,15 @@ public class CalendarController {
 	public CalendarRes getById(@PathVariable("id") Long id) {
 		return calendarService.getById(id);
 	}
+	
+	// 查詢群組中「指派給目前登入者」的行事曆
+	@GetMapping("/group/{groupId}")
+	public CalendarRes getGroupCalendarByAssignedUser(
+	        @PathVariable("groupId") Long groupId,
+	        @RequestParam("userId") Long userId) {
+
+	    return calendarService.getGroupCalendarByAssignedUser(groupId, userId);
+	}
 
 	// 更新事件
 	@PutMapping("/{id}")
@@ -60,5 +72,13 @@ public class CalendarController {
 	@DeleteMapping("/{id}/{userId}/{groupId}")
 	public CalendarRes delete(@PathVariable("id") Long id, @PathVariable("userId") Long userId, @PathVariable("groupId") Long groupId) {
 		return calendarService.delete(id, userId, groupId);
+	}
+	
+	// 查詢同一批活動目前指派的成員 ID
+	@GetMapping("/batchAssignedUsers")
+	public CalendarRes getBatchAssignedUsers(
+	        @RequestParam("eventBatchId") String eventBatchId) {
+
+	    return calendarService.getBatchAssignedUsers(eventBatchId);
 	}
 }

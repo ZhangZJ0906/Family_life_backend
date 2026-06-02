@@ -17,6 +17,7 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.group;
@@ -29,6 +30,12 @@ import com.example.Family_life_backend.response.GetGroupRes;
 public class groupService {
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	@Autowired
 	private groupDao groupDao;
 
 	@Autowired
@@ -39,7 +46,7 @@ public class groupService {
 
 	@Autowired
 	private GroupRepository groupRepository;
-	
+
 	@Autowired
 	private NotifySocketService notifySocketService;
 	
@@ -71,8 +78,8 @@ public class groupService {
 
 	public GetGroupRes getList(Long user_id) {
 		System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
-		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id)
-				, groupDao.getMyGroupsPublicInventory(user_id));
+		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id),
+				groupDao.getMyGroupsPublicInventory(user_id));
 	}
 
 	@Transactional
@@ -120,14 +127,15 @@ public class groupService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
-					
-					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 

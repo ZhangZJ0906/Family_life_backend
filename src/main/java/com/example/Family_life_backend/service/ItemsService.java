@@ -15,6 +15,7 @@ import com.example.Family_life_backend.dao.CategoiesDao;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.LocationDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Categories;
@@ -22,6 +23,7 @@ import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.entity.Location;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
@@ -30,6 +32,12 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ItemsService {
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
 	@Autowired
 	private ItemsDao itemDao;
 	@Autowired
@@ -108,11 +116,16 @@ public class ItemsService {
 
 		if (finalGroupId != 0) {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "清單";
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到一般用品清單";
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -123,12 +136,12 @@ public class ItemsService {
 
 		return new AddItemsInfoRes("成功", 200);
 	}
+
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req) {
 
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 		String oldItemName = itemDao.getItemNameById((long) req.getId());
-
 
 		// 安全庫存量：沒填就給 0
 		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
@@ -143,12 +156,17 @@ public class ItemsService {
 				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "清單改成" + req.getName();
+		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
 
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+					
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -160,6 +178,10 @@ public class ItemsService {
 		return new BasicRes("成功", 200);
 	}
 
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+		itemDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
+	}
 	@Transactional
 	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
@@ -174,11 +196,16 @@ public class ItemsService {
 		for (Integer i : id) {
 			Long finalGroupId = itemDao.getGroupIdById((long) i);
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
-			String content = groupDao.getSelfName(userId) + "已將" + itemDao.getItemNameById((long) i) + "刪除";
+			String content = groupDao.getSelfName(userId) + "已將一般用品" + itemDao.getItemNameById((long) i) + "刪除";
 			if (finalGroupId != 0) {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
 						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+						
+						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+						}
+						
 						// 🔥 正確：要重新查 unread count
 						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

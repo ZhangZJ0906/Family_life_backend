@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Family_life_backend.request.AddWarrantyReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.request.UpdateWarrantyReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.WarrantyRes;
 import com.example.Family_life_backend.service.WarrantyService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/warranty")
@@ -39,6 +43,11 @@ public class WarrantyController {
     public WarrantyRes update(@RequestBody UpdateWarrantyReq req) {
         return warrantyService.update(req);
     }
+
+	@PostMapping("/updateNotify")
+	public BasicRes updateNotify(@Valid @RequestBody UpdateNotifyReq req) {
+		return warrantyService.updateNotify(req);
+	}
 
     @DeleteMapping("/delete")
     public WarrantyRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
