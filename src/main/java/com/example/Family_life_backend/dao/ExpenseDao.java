@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.dao;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,15 +51,27 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 	public void deleteExpense(@Param("id") List<Integer> id);
 
 	// 通知 2026-05-27 by ZJ
-		@Modifying
-		@Transactional
-		@Query(value = """
-				    insert into notify (send_id, get_user_id, content, type, is_read)
-				    values (:sendId, :getUserId, :content, :type, :isRead)
-				""", nativeQuery = true)
-		public void insertExpensesEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
-				@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    insert into notify (send_id, get_user_id, content, type, is_read)
+			    values (:sendId, :getUserId, :content, :type, :isRead)
+			""", nativeQuery = true)
+	public void insertExpensesEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
 
+	// 登入該page時間
+	@Modifying
+	@Transactional
+	@Query(value = """
+			update users set login_expense_page_time = :now where user_id = :userId
+			""", nativeQuery = true)
+	public void recordLoginExpensePageTime(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+
+	// 抓取上次登入page時間
+	@Query(value = """
+			select login_expense_page_time from users where user_id = :userId
+			""", nativeQuery = true)
+	public LocalDateTime getLoginExpensePageTime(@Param("userId") Long userId);
 
 }
-

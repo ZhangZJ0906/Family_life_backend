@@ -1,5 +1,7 @@
 package com.example.Family_life_backend.controller;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Family_life_backend.dao.ExpenseDao;
 import com.example.Family_life_backend.request.AddExpensesInfoReq;
 import com.example.Family_life_backend.request.DeleteExpensesReq;
 import com.example.Family_life_backend.request.UpdateExpensesInfoReq;
@@ -25,11 +28,20 @@ public class ExpenseController {
 	@Autowired
 	private ExpenseService expenseService;
 
-//可查 私人 或是群組
+	@Autowired
+	private ExpenseDao expenseDao;
+
+	@GetMapping("/getLoginExpensePageTime")
+	public LocalDateTime getLoginItemPageTime(@RequestParam("userId") Integer userId) {
+		return expenseDao.getLoginExpensePageTime((long) userId);
+	}
+
+	//可查 私人 或是群組
 	@GetMapping("/getInfo")
 	public GetExpenseInfoRes getExpenInfo(@RequestParam(value = "groupId") Long groupId,
 			@RequestParam(value = "userId", required = false) Long userId) {
 
+		expenseDao.recordLoginExpensePageTime(userId, LocalDateTime.now());
 		return expenseService.getExpenseInfo(groupId, userId);
 	}
 

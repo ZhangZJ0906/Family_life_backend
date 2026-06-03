@@ -181,20 +181,50 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 			""", nativeQuery = true)
 	List<Calendar> findByEventBatchId(@Param("eventBatchId") String eventBatchId);
 
-	//發送到期通知
+	// 提前提醒
 	@Query(value = """
-			SELECT * FROM calendar_events
+					SELECT *
+			FROM calendar_events
 			WHERE DATE_SUB(event_time, INTERVAL notify_before MINUTE) <= :now
-			and is_send_enddate_notify = 0
-			""", nativeQuery = true)
-	List<Calendar> findEventsToNotify(@Param("now") LocalDateTime now);
-	
-	//已發送通知不再重複送
+			AND is_send_before_notify = 0 and notify_before != 0
+					""", nativeQuery = true)
+	List<Calendar> findEventsBeforeToNotify(@Param("now") LocalDateTime now);
+
+	// 開始提醒
+	@Query(value = """
+					SELECT *
+			FROM calendar_events
+			WHERE event_time <= :now
+			AND is_send_start_notify = 0
+					""", nativeQuery = true)
+	List<Calendar> findEventsStartToNotify(@Param("now") LocalDateTime now);
+
+	// 已發送通知不再重複送
 	@Modifying
 	@Transactional
 	@Query(value = """
-			update calendar_events set is_send_enddate_notify = 1
-			WHERE id = :eventId
+			UPDATE calendar_events SET is_send_before_notify = 1 WHERE id = :eventId
 			""", nativeQuery = true)
-	public void markAsNotified(@Param("eventId") Long eventId);
+	public void markBeforeAsNotified(@Param("eventId") Long eventId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = """
+			UPDATE calendar_events SET is_send_start_notify = 1 WHERE id = :eventId
+			""", nativeQuery = true)
+	public void markStartAsNotified(@Param("eventId") Long eventId);
+
+	// 登入該page時間
+	@Modifying
+	@Transactional
+	@Query(value = """
+			update users set login_calendar_page_time = :now where user_id = :userId
+			""", nativeQuery = true)
+	public void recordLoginCalendarPageTime(@Param("userId") Long userId, @Param("now") LocalDateTime now);
+
+	// 抓取上次登入page時間
+	@Query(value = """
+			select login_calendar_page_time from users where user_id = :userId
+			""", nativeQuery = true)
+	public LocalDateTime getLoginCalendarPageTime(@Param("userId") Long userId);
 }
