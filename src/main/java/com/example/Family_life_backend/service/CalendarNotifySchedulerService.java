@@ -22,32 +22,66 @@ public class CalendarNotifySchedulerService {
 	@Autowired
 	private NotifySocketService notifySocketService;
 
-	@Scheduled(fixedRate = 60000) // 每 60 秒檢查一次
+	@Scheduled(fixedRate = 60000)
 	public void checkEventTime() {
 
 		LocalDateTime now = LocalDateTime.now();
 
-		List<Calendar> list = calendarDao.findEventsToNotify(now);
+		sendBeforeNotify(now);
 
-		for (Calendar event : list) {
+		sendStartNotify(now);
+	}
 
-			String content = "提醒：即將開始活動" + event.getTitle();
+	private void sendBeforeNotify(LocalDateTime now) {
 
-			// 1. 寫通知
-			if (event.getGroupId() == 0) { //私人活動
-				calendarDao.insertCalendarEventNotify(event.getAssignedUserId(), event.getAssignedUserId(), content,
-						"calendar_self", false);
-			} else {
-				calendarDao.insertCalendarEventNotify(event.getGroupId(), event.getAssignedUserId(), content,
-						"calendar", false);
-			}
+		List<Calendar> events = calendarDao.findEventsBeforeToNotify(now);
 
-			// 2. websocket 推送
-			int unread = notifyDao.countUnreadByUserId(event.getAssignedUserId());
-			notifySocketService.pushUnreadCount(event.getAssignedUserId(), unread);
+		for (Calendar event : events) {
 
-			// 3. 標記已通知
-			calendarDao.markAsNotified(event.getId());
+			String content = "提醒：距離活動" + event.getTitle() + "還有" + event.getNotifyBefore() + "分鐘";
+
+			insertNotify(event, content);
+
+			pushUnread(event.getAssignedUserId());
+
+			calendarDao.markBeforeAsNotified(event.getId());
 		}
+	}
+
+	private void sendStartNotify(LocalDateTime now) {
+
+		List<Calendar> events = calendarDao.findEventsStartToNotify(now);
+
+		for (Calendar event : events) {
+
+			String content = "提醒：" + event.getTitle() + "已經開始";
+
+			insertNotify(event, content);
+
+			pushUnread(event.getAssignedUserId());
+
+			calendarDao.markStartAsNotified(event.getId());
+		}
+	}
+
+	private void insertNotify(Calendar event, String content) {
+
+		if (event.getGroupId() == 0) {
+
+			calendarDao.insertCalendarEventNotify(event.getAssignedUserId(), event.getAssignedUserId(), content,
+					"calendar_self", false);
+
+		} else {
+
+			calendarDao.insertCalendarEventNotify(event.getGroupId(), event.getAssignedUserId(), content, "calendar",
+					false);
+		}
+	}
+
+	private void pushUnread(Long userId) {
+
+		int unread = notifyDao.countUnreadByUserId(userId);
+
+		notifySocketService.pushUnreadCount(userId, unread);
 	}
 }
