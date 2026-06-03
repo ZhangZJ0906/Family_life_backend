@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,12 @@ public class groupService {
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
-					notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
+					if(!Objects.equals(oldGroupName, NewGroupId)) {
+						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
+					}
+					else {
+						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼", "update", false);
+					}
 
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
