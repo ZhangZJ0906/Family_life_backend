@@ -3,6 +3,7 @@ package com.example.Family_life_backend.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,7 +122,7 @@ public class ShoppingListService {
 	}
 
 	public List<ShoppingList> getLists(int userId) {
-	    return shoppingListDao.findVisibleListsByUserId((long)userId);
+		return shoppingListDao.findVisibleListsByUserId((long) userId);
 	}
 
 	public List<PurchaseItem> getItems(int listId) {
@@ -160,7 +161,7 @@ public class ShoppingListService {
 		}
 
 		// 發送通知
-		List<groupMembersDTO> getGroupMembers = groupMemebrDao.getMembersByGroupId((long)groupId);
+		List<groupMembersDTO> getGroupMembers = groupMemebrDao.getMembersByGroupId((long) groupId);
 		String DeletedName = purchaseItemDao.getItemNameById((long) listId, (long) itemId);
 		String sendName = groupDao.getSelfName((long) userId);
 		String content = sendName + "已將" + DeletedName + "購買請求刪除";
@@ -168,7 +169,8 @@ public class ShoppingListService {
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if ((long) userId != member.getUser_id() && groupId != 0) {
-				purchaseItemDao.sendPurchaseReqToAnotherNotify((long)groupId, member.getUser_id(), content, "group", false);
+				purchaseItemDao.sendPurchaseReqToAnotherNotify((long) groupId, member.getUser_id(), content, "group",
+						false);
 
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "邀請通知", content);
@@ -180,7 +182,6 @@ public class ShoppingListService {
 				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 			}
 		}
-		
 
 		purchaseItemDao.deleteById(purchaseItemId);
 
@@ -257,52 +258,63 @@ public class ShoppingListService {
 	}
 
 	public BasicRes updateItem(AddPurchaseItemReq req) {
-		PurchaseItemVo vo = req.getPurchaseItemVoList().get(0);
-		PurchaseItemId id = new PurchaseItemId(vo.getId(), req.getListId());
+		for (PurchaseItemVo vo : req.getPurchaseItemVoList()) {
 
-		// 拿群組ID
-		Long groupID = shoppingListDao.getgroupIdByListId((long) req.getListId());
+			PurchaseItemId id = new PurchaseItemId(vo.getId(), req.getListId());
 
-		PurchaseItem item = purchaseItemDao.findById(id).orElse(null);
-		if (item == null) {
-			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
-					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
-		}
+			// 拿群組ID
+			Long groupID = shoppingListDao.getgroupIdByListId((long) req.getListId());
 
-		Long OldGetterId = (long) item.getUserId();// 拿原先轉給的成員ID
-		item.setUserId(vo.getUserId());
-		item.setCategoryId(vo.getCategoryId());
-		item.setItem(vo.getItem());
-		item.setQuantity(vo.getQuantity());
+			PurchaseItem item = purchaseItemDao.findById(id).orElse(null);
 
-		// 發送通知
-		String sendName = groupDao.getSelfName((long) req.getCreaterId());
-		String getName = groupDao.getSelfName((long) vo.getUserId());
-		String contentToOldGetter = sendName + "已將" + vo.getItem() + "購買請求轉給" + getName;
-		String contentToNewGetter = sendName + "已將" + vo.getItem() + "購買請求轉給你";
-
-		purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group", false);
-
-		if ((long) req.getCreaterId() != (long) vo.getUserId() && groupID != 0L) {
-
-			purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), contentToNewGetter, "group",
-					false);
-
-			if (userInfoDao.getEmailNotifyById(OldGetterId) == true) {
-				emailService.sendMail(userInfoDao.getEmailById(OldGetterId), "群組通知", contentToOldGetter);
+			if (item == null) {
+				return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+						ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 			}
 
-			if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
-				emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知", contentToNewGetter);
+			Long OldGetterId = (long) item.getUserId();// 拿原先轉給的成員ID
+
+			item.setUserId(vo.getUserId());
+			item.setCategoryId(vo.getCategoryId());
+			item.setItem(vo.getItem());
+			item.setQuantity(vo.getQuantity());
+
+			boolean userChanged = !Objects.equals(OldGetterId, (long) vo.getUserId());
+
+			if (userChanged) { // 只有變更委託人才會送通知
+				// 發送通知
+				String sendName = groupDao.getSelfName((long) req.getCreaterId());
+				String getName = groupDao.getSelfName((long) vo.getUserId());
+				String contentToOldGetter = sendName + "已將" + vo.getItem() + "購買請求轉給" + getName;
+				String contentToNewGetter = sendName + "已將" + vo.getItem() + "購買請求轉給你";
+
+				if ((long) req.getCreaterId() != (long) vo.getUserId() && groupID != 0L) {
+
+					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group",
+							false);
+
+					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), contentToNewGetter,
+							"group", false);
+
+					if (userInfoDao.getEmailNotifyById(OldGetterId) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(OldGetterId), "群組通知", contentToOldGetter);
+					}
+
+					if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知",
+								contentToNewGetter);
+					}
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId((long) vo.getUserId());
+
+					notifySocketService.pushUnreadCount((long) vo.getUserId(), unreadCount);
+				}
 			}
 
-			// 🔥 正確：要重新查 unread count
-			int unreadCount = notifyDao.countUnreadByUserId((long) vo.getUserId());
-
-			notifySocketService.pushUnreadCount((long) vo.getUserId(), unreadCount);
+			purchaseItemDao.save(item);
 		}
 
-		purchaseItemDao.save(item);
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
