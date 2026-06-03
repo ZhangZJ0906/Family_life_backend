@@ -140,11 +140,20 @@ public class ExpenseService {
 		System.out.println(groupDao.getSelfName(userId));
 		for (groupMembersDTO member : members) {
 			if (!member.getUser_id().equals(userId)) {
-				expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+				if (type == "刪除") {
+					expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "update", false);
 
-				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+				} else {
+					expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
 				}
+
 			}
 		}
 	}
