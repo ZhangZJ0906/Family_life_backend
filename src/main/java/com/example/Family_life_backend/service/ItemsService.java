@@ -1,5 +1,9 @@
 package com.example.Family_life_backend.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -9,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.CategoiesDao;
@@ -29,7 +34,6 @@ import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
 import jakarta.transaction.Transactional;
-
 @Service
 public class ItemsService {
 	@Autowired
@@ -99,7 +103,7 @@ public class ItemsService {
 	}
 
 	@Transactional
-	public AddItemsInfoRes saveItem(ItemAddInfoReq req) {
+	public AddItemsInfoRes saveItem(ItemAddInfoReq req, MultipartFile image) {
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
 		// 安全庫存量：沒填就給 0
@@ -108,11 +112,31 @@ public class ItemsService {
 		String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
+
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new AddItemsInfoRes("圖片上傳失敗", 500);
+			}
+		}
 
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
-				finalSafeQuantity, status, remindMessage);
+				finalSafeQuantity, status, remindMessage, avatarUrl);
 
 		if (finalGroupId != 0) {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
@@ -121,11 +145,11 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -138,7 +162,7 @@ public class ItemsService {
 	}
 
 	@Transactional
-	public BasicRes updateItem(ItemUpdateReq req) {
+	public BasicRes updateItem(ItemUpdateReq req, MultipartFile image) {
 
 		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 		String oldItemName = itemDao.getItemNameById((long) req.getId());
@@ -149,11 +173,40 @@ public class ItemsService {
 		String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+//跟groupService 一樣 先拿舊的 avatar
+		String oldAvatarString = itemDao.getItemImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString; // 預設使用舊圖
+
+		try {
+			// 只有有新圖片才更新
+			if (image != null && !image.isEmpty()) {
+
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+
+				Path uploadPath = Paths.get("uploads");
+
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			return new BasicRes("update fail", 500);
+		}
 
 		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
 				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
 				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, avatarUrl);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
@@ -162,11 +215,11 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -182,6 +235,7 @@ public class ItemsService {
 		itemDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
 	}
+
 	@Transactional
 	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
@@ -201,11 +255,11 @@ public class ItemsService {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
 						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-						
+
 						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 						}
-						
+
 						// 🔥 正確：要重新查 unread count
 						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

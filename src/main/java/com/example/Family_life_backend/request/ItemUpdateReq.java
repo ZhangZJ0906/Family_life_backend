@@ -17,7 +17,7 @@ public class ItemUpdateReq {
 
 	@NotNull(message = "分類 ID 為必填")
 	private Integer categoryId;
-	
+
 	private Long userId;
 
 	@NotBlank(message = "物品名稱不能為空")
@@ -45,12 +45,21 @@ public class ItemUpdateReq {
 	private LocalDate purchaseDate;
 	@FutureOrPresent(message = "到期日期不能早於今天")
 	private LocalDate expireDate;
-	
+
 	private Integer safeQuantity;
 
 	private Boolean notify = false;
 
 	private String note;
+	private String avatar;
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	public int getUnitPrice() {
 		return unitPrice;
@@ -163,29 +172,28 @@ public class ItemUpdateReq {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
+
 	public Integer getSafeQuantity() {
-	    return safeQuantity;
+		return safeQuantity;
 	}
 
 	public void setSafeQuantity(Integer saveQuantity) {
-	    this.safeQuantity = saveQuantity;
+		this.safeQuantity = saveQuantity;
 	}
-
 
 	public ItemUpdateReq() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemUpdateReq(int id, Integer groupId, Long userId, Integer categoryId, String name, Integer quantity, String unit,
-			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
-			String note,  Integer safeQuantity) {
+	public ItemUpdateReq(int id, Integer groupId, Integer categoryId, Long userId, String name, Integer quantity,
+			String unit, Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate,
+			Integer safeQuantity, Boolean notify, String note, String avatar) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
-		this.userId = userId;
 		this.categoryId = categoryId;
+		this.userId = userId;
 		this.name = name;
 		this.quantity = quantity;
 		this.unit = unit;
@@ -194,9 +202,10 @@ public class ItemUpdateReq {
 		this.unitPrice = unitPrice;
 		this.purchaseDate = purchaseDate;
 		this.expireDate = expireDate;
+		this.safeQuantity = safeQuantity;
 		this.notify = notify;
 		this.note = note;
-		this.safeQuantity = safeQuantity;
+		this.avatar = avatar;
 	}
 
 }
