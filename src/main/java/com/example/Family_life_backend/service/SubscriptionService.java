@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,7 @@ public class SubscriptionService {
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
 		subscriptionDao.addSubscription(req.getGroupId(), req.getUserId(), req.getName(), req.getPrice(),
 				req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage);
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到訂閱清單";
@@ -162,7 +163,7 @@ public class SubscriptionService {
 		System.out.println(req.getPrice());
 		int result = subscriptionDao.updateSubscription(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getPrice(), req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage);
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將訂閱" + oldName + "改成" + req.getName();

@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class WarrantyService {
 		warrantyDao.addWarranty(req.getGroupId(), req.getUserId(), req.getProductName(), req.getBrand(), req.getModel(),
 				req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(), req.getStoreName(),
 				req.getPrice() != null ? req.getPrice() : 0, req.getNotify() != null ? req.getNotify() : true,
-				req.getNote(), status, remindMessage);
+				req.getNote(), status, remindMessage, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
@@ -136,7 +137,7 @@ public class WarrantyService {
 		int result = warrantyDao.updateWarranty(req.getId(), req.getGroupId(), req.getUserId(), req.getProductName(),
 				req.getBrand(), req.getModel(), req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(),
 				req.getStoreName(), req.getPrice() != null ? req.getPrice() : 0,
-				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
+				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固" + oldName + "改成" + req.getProductName();

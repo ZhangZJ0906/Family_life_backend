@@ -29,21 +29,22 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT ignore INTO expenses (group_id,user_id, price, category_id, related_item_id, expense_date, note, created_at,related_item_name) "
-			+ "VALUES (:groupId,:userId, :price, :categoryId, :relatedItemId, :expenseDate, :note, NOW(),:relatedItemName)", nativeQuery = true)
+			+ "VALUES (:groupId,:userId, :price, :categoryId, :relatedItemId, :expenseDate, :note, :createdAt, :relatedItemName)", nativeQuery = true)
 	public void insertExpense(@Param("groupId") Long groupId, @Param("userId") Long userId,
 			@Param("price") Integer price, @Param("categoryId") Integer categoryId,
 			@Param("relatedItemId") Long relatedItemId, @Param("relatedItemName") String relatedItemName,
-			@Param("expenseDate") LocalDate expenseDate, @Param("note") String note);
+			@Param("expenseDate") LocalDate expenseDate, @Param("note") String note,
+			@Param("createdAt") LocalDateTime createdAt);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE expenses SET " + "group_id = :groupId, " + "user_id = :userId, " + "price = :price, "
 			+ "category_id = :categoryId, " + "related_item_id = :relatedItemId, related_item_name= :relatedItemName, "
-			+ "expense_date = :expenseDate, " + "note = :note  " + "WHERE id = :id", nativeQuery = true)
+			+ "expense_date = :expenseDate, " + "note = :note,  " + "created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
 	public void updateExpense(@Param("id") Integer id, @Param("groupId") Long groupId, @Param("userId") Long userId,
 			@Param("price") Integer price, @Param("categoryId") Integer categoryId,
 			@Param("relatedItemId") Long relatedItemId, @Param("relatedItemName") String relatedItemName,
-			@Param("expenseDate") LocalDate expenseDate, @Param("note") String note);
+			@Param("expenseDate") LocalDate expenseDate, @Param("note") String note, @Param("createdAt") LocalDateTime createdAt);
 
 	@Modifying
 	@Transactional

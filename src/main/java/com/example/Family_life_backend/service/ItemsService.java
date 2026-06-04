@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +113,7 @@ public class ItemsService {
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
-				finalSafeQuantity, status, remindMessage);
+				finalSafeQuantity, status, remindMessage, LocalDateTime.now());
 
 		if (finalGroupId != 0) {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
@@ -121,11 +122,11 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -153,7 +154,7 @@ public class ItemsService {
 		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
 				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
 				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage);
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
@@ -162,11 +163,11 @@ public class ItemsService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -182,6 +183,7 @@ public class ItemsService {
 		itemDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
 	}
+
 	@Transactional
 	public BasicRes deleteItem(List<Integer> id, Long userId) {
 		if (id == null || id.isEmpty()) {
@@ -201,11 +203,11 @@ public class ItemsService {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
 						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-						
+
 						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 						}
-						
+
 						// 🔥 正確：要重新查 unread count
 						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
