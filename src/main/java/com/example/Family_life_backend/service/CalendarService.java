@@ -1,5 +1,8 @@
 package com.example.Family_life_backend.service;
 
+import java.time.ZoneId;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +44,8 @@ public class CalendarService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	private static final ZoneId TAIWAN_ZONE = ZoneId.of("Asia/Taipei");
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
@@ -60,8 +65,8 @@ public class CalendarService {
 			return new CalendarRes(400, "活動時間不可為空");
 		}
 
-		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
-			return new CalendarRes(400, "開始時間不可大於結束時間");
+		if (req.getEventTime().toLocalDate().isBefore(LocalDate.now(TAIWAN_ZONE))) {
+		    return new CalendarRes(400, "開始日期不可早於今天");
 		}
 
 		if (req.getEventTime().toLocalDate().isBefore(java.time.LocalDate.now())) {
@@ -125,9 +130,20 @@ public class CalendarService {
 
 		for (Long assignedUserId : assignedUserIds) {
 
-			int result = calendarDao.insertCalendarEvent(eventBatchId, groupId, req.getCreatedBy(), assignedUserId,
-					req.getTitle(), req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore());
+			LocalDateTime taiwanNow = LocalDateTime.now(TAIWAN_ZONE);
 
+			int result = calendarDao.insertCalendarEvent(
+			    eventBatchId,
+			    groupId,
+			    req.getCreatedBy(),
+			    assignedUserId,
+			    req.getTitle(),
+			    req.getDescription(),
+			    req.getEventTime(),
+			    req.getEndTime(),
+			    req.getNotifyBefore(),
+			    taiwanNow
+			);
 			successCount += result;
 		}
 
@@ -262,8 +278,20 @@ public class CalendarService {
 
 		for (Long assignedUserId : assignedUserIds) {
 
-			int result = calendarDao.insertCalendarEvent(eventBatchId, groupId, req.getCreatedBy(), assignedUserId,
-					req.getTitle(), req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore());
+			LocalDateTime taiwanNow = LocalDateTime.now(TAIWAN_ZONE);
+
+			int result = calendarDao.insertCalendarEvent(
+			    eventBatchId,
+			    groupId,
+			    req.getCreatedBy(),
+			    assignedUserId,
+			    req.getTitle(),
+			    req.getDescription(),
+			    req.getEventTime(),
+			    req.getEndTime(),
+			    req.getNotifyBefore(),
+			    taiwanNow
+			);
 
 			successCount += result;
 		}
