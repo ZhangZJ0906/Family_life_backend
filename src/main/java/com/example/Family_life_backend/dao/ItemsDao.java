@@ -45,16 +45,17 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO items "
-			+ "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, remind_message) "
+			+ "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, remind_message, created_at) "
 			+ "VALUES "
-			+ "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, :remindMessage)", nativeQuery = true)
+			+ "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, :remindMessage, :createdAt)", nativeQuery = true)
 	int insertItemNative(@Param("groupId") Integer groupId, @Param("categoryId") Integer categoryId,
 			@Param("name") String name, @Param("quantity") Integer quantity, @Param("unit") String unit,
 			@Param("locationId") Long locationId, @Param("price") Integer price,
 			@Param("purchaseDate") LocalDate purchaseDate, @Param("expireDate") LocalDate expireDate,
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("userId") Integer userId,
 			@Param("unitPrice") int unitPrice, @Param("safeQuantity") Integer safeQuantity,
-			@Param("status") String status, @Param("remindMessage") String remindMessage);
+			@Param("status") String status, @Param("remindMessage") String remindMessage,
+			@Param("createdAt") LocalDateTime createdTime);
 
 	// 通知
 	@Modifying
@@ -73,15 +74,15 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			+ "category_id = :categoryId, " + "name = :name, " + "quantity = :quantity, " + "unit = :unit, "
 			+ "location_id = :locationId, " + "price = :price, " + "purchase_date = :purchaseDate, "
 			+ "expire_date = :expireDate, " + "notify = :notify, " + "note = :note, " + "unit_price = :unitPrice, "
-			+ "safe_quantity = :safeQuantity, " + "status = :status, " + "remind_message = :remindMessage "
-			+ "WHERE id = :id", nativeQuery = true)
+			+ "safe_quantity = :safeQuantity, " + "status = :status, " + "remind_message = :remindMessage, "
+			+ "created_at = :createdAt" + "WHERE id = :id", nativeQuery = true)
 	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId, @Param("userId") Long userId,
 			@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("quantity") Integer quantity,
 			@Param("unit") String unit, @Param("locationId") Long locationId, @Param("price") Integer price,
 			@Param("purchaseDate") LocalDate purchaseDate, @Param("expireDate") LocalDate expireDate,
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("unitPrice") int unitPrice,
 			@Param("safeQuantity") Integer safeQuantity, @Param("status") String status,
-			@Param("remindMessage") String remindMessage);
+			@Param("remindMessage") String remindMessage, @Param("createdAt") LocalDateTime createdTime);
 
 	@Modifying
 	@Transactional

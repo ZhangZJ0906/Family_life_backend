@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.dao;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,23 +17,21 @@ import com.example.Family_life_backend.entity.Subscription;
 public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 
 	@Query(value = """
-		    SELECT *
-		    FROM subscriptions
-		    WHERE (
-		        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
-		        OR
-		        (:groupId IS NOT NULL AND group_id = :groupId)
-		    )
-		    ORDER BY next_billing_date ASC
-		""", nativeQuery = true)
-		List<Subscription> findByGroupId(
-		        @Param("userId") Integer userId,
-		        @Param("groupId") Integer groupId
-		);
+			    SELECT *
+			    FROM subscriptions
+			    WHERE (
+			        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
+			        OR
+			        (:groupId IS NOT NULL AND group_id = :groupId)
+			    )
+			    ORDER BY next_billing_date ASC
+			""", nativeQuery = true)
+	List<Subscription> findByGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
+
 	// 依群組查詢訂閱
 	@Query(value = "SELECT * FROM subscriptions WHERE group_id = :groupId ORDER BY next_billing_date ASC", nativeQuery = true)
 	List<Subscription> findByGroupId(@Param("groupId") Integer groupId);
-	
+
 	// 查詢所屬群組
 	@Query(value = "SELECT group_id FROM subscriptions WHERE id = :Id", nativeQuery = true)
 	Long getGroupId(@Param("Id") Integer Id);
@@ -51,12 +50,13 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Query(value = "INSERT INTO subscriptions "
 			+ "(group_id, user_id, name, price, billing_cycle, next_billing_date, purchase_date, trial_end_date, notify, note,  status, remind_message, created_at) "
 			+ "VALUES "
-			+ "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, :status, :remindMessage, NOW())", nativeQuery = true)
+			+ "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, :status, :remindMessage, :createdAt)", nativeQuery = true)
 	int addSubscription(@Param("groupId") Integer groupId, @Param("userId") Integer userId, @Param("name") String name,
 			@Param("price") Integer price, @Param("billingCycle") String billingCycle,
 			@Param("nextBillingDate") LocalDate nextBillingDate, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
-			@Param("status") String status, @Param("remindMessage") String remindMessage);
+			@Param("status") String status, @Param("remindMessage") String remindMessage,
+			@Param("createdAt") LocalDateTime createdTime);
 
 	// 修改訂閱
 	@Modifying
@@ -64,18 +64,20 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Query(value = "UPDATE subscriptions SET " + "group_id = :groupId, " + "user_id = :userId, " + "name = :name, "
 			+ "price = :price, " + "billing_cycle = :billingCycle, " + "next_billing_date = :nextBillingDate, "
 			+ "purchase_date = :purchaseDate, " + "trial_end_date = :trialEndDate, " + "notify = :notify, "
-			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage "
+			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, " + "created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
 	int updateSubscription(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("name") String name, @Param("price") Integer price, @Param("billingCycle") String billingCycle,
 			@Param("nextBillingDate") LocalDate nextBillingDate, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
-			@Param("status") String status, @Param("remindMessage") String remindMessage);
+			@Param("status") String status, @Param("remindMessage") String remindMessage,
+			@Param("createdAt") LocalDateTime createdTime);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE subscriptions SET notify = :notify  WHERE id = :id", nativeQuery = true)
 	public void updateNotifyById(@Param("id") Integer id, @Param("notify") Boolean notify);
+
 	// 刪除訂閱
 	@Modifying
 	@Transactional
