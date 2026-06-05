@@ -48,15 +48,20 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO subscriptions "
-			+ "(group_id, user_id, name, price, billing_cycle, next_billing_date, purchase_date, trial_end_date, notify, note,  status, remind_message, created_at) "
+			+ "(group_id, user_id, name, price, billing_cycle, next_billing_date, purchase_date, trial_end_date, notify, note,  status, remind_message, created_at, avatar) "
 			+ "VALUES "
-			+ "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, :status, :remindMessage, :createdAt)", nativeQuery = true)
+			+ "(:groupId, :userId, :name, :price, :billingCycle, :nextBillingDate, :purchaseDate, :trialEndDate, :notify, :note, :status, :remindMessage, :createdAt, :avatar)", nativeQuery = true)
+
 	int addSubscription(@Param("groupId") Integer groupId, @Param("userId") Integer userId, @Param("name") String name,
 			@Param("price") Integer price, @Param("billingCycle") String billingCycle,
 			@Param("nextBillingDate") LocalDate nextBillingDate, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTime);
+
+			@Param("createdAt") LocalDateTime createdTime,@Param("avatar") String avatar);
+
+			
+
 
 	// 修改訂閱
 	@Modifying
@@ -64,14 +69,19 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Query(value = "UPDATE subscriptions SET " + "group_id = :groupId, " + "user_id = :userId, " + "name = :name, "
 			+ "price = :price, " + "billing_cycle = :billingCycle, " + "next_billing_date = :nextBillingDate, "
 			+ "purchase_date = :purchaseDate, " + "trial_end_date = :trialEndDate, " + "notify = :notify, "
+
 			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, " + "created_at = :createdAt "
+
+			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage , avatar= :avatar "+ "created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
 	int updateSubscription(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("name") String name, @Param("price") Integer price, @Param("billingCycle") String billingCycle,
 			@Param("nextBillingDate") LocalDate nextBillingDate, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTime);
+
+			@Param("createdAt") LocalDateTime createdTime,@Param("avatar") String avatar);
+
 
 	@Modifying
 	@Transactional

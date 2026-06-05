@@ -62,10 +62,15 @@ public class Items {
 	
 	@Column(name = "remind_message")
 	private String remindMessage;
+	@Column(name = "avatar")
+	private String avatar;
+
+
 
 	public Items(int id, Integer groupId, int categoryId, int createdById, String name, Integer quantity, String unit,
 			Long locationId, LocalDate purchaseDate, LocalDate expireDate, Integer safeQuantity, int unitPrice,
-			Integer price, Boolean notify, String note, LocalDateTime createdAt, String status,String remindMessage) {
+			Integer price, Boolean notify, String note, String status, String remindMessage, String avatar,
+			LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -82,9 +87,18 @@ public class Items {
 		this.price = price;
 		this.notify = notify;
 		this.note = note;
-		this.createdAt = createdAt;
 		this.status = status;
 		this.remindMessage = remindMessage;
+		this.avatar = avatar;
+		this.createdAt = createdAt;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 	public int getUnitPrice() {

@@ -14,72 +14,113 @@ import jakarta.persistence.Table;
 @Table(name = "medicines")
 public class Medicine {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "group_id")
-    private Integer groupId;
+	@Column(name = "group_id")
+	private Integer groupId;
 
-    @Column(name = "user_id")
-    private Integer userId;
-    
-    @Column(name = "name")
-    private String name;
+	@Column(name = "user_id")
+	private Integer userId;
 
-    @Column(name = "medicine_type")
-    private String medicineType;
-    
-    @Column(name = "quantity")
-    private Integer quantity;
-    
-    @Column(name = "unit")
-    private String unit;
-    
-    @Column(name = "unit_price")
-    private Integer unitPrice;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "price")
-    private Integer price;
+	@Column(name = "medicine_type")
+	private String medicineType;
 
-    @Column(name = "safe_quantity")
-    private Integer safeQuantity;
+	@Column(name = "quantity")
+	private Integer quantity;
 
-    @Column(name = "purchase_date")
-    private LocalDate purchaseDate;
+	@Column(name = "unit")
+	private String unit;
 
-    @Column(name = "expire_date")
-    private LocalDate expireDate;
+	@Column(name = "unit_price")
+	private Integer unitPrice;
 
-    @Column(name = "dosage")
-    private String dosage;
+	@Column(name = "price")
+	private Integer price;
 
-    @Column(name = "usage_method")
-    private String usageMethod;
-    
-    @Column(name = "location")
-    private String location;
-    
-    @Column(name = "source")
-    private String source;
-    
-    @Column(name = "notify")
-    private Boolean notify;
-    
-    @Column(name = "note")
-    private String note;
-    
-    @Column(name = "status")
-    private String status;
+	@Column(name = "safe_quantity")
+	private Integer safeQuantity;
 
-    @Column(name = "createdAt")
-    private LocalDateTime createdAt;
-    
-    @Column(name = "remind_message")
-    private String remindMessage;
-    
-    public Medicine() {
-    }
+	@Column(name = "purchase_date")
+	private LocalDate purchaseDate;
+
+	@Column(name = "expire_date")
+	private LocalDate expireDate;
+
+	@Column(name = "dosage")
+	private String dosage;
+
+	@Column(name = "usage_method")
+	private String usageMethod;
+
+	@Column(name = "location")
+	private String location;
+
+	@Column(name = "source")
+	private String source;
+
+	@Column(name = "notify")
+	private Boolean notify;
+
+	@Column(name = "note")
+	private String note;
+
+	@Column(name = "status")
+	private String status;
+
+	@Column(name = "createdAt")
+	private LocalDateTime createdAt;
+
+	@Column(name = "remind_message")
+	private String remindMessage;
+	@Column(name = "avatar")
+	private String avatar;
+
+	public Medicine() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Medicine(Integer id, Integer groupId, Integer userId, String name, String medicineType, Integer quantity,
+			String unit, Integer unitPrice, Integer price, Integer safeQuantity, LocalDate purchaseDate,
+			LocalDate expireDate, String dosage, String usageMethod, String location, String source, Boolean notify,
+			String note, String status, LocalDateTime createdAt, String remindMessage, String avatar) {
+		super();
+		this.id = id;
+		this.groupId = groupId;
+		this.userId = userId;
+		this.name = name;
+		this.medicineType = medicineType;
+		this.quantity = quantity;
+		this.unit = unit;
+		this.unitPrice = unitPrice;
+		this.price = price;
+		this.safeQuantity = safeQuantity;
+		this.purchaseDate = purchaseDate;
+		this.expireDate = expireDate;
+		this.dosage = dosage;
+		this.usageMethod = usageMethod;
+		this.location = location;
+		this.source = source;
+		this.notify = notify;
+		this.note = note;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.remindMessage = remindMessage;
+		this.avatar = avatar;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	public Integer getId() {
 		return id;
@@ -153,8 +194,6 @@ public class Medicine {
 		this.purchaseDate = purchaseDate;
 	}
 
-
-
 	public LocalDate getExpireDate() {
 		return expireDate;
 	}
@@ -178,7 +217,6 @@ public class Medicine {
 	public void setUsageMethod(String usageMethod) {
 		this.usageMethod = usageMethod;
 	}
-
 
 	public String getLocation() {
 		return location;
@@ -227,29 +265,29 @@ public class Medicine {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-    
+
 	public Integer getUnitPrice() {
-	    return unitPrice;
+		return unitPrice;
 	}
 
 	public void setUnitPrice(Integer unitPrice) {
-	    this.unitPrice = unitPrice;
+		this.unitPrice = unitPrice;
 	}
 
 	public Integer getPrice() {
-	    return price;
+		return price;
 	}
 
 	public void setPrice(Integer price) {
-	    this.price = price;
+		this.price = price;
 	}
-	
+
 	public String getRemindMessage() {
-	    return remindMessage;
+		return remindMessage;
 	}
 
 	public void setRemindMessage(String remindMessage) {
-	    this.remindMessage = remindMessage;
+		this.remindMessage = remindMessage;
 	}
 
 }

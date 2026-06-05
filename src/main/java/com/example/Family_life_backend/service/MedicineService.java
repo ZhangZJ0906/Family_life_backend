@@ -1,5 +1,9 @@
 package com.example.Family_life_backend.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -7,6 +11,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
@@ -65,7 +70,7 @@ public class MedicineService {
 		return new MedicineRes(200, "查詢成功", medicineDao.findByGroupId(groupId));
 	}
 
-	public MedicineRes add(AddMedicineReq req) {
+	public MedicineRes add(AddMedicineReq req, MultipartFile image) {
 
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new MedicineRes(400, "userId 不可為空");
@@ -92,12 +97,33 @@ public class MedicineService {
 		Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
 		Integer price = quantity * unitPrice;
 		String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new MedicineRes(500, "圖片上傳失敗");
+			}
+		}
 		medicineDao.addMedicine(req.getGroupId(), req.getUserId(), req.getName(), req.getMedicineType(), quantity,
 				req.getUnit(), safeQuantity, req.getPurchaseDate(), req.getExpireDate(), req.getDosage(),
 				req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage, LocalDateTime.now());
+
+				remindMessage, avatarUrl, LocalDateTime.now());
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到藥品清單";
@@ -111,7 +137,7 @@ public class MedicineService {
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -123,7 +149,7 @@ public class MedicineService {
 		return new MedicineRes(200, "新增成功");
 	}
 
-	public MedicineRes update(UpdateMedicineReq req) {
+	public MedicineRes update(UpdateMedicineReq req, MultipartFile image) {
 
 		String oldName = medicineDao.getMedicineNameById(req.getId());
 
@@ -149,12 +175,33 @@ public class MedicineService {
 		Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
 		Integer price = quantity * unitPrice;
 		String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new MedicineRes(500, "圖片上傳失敗");
+			}
+		}
 		int result = medicineDao.updateMedicine(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getMedicineType(), quantity, req.getUnit(), safeQuantity, req.getPurchaseDate(),
 				req.getExpireDate(), req.getDosage(), req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage, LocalDateTime.now());
+
+				remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "藥品清單改成" + req.getName();
@@ -163,11 +210,11 @@ public class MedicineService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -186,10 +233,10 @@ public class MedicineService {
 // 更新notify
 	public BasicRes updateNotify(UpdateNotifyReq req) {
 
-
 		medicineDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
 	}
+
 	public MedicineRes delete(Integer id, Long userId) {
 		if (id == null || id <= 0) {
 			return new MedicineRes(400, "id 不可為空");
@@ -202,11 +249,11 @@ public class MedicineService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 

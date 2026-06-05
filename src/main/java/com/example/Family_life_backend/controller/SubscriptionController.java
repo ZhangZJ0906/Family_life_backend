@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.request.AddSubscriptionReq;
 import com.example.Family_life_backend.request.UpdateNotifyReq;
@@ -24,38 +26,40 @@ import jakarta.validation.Valid;
 @RequestMapping("/subscription")
 public class SubscriptionController {
 
-    @Autowired
-    private SubscriptionService subscriptionService;
+	@Autowired
+	private SubscriptionService subscriptionService;
 
-    // 查詢某群組的訂閱
-    @GetMapping("/getByGroup")
-    public SubscriptionRes getByGroup(
-            @RequestParam("userId") Integer userId,
-            @RequestParam(value = "groupId", required = false) Integer groupId) {
+	// 查詢某群組的訂閱
+	@GetMapping("/getByGroup")
+	public SubscriptionRes getByGroup(@RequestParam("userId") Integer userId,
+			@RequestParam(value = "groupId", required = false) Integer groupId) {
 
-        return subscriptionService.getByGroup(groupId, userId);
-    }
+		return subscriptionService.getByGroup(groupId, userId);
+	}
 
-    // 新增訂閱
-    @PostMapping("/add")
-    public SubscriptionRes add(@RequestBody AddSubscriptionReq req) {
-        return subscriptionService.add(req);
-    }
+	// 新增訂閱
+	@PostMapping("/add")
+	public SubscriptionRes add(@RequestPart("req") AddSubscriptionReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
+		return subscriptionService.add(req, image);
+	}
 
-    // 修改訂閱
-    @PostMapping("/update")
-    public SubscriptionRes update(@RequestBody UpdateSubscriptionReq req) {
-        return subscriptionService.update(req);
-    }
+	// 修改訂閱
+	@PostMapping("/update")
+	public SubscriptionRes update(@RequestPart("req") UpdateSubscriptionReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
+		return subscriptionService.update(req, image);
+	}
 
 	@PostMapping("/updateNotify")
 	public BasicRes updateNotify(@Valid @RequestBody UpdateNotifyReq req) {
 		return subscriptionService.updateNotify(req);
 	}
-    // 刪除訂閱
-    // 使用 DELETE 刪除訂閱
-    @DeleteMapping("/delete")
-    public SubscriptionRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
-        return subscriptionService.delete(id, userId);
-    }
+
+	// 刪除訂閱
+	// 使用 DELETE 刪除訂閱
+	@DeleteMapping("/delete")
+	public SubscriptionRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+		return subscriptionService.delete(id, userId);
+	}
 }

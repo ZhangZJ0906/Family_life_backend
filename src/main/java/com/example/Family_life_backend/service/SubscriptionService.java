@@ -1,5 +1,9 @@
 package com.example.Family_life_backend.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -8,6 +12,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
@@ -59,8 +64,6 @@ public class SubscriptionService {
 			return new SubscriptionRes(400, "userId 錯誤");
 		}
 
-
-
 		List<Subscription> subscriptionList;
 
 		// ================= 情況 A：查私人訂閱 (groupId == 0) =================
@@ -94,7 +97,7 @@ public class SubscriptionService {
 	}
 
 	// 新增
-	public SubscriptionRes add(AddSubscriptionReq req) {
+	public SubscriptionRes add(AddSubscriptionReq req, MultipartFile image) {
 
 		if (req.getName() == null || req.getName().isBlank()) {
 			return new SubscriptionRes(400, "訂閱名稱不可為空");
@@ -117,9 +120,32 @@ public class SubscriptionService {
 		String status = getSubscriptionStatus(req.getTrialEndDate(), nextBillingDate);
 
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
+
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
+
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new SubscriptionRes(500, "圖片上傳失敗");
+			}
+		}
 		subscriptionDao.addSubscription(req.getGroupId(), req.getUserId(), req.getName(), req.getPrice(),
 				req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now());
+
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到訂閱清單";
@@ -129,11 +155,11 @@ public class SubscriptionService {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
 							false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -146,7 +172,7 @@ public class SubscriptionService {
 	}
 
 	// 修改
-	public SubscriptionRes update(UpdateSubscriptionReq req) {
+	public SubscriptionRes update(UpdateSubscriptionReq req, MultipartFile image) {
 
 		String oldName = subscriptionDao.getOldNameById(req.getId());
 
@@ -159,11 +185,33 @@ public class SubscriptionService {
 		String status = getSubscriptionStatus(req.getTrialEndDate(), nextBillingDate);
 
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new SubscriptionRes(500, "圖片上傳失敗");
+			}
+		}
 		System.out.println(req.getPrice());
+
 		int result = subscriptionDao.updateSubscription(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getPrice(), req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now());
+
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將訂閱" + oldName + "改成" + req.getName();
@@ -172,11 +220,11 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -197,6 +245,7 @@ public class SubscriptionService {
 		subscriptionDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
 	}
+
 	// 刪除訂閱
 	public SubscriptionRes delete(Integer id, Long userId) {
 		if (id == null || id <= 0) {
@@ -210,11 +259,11 @@ public class SubscriptionService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
 					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-					
+
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
 					}
-					
+
 					// 🔥 正確：要重新查 unread count
 					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -234,71 +283,71 @@ public class SubscriptionService {
 
 	// 判斷訂閱狀態
 	private String getSubscriptionStatus(LocalDate trialEndDate, LocalDate nextBillingDate) {
-	    LocalDate today = LocalDate.now();
+		LocalDate today = LocalDate.now();
 
-	    // 1. 還在試用期間
-	    if (trialEndDate != null && !today.isAfter(trialEndDate)) {
-	        long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+		// 1. 還在試用期間
+		if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+			long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
 
-	        // 試用剩 30 天內
-	        if (daysLeft <= 30) {
-	            return "試用即將結束";
-	        }
+			// 試用剩 30 天內
+			if (daysLeft <= 30) {
+				return "試用即將結束";
+			}
 
-	        return "試用中";
-	    }
+			return "試用中";
+		}
 
-	    // 2. 已過試用期，看下次扣款日
-	    if (nextBillingDate != null) {
-	        long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+		// 2. 已過試用期，看下次扣款日
+		if (nextBillingDate != null) {
+			long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
 
-	        // 扣款日已過
-	        if (daysLeft < 0) {
-	            return "已逾期扣款";
-	        }
+			// 扣款日已過
+			if (daysLeft < 0) {
+				return "已逾期扣款";
+			}
 
-	        // 距離扣款 30 天內
-	        if (daysLeft <= 30) {
-	            return "即將扣款";
-	        }
+			// 距離扣款 30 天內
+			if (daysLeft <= 30) {
+				return "即將扣款";
+			}
 
-	        return "正常";
-	    }
+			return "正常";
+		}
 
-	    return "未設定";
+		return "未設定";
 	}
 
 	// 產生提醒文字
 	private String getSubscriptionRemindMessage(LocalDate trialEndDate, LocalDate nextBillingDate) {
-	    LocalDate today = LocalDate.now();
+		LocalDate today = LocalDate.now();
 
-	    // 1. 還在試用期間
-	    if (trialEndDate != null && !today.isAfter(trialEndDate)) {
-	        long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
+		// 1. 還在試用期間
+		if (trialEndDate != null && !today.isAfter(trialEndDate)) {
+			long daysLeft = ChronoUnit.DAYS.between(today, trialEndDate);
 
-	        if (daysLeft <= 30) {
-	            return "試用剩餘 " + daysLeft + " 天";
-	        }
+			if (daysLeft <= 30) {
+				return "試用剩餘 " + daysLeft + " 天";
+			}
 
-	        return "";
-	    }
+			return "";
+		}
 
-	    // 2. 已過試用期，看下次扣款日
-	    if (nextBillingDate != null) {
-	        long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
+		// 2. 已過試用期，看下次扣款日
+		if (nextBillingDate != null) {
+			long daysLeft = ChronoUnit.DAYS.between(today, nextBillingDate);
 
-	        if (daysLeft < 0) {
-	            return "扣款日已過 " + Math.abs(daysLeft) + " 天";
-	        }
+			if (daysLeft < 0) {
+				return "扣款日已過 " + Math.abs(daysLeft) + " 天";
+			}
 
-	        if (daysLeft <= 30) {
-	            return "距離扣款剩餘 " + daysLeft + " 天";
-	        }
+			if (daysLeft <= 30) {
+				return "距離扣款剩餘 " + daysLeft + " 天";
+			}
 
-	        return "";
-	    }
+			return "";
+		}
 
-	    return "";
+		return "";
 	}
 
 	// 依照試用結束日 + 扣款週期，自動計算下次扣款日

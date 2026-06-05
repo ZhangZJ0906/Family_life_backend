@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
@@ -51,15 +53,17 @@ public class ItemsController {
 	}
 
 	@PostMapping("/add")
-	public AddItemsInfoRes addItem(@Valid @RequestBody ItemAddInfoReq req) {
+	public AddItemsInfoRes addItem(@Valid @RequestPart("req") ItemAddInfoReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
 
-		return itemsService.saveItem(req);
+		return itemsService.saveItem(req, image);
 	}
 
 	@PostMapping("/update")
-	public BasicRes updateItem(@Valid @RequestBody ItemUpdateReq req) {
+	public BasicRes updateItem(@Valid @RequestPart("req") ItemUpdateReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
 
-		return itemsService.updateItem(req);
+		return itemsService.updateItem(req, image);
 	}
 
 	@PostMapping("/updateNotify")

@@ -14,56 +14,56 @@ import jakarta.persistence.Table;
 @Table(name = "warranties")
 public class Warranty {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "group_id")
-    private Integer groupId;
+	@Column(name = "group_id")
+	private Integer groupId;
 
-    @Column(name = "user_id")
-    private Integer userId;
+	@Column(name = "user_id")
+	private Integer userId;
 
-    @Column(name = "product_name")
-    private String productName;
+	@Column(name = "product_name")
+	private String productName;
 
-    @Column(name = "brand")
-    private String brand;
+	@Column(name = "brand")
+	private String brand;
 
-    @Column(name = "model")
-    private String model;
+	@Column(name = "model")
+	private String model;
 
-    @Column(name = "serial_number")
-    private String serialNumber;
+	@Column(name = "serial_number")
+	private String serialNumber;
 
-    @Column(name = "purchase_date")
-    private LocalDate purchaseDate;
+	@Column(name = "purchase_date")
+	private LocalDate purchaseDate;
 
-    @Column(name = "warranty_end_date")
-    private LocalDate warrantyEndDate;
+	@Column(name = "warranty_end_date")
+	private LocalDate warrantyEndDate;
 
-    @Column(name = "store_name")
-    private String storeName;
+	@Column(name = "store_name")
+	private String storeName;
 
-    @Column(name = "price")
-    private Integer price;
+	@Column(name = "price")
+	private Integer price;
 
-    @Column(name = "notify")
-    private Boolean notify;
+	@Column(name = "notify")
+	private Boolean notify;
 
-    @Column(name = "note")
-    private String note;
+	@Column(name = "note")
+	private String note;
 
-    @Column(name = "status")
-    private String status;
+	@Column(name = "status")
+	private String status;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    
-    @Column(name = "remind_message")
-    private String remindMessage;
-    
-    
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "remind_message")
+	private String remindMessage;
+	@Column(name = "avatar")
+	private String avatar;
 
 	public Integer getId() {
 		return id;
@@ -184,13 +184,49 @@ public class Warranty {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-    
+
 	public String getRemindMessage() {
-	    return remindMessage;
+		return remindMessage;
 	}
 
 	public void setRemindMessage(String remindMessage) {
-	    this.remindMessage = remindMessage;
+		this.remindMessage = remindMessage;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public Warranty() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Warranty(Integer id, Integer groupId, Integer userId, String productName, String brand, String model,
+			String serialNumber, LocalDate purchaseDate, LocalDate warrantyEndDate, String storeName, Integer price,
+			Boolean notify, String note, String status, LocalDateTime createdAt, String remindMessage, String avatar) {
+		super();
+		this.id = id;
+		this.groupId = groupId;
+		this.userId = userId;
+		this.productName = productName;
+		this.brand = brand;
+		this.model = model;
+		this.serialNumber = serialNumber;
+		this.purchaseDate = purchaseDate;
+		this.warrantyEndDate = warrantyEndDate;
+		this.storeName = storeName;
+		this.price = price;
+		this.notify = notify;
+		this.note = note;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.remindMessage = remindMessage;
+		this.avatar = avatar;
 	}
 
 }
