@@ -35,7 +35,7 @@ public class EmailService {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 			helper.setFrom("familyLifeTest123456@gmail.com");
-			helper.setTo("davids710119@gmail.com");
+			helper.setTo(to);
 			helper.setSubject("Email 驗證");
 
 			String content = """

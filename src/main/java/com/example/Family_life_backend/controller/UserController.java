@@ -89,7 +89,7 @@ public class UserController {
 	}
 
 	@PostMapping("/send")
-	public String sendCode(@RequestParam String email) {
+	public String sendCode(@RequestParam("email") String email) {
 		Random random = new Random();
 
 		String code = String.format("%06d", random.nextInt(1000000));
@@ -102,7 +102,7 @@ public class UserController {
 	}
 
 	@PostMapping("/verify")
-	public String verifyCode(@RequestParam String email, @RequestParam String code) {
+	public String verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
 
 		String savedCode = verificationCodes.get(email);
 
