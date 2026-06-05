@@ -74,7 +74,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			+ "category_id = :categoryId, " + "name = :name, " + "quantity = :quantity, " + "unit = :unit, "
 			+ "location_id = :locationId, " + "price = :price, " + "purchase_date = :purchaseDate, "
 			+ "expire_date = :expireDate, " + "notify = :notify, " + "note = :note, " + "unit_price = :unitPrice, "
-			+ "safe_quantity = :safeQuantity, " + "status = :status, "
+			+ "safe_quantity = :safeQuantity, " + "status = :status, created_at = :created_at , "
 			+ "remind_message = :remindMessage , avatar = :avatar " + "WHERE id = :id", nativeQuery = true)
 	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId, @Param("userId") Long userId,
 			@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("quantity") Integer quantity,
@@ -82,7 +82,8 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			@Param("purchaseDate") LocalDate purchaseDate, @Param("expireDate") LocalDate expireDate,
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("unitPrice") int unitPrice,
 			@Param("safeQuantity") Integer safeQuantity, @Param("status") String status,
-			@Param("remindMessage") String remindMessage, @Param("avatar") String avatar);
+			@Param("remindMessage") String remindMessage, @Param("avatar") String avatar,
+			@Param("created_at") LocalDateTime createAt);
 
 	@Modifying
 	@Transactional

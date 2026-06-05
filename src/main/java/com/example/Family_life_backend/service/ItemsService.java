@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +207,7 @@ public class ItemsService {
 		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
 				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
 				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, avatarUrl);
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, avatarUrl, LocalDateTime.now());
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
