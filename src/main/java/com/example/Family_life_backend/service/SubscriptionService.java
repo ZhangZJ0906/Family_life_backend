@@ -141,6 +141,7 @@ public class SubscriptionService {
 				return new SubscriptionRes(500, "圖片上傳失敗");
 			}
 		}
+		System.out.println(avatarUrl);
 		subscriptionDao.addSubscription(req.getGroupId(), req.getUserId(), req.getName(), req.getPrice(),
 				req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
 
