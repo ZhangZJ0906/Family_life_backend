@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -120,7 +121,9 @@ public class MedicineService {
 				req.getUnit(), safeQuantity, req.getPurchaseDate(), req.getExpireDate(), req.getDosage(),
 				req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage, avatarUrl);
+
+				remindMessage, avatarUrl, LocalDateTime.now());
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到藥品清單";
@@ -196,7 +199,9 @@ public class MedicineService {
 				req.getMedicineType(), quantity, req.getUnit(), safeQuantity, req.getPurchaseDate(),
 				req.getExpireDate(), req.getDosage(), req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage, avatarUrl);
+
+				remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "藥品清單改成" + req.getName();

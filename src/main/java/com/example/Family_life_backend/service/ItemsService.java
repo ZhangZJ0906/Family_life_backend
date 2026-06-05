@@ -137,7 +137,9 @@ public class ItemsService {
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
-				finalSafeQuantity, status, remindMessage, avatarUrl);
+
+				finalSafeQuantity, status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		if (finalGroupId != 0) {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
@@ -207,7 +209,10 @@ public class ItemsService {
 		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
 				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
 				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, avatarUrl, LocalDateTime.now());
+
+
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();

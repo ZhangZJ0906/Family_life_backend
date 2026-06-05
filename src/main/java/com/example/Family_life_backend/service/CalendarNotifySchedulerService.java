@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,25 @@ public class CalendarNotifySchedulerService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	 // 台灣時區
+    private static final ZoneId TAIWAN_ZONE = ZoneId.of("Asia/Taipei");
 
+ // 每 60 秒檢查一次行事曆通知
 	@Scheduled(fixedRate = 60000)
 	public void checkEventTime() {
 
-		LocalDateTime now = LocalDateTime.now();
+		// 原本是 LocalDateTime.now()
+        // 雲端主機如果是美國時區，會拿到美國時間
+        // 改成固定使用台灣時間
+        LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
 
 		sendBeforeNotify(now);
 
 		sendStartNotify(now);
 	}
 
+	// 活動開始前提醒
 	private void sendBeforeNotify(LocalDateTime now) {
 
 		List<Calendar> events = calendarDao.findEventsBeforeToNotify(now);
@@ -48,6 +57,7 @@ public class CalendarNotifySchedulerService {
 		}
 	}
 
+	// 活動開始時提醒
 	private void sendStartNotify(LocalDateTime now) {
 
 		List<Calendar> events = calendarDao.findEventsStartToNotify(now);
@@ -64,6 +74,7 @@ public class CalendarNotifySchedulerService {
 		}
 	}
 
+	 // 寫入通知資料表
 	private void insertNotify(Calendar event, String content) {
 
 		if (event.getGroupId() == 0) {

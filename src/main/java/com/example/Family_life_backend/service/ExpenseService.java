@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,7 +105,7 @@ public class ExpenseService {
 
 	public BasicRes addExpenseInfo(AddExpensesInfoReq req) {
 		expenseDao.insertExpense(req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
-				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
+				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote(), LocalDateTime.now());
 		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
 
 		if (userInfoDao.getEmailNotifyById(req.getUserId()) == true) {
@@ -116,7 +117,7 @@ public class ExpenseService {
 	public BasicRes updateExpenseInfo(UpdateExpensesInfoReq req) {
 
 		expenseDao.updateExpense(req.getId(), req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
-				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
+				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote(), LocalDateTime.now());
 		sendNotifyForGroupMember(req.getGroupId(), req.getOperationUser(), "更新");
 		return new BasicRes("成功", 200);
 	}

@@ -1,6 +1,9 @@
 package com.example.Family_life_backend.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.entity.PublicInventoryItem;
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
@@ -36,9 +40,15 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	//email驗證碼
+    private final Map<String, String> verificationCodes = new HashMap<>();
 
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
@@ -78,20 +88,32 @@ public class UserController {
 		return userService.getUserInfo(userId);
 	}
 
-	
-//	//船mail
-//	@GetMapping("/test-mail")
-//	public String testMail(@RequestParam("Email") String email) {
-//		
-//	    emailService.sendMail(
-//	        email,
-//	        "測試信",
-//	        "Spring Boot Gmail 發信成功"
-//	    );
-//
-//	    return "OK";
-//	}
+	@PostMapping("/send")
+	public String sendCode(@RequestParam("email") String email) {
+		Random random = new Random();
 
+		String code = String.format("%06d", random.nextInt(1000000));
+
+		verificationCodes.put(email, code);
+
+		emailService.sendVerificationCode(email, code);
+
+		return "驗證碼已寄出";
+	}
+
+	@PostMapping("/verify")
+	public String verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+
+		String savedCode = verificationCodes.get(email);
+
+		if (savedCode != null && savedCode.equals(code)) {
+			verificationCodes.remove(email);
+			userInfoDao.updateEmailVerify(email);
+			return "驗證成功";
+		}
+
+		return "驗證失敗";
+	}
 
 //確認Email 2026-05-28 by ZJ
 	@GetMapping("/checkEmail")
@@ -104,6 +126,5 @@ public class UserController {
 		System.out.println(req.getEmail() + req.getPassword());
 		return userService.updatePassword(req.getEmail(), req.getPassword());
 	}
-
 
 }
