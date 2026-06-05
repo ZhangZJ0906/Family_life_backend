@@ -80,7 +80,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			+ "expire_date = :expireDate, " + "notify = :notify, " + "note = :note, " + "unit_price = :unitPrice, "
 
 			+ "safe_quantity = :safeQuantity, " + "status = :status, "
-			+ "remind_message = :remindMessage ," + " avatar = :avatar " + "created_at = :createdAt" + "WHERE id = :id", nativeQuery = true)
+			+ "remind_message = :remindMessage ," + " avatar = :avatar " + ",created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
 
 	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId, @Param("userId") Long userId,
 			@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("quantity") Integer quantity,

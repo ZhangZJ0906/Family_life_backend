@@ -18,6 +18,7 @@ public class SubscriptionVo {
     private String remindMessage;
     private Boolean notify;
     private String note;
+    private String avatar;
 
     public SubscriptionVo(
             Integer id,
@@ -32,7 +33,8 @@ public class SubscriptionVo {
             String status,
             String remindMessage,
             Boolean notify,
-            String note) {
+            String note,
+            String avatar) {
 
         this.id = id;
         this.groupId = groupId;
@@ -47,6 +49,7 @@ public class SubscriptionVo {
         this.remindMessage = remindMessage;
         this.notify = notify;
         this.note = note;
+        this.avatar = avatar;
         
     }
 
@@ -101,4 +104,14 @@ public class SubscriptionVo {
     public String getNote() {
         return note;
     }
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+    
+    
 }

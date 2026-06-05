@@ -88,7 +88,7 @@ public class SubscriptionService {
 			SubscriptionVo vo = new SubscriptionVo(sub.getId(), sub.getGroupId(), sub.getUserId(), sub.getName(),
 					sub.getPrice(), sub.getBillingCycle(), sub.getPurchaseDate(), sub.getTrialEndDate(),
 					sub.getNextBillingDate(), sub.getStatus(), sub.getRemindMessage(),
-					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote());
+					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote(), sub.getAvatar());
 
 			resultList.add(vo);
 		}
