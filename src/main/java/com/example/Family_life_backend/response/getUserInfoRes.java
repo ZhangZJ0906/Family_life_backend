@@ -14,6 +14,8 @@ public class getUserInfoRes extends BasicResponse {
 
 	private boolean notifyByEmail;
 
+	private boolean emailVerify;
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -62,6 +64,14 @@ public class getUserInfoRes extends BasicResponse {
 		this.notifyByEmail = notifyByEmail;
 	}
 
+	public boolean isEmailVerify() {
+		return emailVerify;
+	}
+
+	public void setEmailVerify(boolean emailVerify) {
+		this.emailVerify = emailVerify;
+	}
+
 	public getUserInfoRes() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -72,8 +82,8 @@ public class getUserInfoRes extends BasicResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	public getUserInfoRes(String message, int code, Long userId, String name, String email, String avatar, boolean notifyByEndDate,
-			boolean notifyByEmail) {
+	public getUserInfoRes(String message, int code, Long userId, String name, String email, String avatar,
+			boolean notifyByEndDate, boolean notifyByEmail, boolean emailVerify) {
 		super(message, code);
 		this.userId = userId;
 		this.name = name;
@@ -81,6 +91,7 @@ public class getUserInfoRes extends BasicResponse {
 		this.avatar = avatar;
 		this.notifyByEndDate = notifyByEndDate;
 		this.notifyByEmail = notifyByEmail;
+		this.emailVerify = emailVerify;
 	}
 
 }

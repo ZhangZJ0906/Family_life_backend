@@ -58,7 +58,7 @@ public class UserService {
 
 		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
 				(long) user.getUserId(), user.getUserName(), user.getEmail(), user.getAvatar(),
-				user.isNotifyByEndDate(), user.isNotifyByEmail());
+				user.isNotifyByEndDate(), user.isNotifyByEmail(), user.isEmailVerify());
 	}
 
 	public BasicRes changePwd(ChangePwdReq req) {
@@ -127,7 +127,7 @@ public class UserService {
 
 		return new getUserInfoRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode(),
 				(long) userInfo.getUserId(), userInfo.getUserName(), userInfo.getEmail(), userInfo.getAvatar(),
-				userInfo.isNotifyByEndDate(), userInfo.isNotifyByEmail());
+				userInfo.isNotifyByEndDate(), userInfo.isNotifyByEmail(), userInfo.isEmailVerify());
 	}
 
 	// 確認Email 2026-05-28 by ZJ
