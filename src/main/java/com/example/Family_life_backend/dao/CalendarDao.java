@@ -43,14 +43,14 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 			    :eventTime,
 			    :endTime,
 			    :notifyBefore,
-			    NOW()
+			    :createdAt
 			)
 			""", nativeQuery = true)
 	int insertCalendarEvent(@Param("eventBatchId") String eventBatchId, @Param("groupId") Long groupId,
 			@Param("createdBy") Long createdBy, @Param("assignedUserId") Long assignedUserId,
 			@Param("title") String title, @Param("description") String description,
 			@Param("eventTime") LocalDateTime eventTime, @Param("endTime") LocalDateTime endTime,
-			@Param("notifyBefore") Integer notifyBefore);
+			@Param("notifyBefore") Integer notifyBefore, @Param("createdAt") LocalDateTime createdAt);
 
 	// 更新事件
 	@Modifying
@@ -104,8 +104,8 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	List<Calendar> findByGroupIdAndCreatedBy(Long groupId, Long createdBy);
 
 	// 查詢即將提醒的事件
-	@Query(value = "SELECT * FROM calendar_events WHERE event_time >= NOW() ORDER BY event_time ASC", nativeQuery = true)
-	List<Calendar> findUpcomingEvents();
+	@Query(value = "SELECT * FROM calendar_events WHERE event_time >= :now ORDER BY event_time ASC", nativeQuery = true)
+	List<Calendar> findUpcomingEvents(@Param("now") LocalDateTime now);
 
 	// 2026-05- 24 by ZJ 查詢群組
 	@Query(value = """

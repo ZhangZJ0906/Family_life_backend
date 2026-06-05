@@ -51,14 +51,14 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Query(value = "select * from users where user_id in (:userId)", nativeQuery = true)
 	public List<UserInfo> getSelfInfoByIds(@Param("userId") List<Long> userId);
 
-	//拿UID
+	// 拿UID
 	@Query(value = "select user_id from users where email = :Email", nativeQuery = true)
 	public Long getUIDByEmail(@Param("Email") String Email);
-	
-	//拿email
+
+	// 拿email
 	@Query(value = "select email from users where user_id = :userId", nativeQuery = true)
 	public String getEmailById(@Param("userId") Long userId);
-	
+
 	// 拿endDate通知
 	@Query(value = "select is_notify_by_enddate from users where user_id = :userId", nativeQuery = true)
 	public boolean getEndDateNotifyById(@Param("userId") Long userId);
@@ -66,5 +66,11 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	// 拿email通知
 	@Query(value = "select is_notify_by_email from users where user_id = :userId", nativeQuery = true)
 	public boolean getEmailNotifyById(@Param("userId") Long userId);
+
+	// 更新email成功驗證
+	@Modifying
+	@Transactional
+	@Query(value = "update users set email_verify = 1 where email = :email", nativeQuery = true)
+	public void updateEmailVerify(@Param("email") String email);
 
 }

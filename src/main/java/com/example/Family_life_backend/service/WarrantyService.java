@@ -1,12 +1,18 @@
 package com.example.Family_life_backend.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
@@ -58,7 +64,7 @@ public class WarrantyService {
 		return new WarrantyRes(200, "查詢成功", warrantyDao.findByGroupId(userId, groupId));
 	}
 
-	public WarrantyRes add(AddWarrantyReq req) {
+	public WarrantyRes add(AddWarrantyReq req, MultipartFile image) {
 
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new WarrantyRes(400, "userId 不可為空");
@@ -82,11 +88,32 @@ public class WarrantyService {
 
 		String status = calcWarrantyStatus(req.getWarrantyEndDate());
 		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new WarrantyRes(500, "圖片上傳失敗");
+			}
+		}
 		warrantyDao.addWarranty(req.getGroupId(), req.getUserId(), req.getProductName(), req.getBrand(), req.getModel(),
 				req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(), req.getStoreName(),
 				req.getPrice() != null ? req.getPrice() : 0, req.getNotify() != null ? req.getNotify() : true,
-				req.getNote(), status, remindMessage);
+
+				req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
@@ -111,7 +138,7 @@ public class WarrantyService {
 		return new WarrantyRes(200, "新增成功");
 	}
 
-	public WarrantyRes update(UpdateWarrantyReq req) {
+	public WarrantyRes update(UpdateWarrantyReq req, MultipartFile image) {
 
 		String oldName = warrantyDao.getNameById(req.getId());
 
@@ -133,10 +160,33 @@ public class WarrantyService {
 
 		String status = calcWarrantyStatus(req.getWarrantyEndDate());
 		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
+
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("uploads");
+
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new WarrantyRes(500, "圖片上傳失敗");
+			}
+		}
 		int result = warrantyDao.updateWarranty(req.getId(), req.getGroupId(), req.getUserId(), req.getProductName(),
 				req.getBrand(), req.getModel(), req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(),
 				req.getStoreName(), req.getPrice() != null ? req.getPrice() : 0,
-				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage);
+
+				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固" + oldName + "改成" + req.getProductName();
@@ -170,6 +220,7 @@ public class WarrantyService {
 		warrantyDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
 	}
+
 	@Transactional
 	public WarrantyRes delete(Integer id, Long userId) {
 		int finalGroupId = 0;

@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.request.AddWarrantyReq;
 import com.example.Family_life_backend.request.UpdateNotifyReq;
@@ -24,33 +26,35 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "http://localhost:4200")
 public class WarrantyController {
 
-    @Autowired
-    private WarrantyService warrantyService;
+	@Autowired
+	private WarrantyService warrantyService;
 
-    @GetMapping("/getByGroup")
-    public WarrantyRes getByGroup(
-            @RequestParam("userId") Integer userId,
-            @RequestParam(value = "groupId", required = false) Integer groupId) {
+	@GetMapping("/getByGroup")
+	public WarrantyRes getByGroup(@RequestParam("userId") Integer userId,
+			@RequestParam(value = "groupId", required = false) Integer groupId) {
 
-        return warrantyService.getByGroup(groupId, userId);
-    }
-    @PostMapping("/add")
-    public WarrantyRes add(@RequestBody AddWarrantyReq req) {
-        return warrantyService.add(req);
-    }
+		return warrantyService.getByGroup(groupId, userId);
+	}
 
-    @PostMapping("/update")
-    public WarrantyRes update(@RequestBody UpdateWarrantyReq req) {
-        return warrantyService.update(req);
-    }
+	@PostMapping("/add")
+	public WarrantyRes add(@RequestPart("req") AddWarrantyReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
+		return warrantyService.add(req, image);
+	}
+
+	@PostMapping("/update")
+	public WarrantyRes update(@RequestPart("req") UpdateWarrantyReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
+		return warrantyService.update(req, image);
+	}
 
 	@PostMapping("/updateNotify")
 	public BasicRes updateNotify(@Valid @RequestBody UpdateNotifyReq req) {
 		return warrantyService.updateNotify(req);
 	}
 
-    @DeleteMapping("/delete")
-    public WarrantyRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
-        return warrantyService.delete(id, userId);
-    }
+	@DeleteMapping("/delete")
+	public WarrantyRes delete(@RequestParam("id") Integer id, @RequestParam("userId") Long userId) {
+		return warrantyService.delete(id, userId);
+	}
 }

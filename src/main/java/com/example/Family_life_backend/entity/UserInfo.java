@@ -32,7 +32,7 @@ public class UserInfo {
 
 	@Column(name = "is_notify_by_enddate")
 	private boolean notifyByEndDate;
-	
+
 	@Column(name = "is_notify_by_email")
 	private boolean notifyByEmail;
 
@@ -41,6 +41,9 @@ public class UserInfo {
 
 	@Column(name = "updated_at")
 	private LocalDate updateDate;
+
+	@Column(name = "email_verify")
+	private boolean emailVerify;
 
 	public int getUserId() {
 		return userId;
@@ -112,6 +115,14 @@ public class UserInfo {
 
 	public void setUpdateDate(LocalDate updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public boolean isEmailVerify() {
+		return emailVerify;
+	}
+
+	public void setEmailVerify(boolean emailVerify) {
+		this.emailVerify = emailVerify;
 	}
 
 }
