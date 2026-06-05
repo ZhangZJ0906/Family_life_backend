@@ -39,10 +39,72 @@ public class EmailService {
 			helper.setSubject("Email 驗證");
 
 			String content = """
-					<h2>Email 驗證</h2>
-					<p>您的驗證碼為：</p>
-					<h1>%s</h1>
-					<p>5分鐘內有效</p>
+					<!DOCTYPE html>
+					<html>
+					<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+
+					<table width="100%%" cellpadding="0" cellspacing="0">
+					<tr>
+					<td align="center">
+
+					<table width="480" cellpadding="0" cellspacing="0"
+					style="
+					background:#ffffff;
+					margin-top:40px;
+					border-radius:12px;
+					padding:24px;
+					">
+
+					<tr>
+					<td style="font-size:24px;font-weight:bold;color:#111;">
+					🏠 家庭生活管家
+					</td>
+					</tr>
+
+					<tr>
+					<td style="padding-top:15px;color:#555;">
+					您好，這是一封 Email 驗證信。
+					</td>
+					</tr>
+
+					<tr>
+					<td align="center" style="padding:30px 0;">
+
+					<div style="
+					font-size:36px;
+					font-weight:bold;
+					letter-spacing:8px;
+					color:#4f46e5;
+					background:#eef2ff;
+					padding:20px;
+					border-radius:10px;
+					">
+					%s
+					</div>
+
+					</td>
+					</tr>
+
+					<tr>
+					<td style="color:#666;">
+					此驗證碼將於 <b>5 分鐘</b> 後失效。
+					</td>
+					</tr>
+
+					<tr>
+					<td style="padding-top:30px;font-size:12px;color:#999;">
+					© 2026 Family Life
+					</td>
+					</tr>
+
+					</table>
+
+					</td>
+					</tr>
+					</table>
+
+					</body>
+					</html>
 					""".formatted(code);
 
 			helper.setText(content, true);
