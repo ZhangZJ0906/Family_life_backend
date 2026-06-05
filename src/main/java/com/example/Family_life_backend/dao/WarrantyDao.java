@@ -44,16 +44,20 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO warranties " + "(group_id, user_id, product_name, brand, model, serial_number, "
-			+ "purchase_date, warranty_end_date, store_name, price, notify, note, status, remind_message, created_at) "
+			+ "purchase_date, warranty_end_date, store_name, price, notify, note, status, remind_message, avatar, created_at) "
 			+ "VALUES " + "(:groupId, :userId, :productName, :brand, :model, :serialNumber, "
-			+ ":purchaseDate, :warrantyEndDate, :storeName, :price, :notify, :note, :status, :remindMessage, :createdAt)", nativeQuery = true)
+			+ ":purchaseDate, :warrantyEndDate, :storeName, :price, :notify, :note, :status, :remindMessage, , :createdAt )", nativeQuery = true)
+
 	int addWarranty(@Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("productName") String productName, @Param("brand") String brand, @Param("model") String model,
 			@Param("serialNumber") String serialNumber, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("warrantyEndDate") LocalDate warrantyEndDate, @Param("storeName") String storeName,
 			@Param("price") Integer price, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTime);
+
+			@Param("createdAt") LocalDateTime createdTime,@Param("avatar") String avatar);
+			
+
 
 	// 修改
 	@Modifying
@@ -62,15 +66,17 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 			+ "product_name = :productName, " + "brand = :brand, " + "model = :model, "
 			+ "serial_number = :serialNumber, " + "purchase_date = :purchaseDate, "
 			+ "warranty_end_date = :warrantyEndDate, " + "store_name = :storeName, " + "price = :price, "
-			+ "notify = :notify, " + "note = :note, " + "status = :status, " + "remind_message = :remindMessage, "
-			+ "created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
+			+ "notify = :notify, " + "note = :note, " + "status = :status, "
+			+ "remind_message = :remindMessage , avatar = :avatar   " + "created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
 	int updateWarranty(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("productName") String productName, @Param("brand") String brand, @Param("model") String model,
 			@Param("serialNumber") String serialNumber, @Param("purchaseDate") LocalDate purchaseDate,
 			@Param("warrantyEndDate") LocalDate warrantyEndDate, @Param("storeName") String storeName,
 			@Param("price") Integer price, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTime);
+			@Param("createdAt") LocalDateTime createdTime,@Param("avatar") String avatar);
+
+
 
 	@Modifying
 	@Transactional
