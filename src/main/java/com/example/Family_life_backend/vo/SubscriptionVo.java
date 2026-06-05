@@ -18,39 +18,39 @@ public class SubscriptionVo {
     private String remindMessage;
     private Boolean notify;
     private String note;
+	private String avatar;
 
-    public SubscriptionVo(
-            Integer id,
-            Integer groupId,
-            Integer userId,
-            String name,
-            Integer price,
-            String billingCycle,
-            LocalDate purchaseDate,
-            LocalDate trialEndDate,
-            LocalDate nextBillingDate,
-            String status,
-            String remindMessage,
-            Boolean notify,
-            String note) {
 
-        this.id = id;
-        this.groupId = groupId;
-        this.userId = userId;
-        this.name = name;
-        this.price = price;
-        this.billingCycle = billingCycle;
-        this.purchaseDate = purchaseDate;
-        this.trialEndDate = trialEndDate;
-        this.nextBillingDate = nextBillingDate;
-        this.status = status;
-        this.remindMessage = remindMessage;
-        this.notify = notify;
-        this.note = note;
-        
-    }
 
-    public Integer getId() {
+	public SubscriptionVo(Integer id, Integer groupId, Integer userId, String name, Integer price, String billingCycle,
+			LocalDate purchaseDate, LocalDate trialEndDate, LocalDate nextBillingDate, String status,
+			String remindMessage, Boolean notify, String note, String avatar) {
+		super();
+		this.id = id;
+		this.groupId = groupId;
+		this.userId = userId;
+		this.name = name;
+		this.price = price;
+		this.billingCycle = billingCycle;
+		this.purchaseDate = purchaseDate;
+		this.trialEndDate = trialEndDate;
+		this.nextBillingDate = nextBillingDate;
+		this.status = status;
+		this.remindMessage = remindMessage;
+		this.notify = notify;
+		this.note = note;
+		this.avatar = avatar;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public Integer getId() {
         return id;
     }
 
