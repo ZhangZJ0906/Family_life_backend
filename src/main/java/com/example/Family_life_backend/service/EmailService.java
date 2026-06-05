@@ -17,11 +17,134 @@ public class EmailService {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+			System.out.println("C: " + content);
+			String content_sended = """
+					<!DOCTYPE html>
+					<html lang="zh-Hant">
+					<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+
+					<table width="100%%" cellpadding="0" cellspacing="0" border="0">
+					<tr>
+					<td align="center" style="padding:30px 15px;">
+
+					<table width="520" cellpadding="0" cellspacing="0" border="0"
+					style="
+					background:#ffffff;
+					border-radius:16px;
+					overflow:hidden;
+					box-shadow:0 2px 8px rgba(0,0,0,0.08);
+					">
+
+					<!-- Header -->
+					<tr>
+					<td
+					style="
+					background:#4f46e5;
+					padding:25px;
+					text-align:center;
+					">
+
+					<h1 style="
+					margin:0;
+					color:white;
+					font-size:24px;
+					">
+					🏠 家庭生活管家
+					</h1>
+
+					</td>
+					</tr>
+
+					<!-- Content -->
+					<tr>
+					<td style="padding:35px;">
+
+					<h2 style="
+					margin-top:0;
+					margin-bottom:20px;
+					color:#111827;
+					">
+					%s
+					</h2>
+
+					<p style="
+					color:#6b7280;
+					line-height:1.8;
+					margin-bottom:25px;
+					">
+					您好，這是一封系統通知信件。
+					</p>
+
+					<div
+					style="
+					background:#eef2ff;
+					border:1px solid #c7d2fe;
+					border-radius:12px;
+					padding:20px;
+					text-align:center;
+					">
+
+					<div style="
+					font-size:14px;
+					color:#6b7280;
+					margin-bottom:10px;
+					">
+					通知內容
+					</div>
+
+					<div style="
+					font-size:30px;
+					font-weight:bold;
+					letter-spacing:3px;
+					color:#4f46e5;
+					word-break:break-word;
+					">
+					%s
+					</div>
+
+					</div>
+
+					<p style="
+					margin-top:25px;
+					font-size:13px;
+					color:#9ca3af;
+					">
+					此郵件由系統自動發送，請勿直接回覆。
+					</p>
+
+					</td>
+					</tr>
+
+					<!-- Footer -->
+					<tr>
+					<td
+					style="
+					background:#f9fafb;
+					padding:20px;
+					text-align:center;
+					font-size:12px;
+					color:#9ca3af;
+					">
+
+					© 2026 Family Life
+
+					</td>
+					</tr>
+
+					</table>
+
+					</td>
+					</tr>
+					</table>
+
+					</body>
+					</html>
+					""".formatted(subject, content);
 
 			helper.setFrom("familyLifeTest123456@gmail.com");
 			helper.setTo(to);
 			helper.setSubject(subject);
-			helper.setText(content, true); // true = HTML
+			helper.setText(content_sended, true); // true = HTML
 
 			mailSender.send(message);
 		} catch (Exception e) {
@@ -107,7 +230,7 @@ public class EmailService {
 					</html>
 					""".formatted(code);
 
-			helper.setText(content, true);
+			helper.setText(code, true);
 
 			mailSender.send(message);
 
