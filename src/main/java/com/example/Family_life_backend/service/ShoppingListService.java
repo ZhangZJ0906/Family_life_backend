@@ -2,8 +2,11 @@ package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -316,6 +319,18 @@ public class ShoppingListService {
 		}
 
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+	}
+	
+	
+	/* 一次回傳所有清單的購物項目 */
+	public Map<Integer, List<PurchaseItem>> getItemsByListIds(List<Integer> listIds) {
+	    if (listIds == null || listIds.isEmpty()) {
+	        return new HashMap<>();
+	    }
+
+	    return purchaseItemDao.getByListIds(listIds)
+	        .stream()
+	        .collect(Collectors.groupingBy(PurchaseItem::getListId));
 	}
 
 }
