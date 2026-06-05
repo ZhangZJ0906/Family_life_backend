@@ -22,7 +22,7 @@ public class CorsConfig {
 
                 registry.addMapping("/**")
                         // 允許 Angular 開發環境
-                        .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("https://zipping-cytoplast-laxative.ngrok-free.dev")
 
                         // 允許的 HTTP 方法
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
