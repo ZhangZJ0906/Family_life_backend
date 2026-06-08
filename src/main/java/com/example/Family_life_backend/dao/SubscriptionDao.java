@@ -69,10 +69,8 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Query(value = "UPDATE subscriptions SET " + "group_id = :groupId, " + "user_id = :userId, " + "name = :name, "
 			+ "price = :price, " + "billing_cycle = :billingCycle, " + "next_billing_date = :nextBillingDate, "
 			+ "purchase_date = :purchaseDate, " + "trial_end_date = :trialEndDate, " + "notify = :notify, "
-
-			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, " + "created_at = :createdAt "
-
-			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage , avatar= :avatar "+ "created_at = :createdAt "
+			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, avatar= :avatar , "
+			+ "created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
 	int updateSubscription(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("name") String name, @Param("price") Integer price, @Param("billingCycle") String billingCycle,
