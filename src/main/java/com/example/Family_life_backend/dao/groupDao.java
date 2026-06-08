@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.Family_life_backend.entity.group;
 
@@ -50,6 +49,8 @@ public interface groupDao extends JpaRepository<group, Long> {
 		    WHERE user_id = :userId
 		""", nativeQuery = true)
 	public List<Long> getMyGroupIdList(@Param("userId") Long userId);
+	
+//	public List<String> getGroupsCreaters(@Param("user"))
 
 	@Query(value = "select group_name from `groups` where group_id = :group_id", nativeQuery = true)
 	public String getGroupName(@Param("group_id") Long group_id);

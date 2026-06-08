@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.example.Family_life_backend.entity.group;
 
-public class GetGroupRes extends BasicResponse{
+public class GetGroupRes extends BasicResponse {
 	private List<group> groupList;
-	
+
 	private List<Integer> publicInventory;
+
+//	private List<String> creater;
 
 	public List<group> getGroupList() {
 		return groupList;
@@ -25,6 +27,14 @@ public class GetGroupRes extends BasicResponse{
 		this.publicInventory = publicInventory;
 	}
 
+//	public List<String> getCreater() {
+//		return creater;
+//	}
+//
+//	public void setCreater(List<String> creater) {
+//		this.creater = creater;
+//	}
+
 	public GetGroupRes() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -39,7 +49,7 @@ public class GetGroupRes extends BasicResponse{
 		super(message, code);
 		this.groupList = groupList;
 		this.publicInventory = publicInventory;
+//		this.creater = creater;
 	}
-	
-	
+
 }
