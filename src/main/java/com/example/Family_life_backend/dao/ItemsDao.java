@@ -46,9 +46,9 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	@Transactional
 	@Query(value = "INSERT INTO items "
 
-			+ "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, remind_message,avatar) "
+			+ "(group_id, category_id, name, quantity, unit, location_id, price, purchase_date, expire_date, notify, note, created_by_id, unit_price, safe_quantity, status, created_at, remind_message,avatar) "
 			+ "VALUES "
-			+ "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, :remindMessage, :avatar)", nativeQuery = true)
+			+ "(:groupId, :categoryId, :name, :quantity, :unit, :locationId, :price, :purchaseDate, :expireDate, :notify, :note, :userId, :unitPrice, :safeQuantity, :status, :createdAt, :remindMessage, :avatar)", nativeQuery = true)
 
 	int insertItemNative(@Param("groupId") Integer groupId, @Param("categoryId") Integer categoryId,
 			@Param("name") String name, @Param("quantity") Integer quantity, @Param("unit") String unit,
@@ -57,7 +57,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("userId") Integer userId,
 			@Param("unitPrice") int unitPrice, @Param("safeQuantity") Integer safeQuantity,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTim,
+			@Param("createdAt") LocalDateTime createdTime,
 			@Param("avatar") String avatar);
 
 
