@@ -66,25 +66,12 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	// 修改訂閱
 	@Modifying
 	@Transactional
-	@Query(value = """
-	    UPDATE subscriptions
-	    SET
-	        group_id = :groupId,
-	        user_id = :userId,
-	        name = :name,
-	        price = :price,
-	        billing_cycle = :billingCycle,
-	        next_billing_date = :nextBillingDate,
-	        purchase_date = :purchaseDate,
-	        trial_end_date = :trialEndDate,
-	        notify = :notify,
-	        note = :note,
-	        status = :status,
-	        remind_message = :remindMessage,
-	        avatar = :avatar,
-	        created_at = :createdAt
-	    WHERE id = :id
-	    """, nativeQuery = true)
+	@Query(value = "UPDATE subscriptions SET " + "group_id = :groupId, " + "user_id = :userId, " + "name = :name, "
+			+ "price = :price, " + "billing_cycle = :billingCycle, " + "next_billing_date = :nextBillingDate, "
+			+ "purchase_date = :purchaseDate, " + "trial_end_date = :trialEndDate, " + "notify = :notify, "
+			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, avatar= :avatar , "
+			+ "created_at = :createdAt "
+			+ "WHERE id = :id", nativeQuery = true)
 	int updateSubscription(
 	        @Param("id") Integer id,
 	        @Param("groupId") Integer groupId,
@@ -102,6 +89,7 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	        @Param("createdAt") LocalDateTime createdTime,
 	        @Param("avatar") String avatar
 	);
+
 
 
 	@Modifying
