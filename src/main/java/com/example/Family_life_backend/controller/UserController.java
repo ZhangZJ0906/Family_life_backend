@@ -34,6 +34,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 
 @RestController
+//@CrossOrigin(origins = {
+//		  "http://localhost:4200",
+//		  "https://zipping-cytoplast-laxative.ngrok-free.dev"
+//		})
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/users")
 public class UserController {

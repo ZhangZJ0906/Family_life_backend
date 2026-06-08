@@ -13,6 +13,7 @@ import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.MedicineDao;
 import com.example.Family_life_backend.dao.SubscriptionDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.WarrantyDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Items;
@@ -25,6 +26,9 @@ public class ExpiryScheduleService {
 
 	@Autowired
 	private ItemsDao itemsDao;
+	
+	@Autowired
+	private UserInfoDao userInfoDao;
 
 	@Autowired
 	private MedicineDao medicineDao;
@@ -38,6 +42,9 @@ public class ExpiryScheduleService {
 	@Autowired
 	private SubscriptionDao subscriptionDao;
 
+	@Autowired
+	private EmailService emailService;
+	
 	List<groupMembersDTO> members = new ArrayList<groupMembersDTO>();
 
 	// 每天 00:00 自動執行
@@ -86,6 +93,10 @@ public class ExpiryScheduleService {
 		if (groupId == 0L) {
 
 			itemsDao.addGroupItemNotify(userId, userId, remindMessage, "warring_self", false);
+			
+			if (userInfoDao.getEmailNotifyById(userId) == true) {
+				emailService.sendMail(userInfoDao.getEmailById(userId), "到期通知", remindMessage);
+			}
 
 			return;
 		}
@@ -96,6 +107,10 @@ public class ExpiryScheduleService {
 		for (groupMembersDTO member : members) {
 
 			itemsDao.addGroupItemNotify(groupId, member.getUser_id(), remindMessage, "warring", false);
+			
+			if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+				emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "到期通知", remindMessage);
+			}
 		}
 	}
 

@@ -22,13 +22,16 @@ public class GroupMembers {
 
 	@Column(name = "public_inventory", nullable = false)
 	private Integer publicInventory = 0;
-	
+
 	@Transient
 	private String user_name;
 
 	@Transient
 	private String avatar;
-	
+
+	@Transient
+	private String Email;
+
 	public Long getGroup_id() {
 		return group_id;
 	}
@@ -61,7 +64,6 @@ public class GroupMembers {
 		this.user_name = user_name;
 	}
 
-	
 	public String getAvatar() {
 		return avatar;
 	}
@@ -70,13 +72,22 @@ public class GroupMembers {
 		this.avatar = avatar;
 	}
 
-	public GroupMembers(Long group_id, Long user_id, Integer publicInventory, String userName, String avatar) {
+	public String getEmail() {
+		return Email;
+	}
+
+	public void setEmail(String email) {
+		Email = email;
+	}
+
+	public GroupMembers(Long group_id, Long user_id, Integer publicInventory, String userName, String avatar, String Email) {
 		super();
 		this.group_id = group_id;
 		this.user_id = user_id;
 		this.publicInventory = publicInventory;
 		this.user_name = userName;
 		this.avatar = avatar;
+		this.Email = Email;
 	}
 
 	public GroupMembers() {
