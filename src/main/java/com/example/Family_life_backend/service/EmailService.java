@@ -157,10 +157,6 @@ public class EmailService {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-			helper.setFrom("familyLifeTest123456@gmail.com");
-			helper.setTo(to);
-			helper.setSubject("Email 驗證");
-
 			String content = """
 					<!DOCTYPE html>
 					<html>
@@ -230,7 +226,10 @@ public class EmailService {
 					</html>
 					""".formatted(code);
 
-			helper.setText(code, true);
+			helper.setFrom("familyLifeTest123456@gmail.com");
+			helper.setTo(to);
+			helper.setSubject("Email 驗證");
+			helper.setText(content, true);
 
 			mailSender.send(message);
 
