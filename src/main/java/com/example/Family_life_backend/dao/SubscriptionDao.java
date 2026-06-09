@@ -102,4 +102,8 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 	@Transactional
 	@Query(value = "DELETE FROM subscriptions WHERE id = :id", nativeQuery = true)
 	int deleteSubscription(@Param("id") Integer id);
+
+	// 抓取該物品的舊image
+	@Query(value = "Select avatar FROM subscriptions WHERE id = :id", nativeQuery = true)
+	String getSubscriptionImage(@Param("id") Long id);
 }

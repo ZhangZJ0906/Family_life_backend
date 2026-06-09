@@ -161,7 +161,8 @@ public class WarrantyService {
 		String status = calcWarrantyStatus(req.getWarrantyEndDate());
 		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
 
-		String avatarUrl = null;
+		String oldAvatarString = warrantyDao.getWarrantyImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString;
 		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
 			try {
