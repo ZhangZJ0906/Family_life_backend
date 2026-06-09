@@ -87,4 +87,8 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 	@Transactional
 	@Query(value = "DELETE FROM warranties WHERE id = :id", nativeQuery = true)
 	int deleteWarranty(@Param("id") Integer id);
+
+	// 抓取該物品的舊image
+	@Query(value = "Select avatar  from warranties where id = :id ", nativeQuery = true)
+	String getWarrantyImage(@Param("id") Long id);
 }

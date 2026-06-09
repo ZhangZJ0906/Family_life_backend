@@ -94,4 +94,8 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 	@Transactional
 	@Query(value = "DELETE FROM medicines WHERE id = :id", nativeQuery = true)
 	int deleteMedicine(@Param("id") Integer id);
+
+	// 抓取該物品的舊image
+	@Query(value = "Select avatar  from medicines where id = :id ", nativeQuery = true)
+	String getMedicineImage(@Param("id") Long id);
 }

@@ -186,7 +186,8 @@ public class SubscriptionService {
 		String status = getSubscriptionStatus(req.getTrialEndDate(), nextBillingDate);
 
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
-		String avatarUrl = null;
+		String oldAvatarString = subscriptionDao.getSubscriptionImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString;
 		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
 			try {
