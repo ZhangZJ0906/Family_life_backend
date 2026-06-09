@@ -200,6 +200,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			 SELECT
 			     gm.group_id as group_id,
 			     gm.user_id as user_id,
+			     u.email as Email,
 			     gm.public_inventory as publicInventory,
 			     u.name as user_name,
 			     u.avatar as avatar

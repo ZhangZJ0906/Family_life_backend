@@ -65,8 +65,10 @@ public interface WarrantyDao extends JpaRepository<Warranty, Integer> {
 			+ "serial_number = :serialNumber, " + "purchase_date = :purchaseDate, "
 			+ "warranty_end_date = :warrantyEndDate, " + "store_name = :storeName, " + "price = :price, "
 			+ "notify = :notify, " + "note = :note, " + "status = :status, "
+
 			+ "remind_message = :remindMessage , avatar = :avatar   " + ", created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
+
 	int updateWarranty(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("productName") String productName, @Param("brand") String brand, @Param("model") String model,
 			@Param("serialNumber") String serialNumber, @Param("purchaseDate") LocalDate purchaseDate,

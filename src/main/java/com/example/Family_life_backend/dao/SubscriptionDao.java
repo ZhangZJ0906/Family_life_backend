@@ -72,13 +72,24 @@ public interface SubscriptionDao extends JpaRepository<Subscription, Integer> {
 			+ "note = :note, " + "status = :status, " + "remind_message = :remindMessage, avatar= :avatar , "
 			+ "created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
-	int updateSubscription(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
-			@Param("name") String name, @Param("price") Integer price, @Param("billingCycle") String billingCycle,
-			@Param("nextBillingDate") LocalDate nextBillingDate, @Param("purchaseDate") LocalDate purchaseDate,
-			@Param("trialEndDate") LocalDate trialEndDate, @Param("notify") Boolean notify, @Param("note") String note,
-			@Param("status") String status, @Param("remindMessage") String remindMessage,
+	int updateSubscription(
+	        @Param("id") Integer id,
+	        @Param("groupId") Integer groupId,
+	        @Param("userId") Integer userId,
+	        @Param("name") String name,
+	        @Param("price") Integer price,
+	        @Param("billingCycle") String billingCycle,
+	        @Param("nextBillingDate") LocalDate nextBillingDate,
+	        @Param("purchaseDate") LocalDate purchaseDate,
+	        @Param("trialEndDate") LocalDate trialEndDate,
+	        @Param("notify") Boolean notify,
+	        @Param("note") String note,
+	        @Param("status") String status,
+	        @Param("remindMessage") String remindMessage,
+	        @Param("createdAt") LocalDateTime createdTime,
+	        @Param("avatar") String avatar
+	);
 
-			@Param("createdAt") LocalDateTime createdTime,@Param("avatar") String avatar);
 
 
 	@Modifying
