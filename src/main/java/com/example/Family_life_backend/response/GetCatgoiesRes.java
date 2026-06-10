@@ -5,9 +5,6 @@ import java.util.Map;
 public class GetCatgoiesRes extends BasicRes {
 	private Map<Integer, String> categoiesMap;
 
-
-
-
 	public GetCatgoiesRes(String message, int code, Map<Integer, String> categoiesMap) {
 		super(message, code);
 		this.categoiesMap = categoiesMap;
