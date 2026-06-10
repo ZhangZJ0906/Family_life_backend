@@ -26,6 +26,9 @@ public class GroupChatMessage {
 	@Column(name = "message")
 	private String message;
 
+	@Column(name = "image_url")
+	private String imageUrl;
+
 	@Column(name = "createTime")
 	private LocalDateTime createTime = LocalDateTime.now();
 
@@ -61,6 +64,14 @@ public class GroupChatMessage {
 		this.message = message;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
@@ -74,12 +85,14 @@ public class GroupChatMessage {
 		// TODO Auto-generated constructor stub
 	}
 
-	public GroupChatMessage(Long id, Long groupId, Long senderId, String message, LocalDateTime createTime) {
+	public GroupChatMessage(Long id, Long groupId, Long senderId, String message, String imageUrl,
+			LocalDateTime createTime) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
 		this.senderId = senderId;
 		this.message = message;
+		this.imageUrl = imageUrl;
 		this.createTime = createTime;
 	}
 

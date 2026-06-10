@@ -18,6 +18,10 @@ public class ChatMessageResponse extends BasicResponse {
 
 	private LocalDateTime createTime;
 
+	private String imageUrl;
+
+	private String type; // ⭐ 新增
+
 	private Long readCount;
 
 	public Long getId() {
@@ -76,6 +80,22 @@ public class ChatMessageResponse extends BasicResponse {
 		this.createTime = createTime;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public Long getReadCount() {
 		return readCount;
 	}
@@ -95,7 +115,7 @@ public class ChatMessageResponse extends BasicResponse {
 	}
 
 	public ChatMessageResponse(Long id, Long groupId, Long senderId, String senderName, String senderAvatar,
-			String message, LocalDateTime createTime, Long readCount) {
+			String message, LocalDateTime createTime, String imageUrl, String type, Long readCount) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -104,6 +124,8 @@ public class ChatMessageResponse extends BasicResponse {
 		this.senderAvatar = senderAvatar;
 		this.message = message;
 		this.createTime = createTime;
+		this.imageUrl = imageUrl;
+		this.type = type;
 		this.readCount = readCount;
 	}
 

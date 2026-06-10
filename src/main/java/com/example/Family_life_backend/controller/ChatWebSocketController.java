@@ -45,17 +45,19 @@ public class ChatWebSocketController {
 		dto.setGroupId(saved.getGroupId());
 		dto.setSenderId(saved.getSenderId());
 		dto.setMessage(saved.getMessage());
+		dto.setImageUrl(msg.getImageUrl());
 		dto.setCreateTime(saved.getCreateTime());
 
+		// ⭐ sender info
 		if (user != null) {
-
 			dto.setSenderName(user.getUserName());
-
 			dto.setSenderAvatar(user.getAvatar());
-
 		}
 
-		// ⭐ 推播給同群組所有人
+		// ⭐ default fields（重點）
+		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
+		dto.setReadCount(0L);
+
 		messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
 	}
 }
