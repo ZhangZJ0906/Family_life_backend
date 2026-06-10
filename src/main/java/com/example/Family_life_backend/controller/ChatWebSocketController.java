@@ -29,6 +29,8 @@ public class ChatWebSocketController {
 	@MessageMapping("/chat.send")
 	public void send(ChatRequest request) {
 
+		System.out.println("收到WS訊息：" + request.getMessage());
+
 		GroupChatMessage msg = new GroupChatMessage();
 
 		msg.setGroupId(request.getGroupId());
@@ -57,6 +59,8 @@ public class ChatWebSocketController {
 		// ⭐ default fields（重點）
 		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 		dto.setReadCount(0L);
+
+		System.out.println("推播到 topic: /topic/group/" + saved.getGroupId());
 
 		messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
 	}
