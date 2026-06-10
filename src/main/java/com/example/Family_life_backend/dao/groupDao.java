@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.Family_life_backend.DTO.groupDTO;
 import com.example.Family_life_backend.entity.group;
 
 @Repository
@@ -27,29 +27,41 @@ public interface groupDao extends JpaRepository<group, Long> {
 
 	@Query(value = "select group_name from `groups` where group_id = :groupId", nativeQuery = true)
 	public String getSelfGroupNameById(@Param("groupId") Long groupId);
-	
+
 	@Query(value = """
-			    SELECT g.*
+			    SELECT
+			     g.group_id AS groupId,
+			     g.group_name AS groupName,
+			     g.invite_code AS inviteCode,
+			     g.created_by AS createdBy,
+			     g.created_at AS createdAt,
+			     g.avatar AS avatar,
+			     u.name AS creater
+			 FROM `groups` g
+			 JOIN group_members gm
+			     ON g.group_id = gm.group_id
+			 JOIN users u
+			     ON g.created_by = u.user_id
+			 WHERE gm.user_id = :userId
+			""", nativeQuery = true)
+	public List<groupDTO> getMyGroups(@Param("userId") Long userId);
+
+	@Query(value = """
+			    SELECT gm.public_inventory
 			    FROM `groups` g
 			    JOIN group_members gm ON g.group_id = gm.group_id
 			    WHERE gm.user_id = :userId
 			""", nativeQuery = true)
-	public List<group> getMyGroups(@Param("userId") Long userId);
-	
-	@Query(value = """
-		    SELECT gm.public_inventory
-		    FROM `groups` g
-		    JOIN group_members gm ON g.group_id = gm.group_id
-		    WHERE gm.user_id = :userId
-		""", nativeQuery = true)
 	public List<Integer> getMyGroupsPublicInventory(@Param("userId") Long userId);
 
 	@Query(value = """
-		    SELECT group_id
-		    FROM group_members 
-		    WHERE user_id = :userId
-		""", nativeQuery = true)
+			    SELECT group_id
+			    FROM group_members
+			    WHERE user_id = :userId
+			""", nativeQuery = true)
 	public List<Long> getMyGroupIdList(@Param("userId") Long userId);
+
+//	public List<String> getGroupsCreaters(@Param("user"))
 
 	@Query(value = "select group_name from `groups` where group_id = :group_id", nativeQuery = true)
 	public String getGroupName(@Param("group_id") Long group_id);
@@ -59,14 +71,15 @@ public interface groupDao extends JpaRepository<group, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar, created_by = :createdBy, creater = :Creater where group_id = :groupId", nativeQuery = true)
+	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar, created_by = :createdBy where group_id = :groupId", nativeQuery = true)
 	void updateGroup(@Param("groupName") String groupName, @Param("Avatar") String Avatar,
-			@Param("createdBy") Long createdBy, @Param("Creater") String Creater, @Param("groupId") Long groupId);
-	
+			@Param("createdBy") Long createdBy, @Param("groupId") Long groupId);
+
 	@Modifying
 	@Transactional
 	@Query(value = "update group_members set public_inventory = :isChecked where group_id = :groupId and user_id = :userId", nativeQuery = true)
-	public void updatePublicInventoryToThisGroup(@Param("isChecked")boolean isChecked, @Param("groupId")Long groupId, @Param("userId")Long userId);
+	public void updatePublicInventoryToThisGroup(@Param("isChecked") boolean isChecked, @Param("groupId") Long groupId,
+			@Param("userId") Long userId);
 
 	@Modifying
 	@Transactional

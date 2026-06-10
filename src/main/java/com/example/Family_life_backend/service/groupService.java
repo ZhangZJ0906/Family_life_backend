@@ -117,7 +117,7 @@ public class groupService {
 				avatarUrl = "http://localhost:8080/uploads/" + fileName;
 			}
 
-			groupDao.updateGroup(groupName, avatarUrl, createdBy, selfName, groupId);
+			groupDao.updateGroup(groupName, avatarUrl, createdBy, groupId);
 
 			String NewGroupId = groupDao.getSelfGroupNameById(groupId);
 

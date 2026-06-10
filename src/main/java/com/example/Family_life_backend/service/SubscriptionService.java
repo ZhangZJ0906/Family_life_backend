@@ -88,7 +88,7 @@ public class SubscriptionService {
 			SubscriptionVo vo = new SubscriptionVo(sub.getId(), sub.getGroupId(), sub.getUserId(), sub.getName(),
 					sub.getPrice(), sub.getBillingCycle(), sub.getPurchaseDate(), sub.getTrialEndDate(),
 					sub.getNextBillingDate(), sub.getStatus(), sub.getRemindMessage(),
-					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote());
+					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote(), sub.getAvatar());
 
 			resultList.add(vo);
 		}
@@ -141,6 +141,7 @@ public class SubscriptionService {
 				return new SubscriptionRes(500, "圖片上傳失敗");
 			}
 		}
+		System.out.println(avatarUrl);
 		subscriptionDao.addSubscription(req.getGroupId(), req.getUserId(), req.getName(), req.getPrice(),
 				req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
 
@@ -185,7 +186,8 @@ public class SubscriptionService {
 		String status = getSubscriptionStatus(req.getTrialEndDate(), nextBillingDate);
 
 		String remindMessage = getSubscriptionRemindMessage(req.getTrialEndDate(), nextBillingDate);
-		String avatarUrl = null;
+		String oldAvatarString = subscriptionDao.getSubscriptionImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString;
 		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
 			try {

@@ -175,7 +175,8 @@ public class MedicineService {
 		Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
 		Integer price = quantity * unitPrice;
 		String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
-		String avatarUrl = null;
+		String oldAvatarString = medicineDao.getMedicineImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString;
 		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
 			try {

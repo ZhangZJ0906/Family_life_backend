@@ -2,18 +2,20 @@ package com.example.Family_life_backend.response;
 
 import java.util.List;
 
-import com.example.Family_life_backend.entity.group;
+import com.example.Family_life_backend.DTO.groupDTO;
 
-public class GetGroupRes extends BasicResponse{
-	private List<group> groupList;
-	
+public class GetGroupRes extends BasicResponse {
+	private List<groupDTO> groupList;
+
 	private List<Integer> publicInventory;
 
-	public List<group> getGroupList() {
+//	private List<String> creater;
+
+	public List<groupDTO> getGroupList() {
 		return groupList;
 	}
 
-	public void setGroupList(List<group> groupList) {
+	public void setGroupList(List<groupDTO> groupList) {
 		this.groupList = groupList;
 	}
 
@@ -25,6 +27,14 @@ public class GetGroupRes extends BasicResponse{
 		this.publicInventory = publicInventory;
 	}
 
+//	public List<String> getCreater() {
+//		return creater;
+//	}
+//
+//	public void setCreater(List<String> creater) {
+//		this.creater = creater;
+//	}
+
 	public GetGroupRes() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -35,11 +45,11 @@ public class GetGroupRes extends BasicResponse{
 		// TODO Auto-generated constructor stub
 	}
 
-	public GetGroupRes(String message, int code, List<group> groupList, List<Integer> publicInventory) {
+	public GetGroupRes(String message, int code, List<groupDTO> groupList, List<Integer> publicInventory) {
 		super(message, code);
 		this.groupList = groupList;
 		this.publicInventory = publicInventory;
+//		this.creater = creater;
 	}
-	
-	
+
 }

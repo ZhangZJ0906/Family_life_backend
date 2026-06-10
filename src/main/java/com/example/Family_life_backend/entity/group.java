@@ -28,7 +28,7 @@ public class group {
     @Column(name = "avatar", nullable = false, length = 100)
     private String Avatar;
     
-    @Column(name = "creater", nullable = false)
+	@Transient
     private String creater;
     
     // ===== Getter / Setter =====

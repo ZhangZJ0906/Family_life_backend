@@ -16,22 +16,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            .cors(cors -> {}) // 啟用 CORS
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 關鍵
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/users/login", "/users/register").permitAll()
-                .anyRequest().permitAll()
-            );
+//        http
+//            .cors(cors -> {}) // 啟用 CORS
+//            .csrf(csrf -> csrf.disable())
+//            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 關鍵
+//            .authorizeHttpRequests(auth -> auth
+//                .requestMatchers("/users/login", "/users/register").permitAll()
+//                .anyRequest().permitAll()
+//            );
     	
-//    	http
-//        .csrf(csrf -> csrf.disable())
-//        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//        .authorizeHttpRequests(auth -> auth
-//            .requestMatchers("/users/**").permitAll()
-//            .anyRequest().permitAll()
-//        );
+    	http
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/users/**").permitAll()
+            .anyRequest().permitAll()
+        );
 
 
         return http.build();

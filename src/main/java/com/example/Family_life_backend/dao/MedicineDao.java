@@ -16,14 +16,14 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 
 	// 查詢群組
 	@Query(value = """
-			    SELECT *
-			    FROM medicines
-			    WHERE (
-			        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
-			        OR
-			        (:groupId IS NOT NULL AND group_id = :groupId)
-			    )
-			    ORDER BY expire_date ASC
+			SELECT *
+			       FROM medicines
+			       WHERE (
+			           (:groupId = 0 AND group_id = 0 AND user_id = :userId)
+			           OR
+			           (:groupId != 0 AND group_id = :groupId)
+			       )
+			       ORDER BY expire_date ASC
 			""", nativeQuery = true)
 	List<Medicine> findByGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
 
@@ -48,8 +48,8 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 	@Query(value = "INSERT INTO medicines " + "(group_id, user_id, name, medicine_type, quantity, unit, safe_quantity, "
 			+ "purchase_date, expire_date, dosage, usage_method, "
 
-			+ "location, source, notify, note, unit_price, price, status, remind_message,avatar, created_at) " + "VALUES "
-			+ "(:groupId, :userId, :name, :medicineType, :quantity, :unit, :safeQuantity, "
+			+ "location, source, notify, note, unit_price, price, status, remind_message,avatar, created_at) "
+			+ "VALUES " + "(:groupId, :userId, :name, :medicineType, :quantity, :unit, :safeQuantity, "
 			+ ":purchaseDate, :expireDate, :dosage, :usageMethod, "
 			+ ":location, :source, :notify, :note, :unitPrice, :price, :status, :remindMessage , :avatar, :createdAt )", nativeQuery = true)
 
@@ -60,10 +60,8 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 			@Param("usageMethod") String usageMethod, @Param("location") String location,
 			@Param("source") String source, @Param("notify") Boolean notify, @Param("note") String note,
 			@Param("unitPrice") Integer unitPrice, @Param("price") Integer price, @Param("status") String status,
-			@Param("remindMessage") String remindMessage, @Param("avatar") String avatar, @Param("createdAt") LocalDateTime createdAt);
-
-			 
-
+			@Param("remindMessage") String remindMessage, @Param("avatar") String avatar,
+			@Param("createdAt") LocalDateTime createdAt);
 
 	// 修改
 	@Modifying
@@ -73,8 +71,7 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 			+ "safe_quantity = :safeQuantity, " + "purchase_date = :purchaseDate, " + "expire_date = :expireDate, "
 			+ "dosage = :dosage, " + "usage_method = :usageMethod, " + "location = :location, " + "source = :source, "
 			+ "notify = :notify, " + "note = :note, " + "unit_price = :unitPrice, " + "price = :price, "
-			+ "status = :status, " + "remind_message = :remindMessage, " + "created_at = :createdAt "
-			+ "status = :status, " + "remind_message = :remindMessage , avatar = :avatar "+ "created_at = :createdAt "
+			+ "status = :status, " + "remind_message = :remindMessage, avatar = :avatar ," + " created_at = :createdAt "
 			+ "WHERE id = :id", nativeQuery = true)
 	int updateMedicine(@Param("id") Integer id, @Param("groupId") Integer groupId, @Param("userId") Integer userId,
 			@Param("name") String name, @Param("medicineType") String medicineType, @Param("quantity") Integer quantity,
@@ -87,9 +84,6 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 
 			@Param("createdAt") LocalDateTime createdAt, @Param("avatar") String avatar);
 
-			
-
-
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE medicines SET notify = :notify  WHERE id = :id", nativeQuery = true)
@@ -100,4 +94,8 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 	@Transactional
 	@Query(value = "DELETE FROM medicines WHERE id = :id", nativeQuery = true)
 	int deleteMedicine(@Param("id") Integer id);
+
+	// 抓取該物品的舊image
+	@Query(value = "Select avatar  from medicines where id = :id ", nativeQuery = true)
+	String getMedicineImage(@Param("id") Long id);
 }
