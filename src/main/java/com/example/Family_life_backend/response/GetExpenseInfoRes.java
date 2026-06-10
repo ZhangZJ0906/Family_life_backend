@@ -53,6 +53,11 @@ public class GetExpenseInfoRes extends BasicRes {
 		this.itemMap = itemMap;
 	}
 
+	public GetExpenseInfoRes(String message, int code, List<Expense> list) {
+		super(message, code);
+		this.list = list;
+	}
+
 	public GetExpenseInfoRes(String message, int code, List<Expense> list, Map<Long, Items> itemMap,
 			Map<Long, UserInfo> userMap) {
 		super(message, code);
