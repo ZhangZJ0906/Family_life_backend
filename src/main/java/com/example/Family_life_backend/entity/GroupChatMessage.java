@@ -27,7 +27,7 @@ public class GroupChatMessage {
 	private String message;
 
 	@Column(name = "createTime")
-	private LocalDateTime createTime;
+	private LocalDateTime createTime = LocalDateTime.now();
 
 	public Long getId() {
 		return id;
