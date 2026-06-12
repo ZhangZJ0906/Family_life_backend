@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.example.Family_life_backend.entity.GroupChatMessage;
@@ -100,6 +101,8 @@ public class MessageController {
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("groupId") Long groupId,
 			@RequestParam("senderId") Long senderId) throws Exception {
 
+		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
 		String fileName = UUID.randomUUID() + ".jpg";
 
 		Path path = Paths.get("uploads/" + fileName);
@@ -112,7 +115,7 @@ public class MessageController {
 		GroupChatMessage msg = new GroupChatMessage();
 		msg.setGroupId(groupId);
 		msg.setSenderId(senderId);
-		msg.setImageUrl("/uploads/" + fileName);
+		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
 
 		GroupChatMessage saved = repository.save(msg);
 
@@ -126,7 +129,7 @@ public class MessageController {
 		dto.setGroupId(groupId);
 		dto.setSenderId(senderId);
 		dto.setImageUrl(saved.getImageUrl()); // ⭐重點
-		dto.setType("IMAGE");
+		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
 		if (user != null) {
 			dto.setSenderName(user.getUserName());
