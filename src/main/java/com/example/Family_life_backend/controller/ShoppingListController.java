@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -74,6 +75,11 @@ public class ShoppingListController {
 	public BasicRes updateCheck(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId,
 			@RequestParam("check") boolean check, @RequestParam("checkMan") int checkMan) {
 		return shoppingListService.updateCheck(listId, itemId, check, checkMan);
+	}
+	
+	@GetMapping("/items/batch")
+	public Map<Integer, List<PurchaseItem>> getItemsBatch(@RequestParam("listIds") List<Integer> listIds) {
+	    return shoppingListService.getItemsByListIds(listIds);
 	}
 
 }

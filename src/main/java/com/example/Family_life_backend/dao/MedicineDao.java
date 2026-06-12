@@ -16,14 +16,14 @@ public interface MedicineDao extends JpaRepository<Medicine, Integer> {
 
 	// 查詢群組
 	@Query(value = """
-			    SELECT *
-			    FROM medicines
-			    WHERE (
-			        (:groupId IS NULL AND group_id IS NULL AND user_id = :userId)
-			        OR
-			        (:groupId IS NOT NULL AND group_id = :groupId)
-			    )
-			    ORDER BY expire_date ASC
+			SELECT *
+			       FROM medicines
+			       WHERE (
+			           (:groupId = 0 AND group_id = 0 AND user_id = :userId)
+			           OR
+			           (:groupId != 0 AND group_id = :groupId)
+			       )
+			       ORDER BY expire_date ASC
 			""", nativeQuery = true)
 	List<Medicine> findByGroupId(@Param("userId") Integer userId, @Param("groupId") Integer groupId);
 

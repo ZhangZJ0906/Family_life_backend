@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface ExpenseDao extends JpaRepository<Expense, Integer> {
+	// 茶群組
 	@Query(value = """
 			    SELECT * FROM expenses
 			    WHERE (:groupId IS NULL OR group_id = :groupId)
@@ -23,7 +24,8 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 			""", nativeQuery = true)
 	public List<Expense> findExpenses(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
-	@Query(value = "Select * from expenses where user_id = :userId and group_id =0", nativeQuery = true)
+//查私人
+	@Query(value = "Select * from expenses where user_id = :userId ", nativeQuery = true)
 	public List<Expense> findPersonalExpenses(@Param("userId") Long userId);
 
 	@Modifying

@@ -3,6 +3,7 @@ package com.example.Family_life_backend.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.UserInfo;
@@ -12,6 +13,7 @@ import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class ChatWebSocketController {
 
 	private final SimpMessagingTemplate messagingTemplate;

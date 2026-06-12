@@ -49,5 +49,14 @@ public interface PurchaseItemDao extends JpaRepository<PurchaseItem, PurchaseIte
 	//拿刪除指定Item名字
 	@Query(value = "select item_name from shopping_list_items where id = :ItemId and shopping_list_id = :listId", nativeQuery = true)
 	public String getItemNameById(@Param("listId") Long ListId, @Param("ItemId") Long ItemId);
+	
+	/* 一次回傳所有清單的購物項目 */
+	@Query(value = """
+		    select *
+		    from shopping_list_items
+		    where shopping_list_id in (:listIds)
+		    order by shopping_list_id, id
+		    """, nativeQuery = true)
+		List<PurchaseItem> getByListIds(@Param("listIds") List<Integer> listIds);
 
 }
