@@ -22,6 +22,7 @@ import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Subscription;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.request.AddSubscriptionReq;
 import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.request.UpdateSubscriptionReq;
@@ -55,6 +56,8 @@ public class SubscriptionService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	private globalVar globalVar;
 
 	// 查詢
 	public SubscriptionRes getByGroup(Integer groupId, Integer userId) {
@@ -135,7 +138,7 @@ public class SubscriptionService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new SubscriptionRes(500, "圖片上傳失敗");
@@ -201,7 +204,7 @@ public class SubscriptionService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new SubscriptionRes(500, "圖片上傳失敗");

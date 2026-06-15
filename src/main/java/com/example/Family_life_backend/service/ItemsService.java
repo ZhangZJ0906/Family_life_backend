@@ -27,6 +27,7 @@ import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.Categories;
 import com.example.Family_life_backend.entity.Items;
 import com.example.Family_life_backend.entity.Location;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
 import com.example.Family_life_backend.request.UpdateNotifyReq;
@@ -61,6 +62,8 @@ public class ItemsService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	private globalVar globalVar;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
@@ -127,7 +130,7 @@ public class ItemsService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new AddItemsInfoRes("圖片上傳失敗", 500);
@@ -196,7 +199,7 @@ public class ItemsService {
 
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			}
 
 

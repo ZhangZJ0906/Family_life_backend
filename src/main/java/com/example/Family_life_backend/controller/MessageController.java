@@ -25,7 +25,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/chat")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class MessageController {
 
 	private final GroupChatRepository repository;

@@ -20,6 +20,7 @@ import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.request.AddMedicineReq;
 import com.example.Family_life_backend.request.UpdateMedicineReq;
 import com.example.Family_life_backend.request.UpdateNotifyReq;
@@ -51,6 +52,8 @@ public class MedicineService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	private globalVar globalVar;
 
 	public MedicineRes getByGroup(Integer groupId, Integer userId) {
 
@@ -111,7 +114,7 @@ public class MedicineService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new MedicineRes(500, "圖片上傳失敗");
@@ -190,7 +193,7 @@ public class MedicineService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new MedicineRes(500, "圖片上傳失敗");

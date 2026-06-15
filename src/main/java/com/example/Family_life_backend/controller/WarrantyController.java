@@ -23,7 +23,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/warranty")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class WarrantyController {
 
 	@Autowired

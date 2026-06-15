@@ -188,7 +188,8 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			    im.group_id as group_id,
 			    im.user_id as user_id,
 			    u.name as name,
-			    u.avatar as avatar
+			    u.avatar as avatar,
+			    u.email as email
 			FROM invited_members im
 			JOIN users u
 			    ON im.user_id = u.user_id
