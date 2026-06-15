@@ -1,10 +1,17 @@
-version: '3.8'
-
 services:
   backend-api:
     build:
-      context: . # . 代表當前路徑
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
-    restart: always
+    restart: always	  
+    environment:
+    - SERVER_PORT=8081
+
+    networks:
+      - family_net # 💡 加入網路
+
+networks:
+  family_net:
+    name: family_shared_network # 💡 定義一個外部共享網路名稱
