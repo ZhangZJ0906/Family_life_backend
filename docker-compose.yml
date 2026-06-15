@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  backend-api:
+    build:
+      context: . # . 代表當前路徑
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    restart: always
