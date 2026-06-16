@@ -56,7 +56,7 @@ public class SubscriptionService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+	@Autowired
 	private globalVar globalVar;
 
 	// 查詢

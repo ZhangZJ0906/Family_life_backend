@@ -54,7 +54,7 @@ public class groupService {
 	
 	@Autowired
 	private ItemsDao itemsDao;
-	
+	@Autowired
 	private globalVar globalVar;
 
 	@Transactional
