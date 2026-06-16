@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,7 +55,10 @@ public class UserController {
 	private UserInfoDao userInfoDao;
 
 	//email驗證碼
-    private final Map<String, String> verificationCodes = new HashMap<>();
+	private static final int VERIFICATION_EXPIRE_MINUTES = 5;
+	private static final int RESEND_COOLDOWN_SECONDS = 60;
+	
+    private final Map<String, VerificationCodeInfo> verificationCodes = new ConcurrentHashMap<>();
 
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
@@ -92,31 +98,58 @@ public class UserController {
 		return userService.getUserInfo(userId);
 	}
 
+	// 寄送驗證
 	@PostMapping("/send")
 	public String sendCode(@RequestParam("email") String email) {
-		Random random = new Random();
+	    LocalDateTime now = LocalDateTime.now();
+	    VerificationCodeInfo oldInfo = verificationCodes.get(email);
 
-		String code = String.format("%06d", random.nextInt(1000000));
+	    if (oldInfo != null && oldInfo.getLastSentAt().plusSeconds(RESEND_COOLDOWN_SECONDS).isAfter(now)) {
+	        long waitSeconds = Duration.between(
+	            now,
+	            oldInfo.getLastSentAt().plusSeconds(RESEND_COOLDOWN_SECONDS)
+	        ).getSeconds();
 
-		verificationCodes.put(email, code);
+	        return "請 " + waitSeconds + " 秒後再重新發送驗證碼";
+	    }
 
-		emailService.sendVerificationCode(email, code);
+	    Random random = new Random();
+	    String code = String.format("%06d", random.nextInt(1000000));
 
-		return "驗證碼已寄出";
+	    verificationCodes.put(
+	        email,
+	        new VerificationCodeInfo(
+	            code,
+	            now.plusMinutes(VERIFICATION_EXPIRE_MINUTES),
+	            now
+	        )
+	    );
+
+	    emailService.sendVerificationCode(email, code);
+
+	    return "驗證碼已寄出";
 	}
 
 	@PostMapping("/verify")
 	public String verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+	    VerificationCodeInfo savedInfo = verificationCodes.get(email);
 
-		String savedCode = verificationCodes.get(email);
+	    if (savedInfo == null) {
+	        return "請先發送驗證碼";
+	    }
 
-		if (savedCode != null && savedCode.equals(code)) {
-			verificationCodes.remove(email);
-			userInfoDao.updateEmailVerify(email);
-			return "驗證成功";
-		}
+	    if (savedInfo.getExpiresAt().isBefore(LocalDateTime.now())) {
+	        verificationCodes.remove(email);
+	        return "驗證碼已過期，請重新發送";
+	    }
 
-		return "驗證失敗";
+	    if (savedInfo.getCode().equals(code)) {
+	        verificationCodes.remove(email);
+	        userInfoDao.updateEmailVerify(email);
+	        return "驗證成功";
+	    }
+
+	    return "驗證失敗";
 	}
 
 //確認Email 2026-05-28 by ZJ
@@ -129,6 +162,31 @@ public class UserController {
 	public BasicRes updatePassword(@RequestBody UpdatePasswordReq req) {
 		System.out.println(req.getEmail() + req.getPassword());
 		return userService.updatePassword(req.getEmail(), req.getPassword());
+	}
+	
+	// 只存在記憶體
+	private static class VerificationCodeInfo {
+	    private final String code;
+	    private final LocalDateTime expiresAt;
+	    private final LocalDateTime lastSentAt;
+
+	    private VerificationCodeInfo(String code, LocalDateTime expiresAt, LocalDateTime lastSentAt) {
+	        this.code = code;
+	        this.expiresAt = expiresAt;
+	        this.lastSentAt = lastSentAt;
+	    }
+
+	    private String getCode() {
+	        return code;
+	    }
+
+	    private LocalDateTime getExpiresAt() {
+	        return expiresAt;
+	    }
+
+	    private LocalDateTime getLastSentAt() {
+	        return lastSentAt;
+	    }
 	}
 
 }
