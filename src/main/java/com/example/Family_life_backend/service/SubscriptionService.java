@@ -91,7 +91,8 @@ public class SubscriptionService {
 			SubscriptionVo vo = new SubscriptionVo(sub.getId(), sub.getGroupId(), sub.getUserId(), sub.getName(),
 					sub.getPrice(), sub.getBillingCycle(), sub.getPurchaseDate(), sub.getTrialEndDate(),
 					sub.getNextBillingDate(), sub.getStatus(), sub.getRemindMessage(),
-					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote(), sub.getAvatar());
+					sub.getNotify() == null ? true : sub.getNotify(), sub.getNote(), sub.getAvatar(),
+					sub.getCreatedAt());
 
 			resultList.add(vo);
 		}
@@ -148,8 +149,8 @@ public class SubscriptionService {
 		subscriptionDao.addSubscription(req.getGroupId(), req.getUserId(), req.getName(), req.getPrice(),
 				req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
 
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
-
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage,
+				LocalDateTime.now(), avatarUrl);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到訂閱清單";
@@ -215,8 +216,8 @@ public class SubscriptionService {
 		int result = subscriptionDao.updateSubscription(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getPrice(), req.getBillingCycle(), nextBillingDate, req.getPurchaseDate(), req.getTrialEndDate(),
 
-				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
-
+				req.getNotify() == null ? true : req.getNotify(), req.getNote(), status, remindMessage,
+				LocalDateTime.now(), avatarUrl);
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將訂閱" + oldName + "改成" + req.getName();

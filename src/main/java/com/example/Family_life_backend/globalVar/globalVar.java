@@ -10,7 +10,7 @@ public class globalVar {
 	String Url;
 
 	public String getUrl() {
-		return Url;
+		return "http://localhost:8080/uploads/";
 	}
 
 	public void setUrl(String url) {

@@ -32,8 +32,8 @@ import com.example.Family_life_backend.response.ChatMessageResponse;
 
 @RestController
 @RequestMapping("/chat")
-//@CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "*")
 public class MessageController {
 
 	private final GroupChatRepository repository;
