@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.GroupChatRead;
@@ -110,8 +109,8 @@ public class MessageController {
 	@PostMapping("/upload")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("groupId") Long groupId,
 			@RequestParam("senderId") Long senderId) throws Exception {
-
-		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+		System.out.println("來到療天圖片上傳了");
+//		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
 		String fileName = UUID.randomUUID() + ".jpg";
 
@@ -125,7 +124,8 @@ public class MessageController {
 		GroupChatMessage msg = new GroupChatMessage();
 		msg.setGroupId(groupId);
 		msg.setSenderId(senderId);
-		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
+		msg.setImageUrl("/uploads/" + fileName);
+//		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
 
 		GroupChatMessage saved = repository.save(msg);
 
