@@ -71,9 +71,9 @@ public interface groupDao extends JpaRepository<group, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar, created_by = :createdBy where group_id = :groupId", nativeQuery = true)
+	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar where group_id = :groupId", nativeQuery = true)
 	void updateGroup(@Param("groupName") String groupName, @Param("Avatar") String Avatar,
-			@Param("createdBy") Long createdBy, @Param("groupId") Long groupId);
+			@Param("groupId") Long groupId);
 
 	@Modifying
 	@Transactional

@@ -27,14 +27,8 @@ public class SecurityConfig {
 
 		CorsConfiguration config = new CorsConfiguration();
 
-<<<<<<< HEAD
-		config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://127.0.0.1:4200",
-				"https://*.ngrok-free.app", "https://*.ngrok-free.dev", "http://localhost:8080",
-				"https://*.trycloudflare.com"));
-=======
 		config.setAllowedOriginPatterns(List.of("http://localhost", "http://localhost:4200", "http://127.0.0.1:4200",
 				"https://*.trycloudflare.com", "https://*.ngrok-free.app", "https://*.ngrok-free.dev"));
->>>>>>> origin/ZJTestDocker
 
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

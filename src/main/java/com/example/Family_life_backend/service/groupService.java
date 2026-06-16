@@ -54,10 +54,7 @@ public class groupService {
 
 	@Autowired
 	private ItemsDao itemsDao;
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/ZJTestDocker
 	@Autowired
 	private globalVar globalVar;
 
@@ -135,7 +132,7 @@ public class groupService {
 				avatarUrl = globalVar.getUrl() + fileName;
 			}
 
-			groupDao.updateGroup(groupName, avatarUrl, createdBy, groupId);
+			groupDao.updateGroup(groupName, avatarUrl, groupId);
 
 			String NewGroupId = groupDao.getSelfGroupNameById(groupId);
 
