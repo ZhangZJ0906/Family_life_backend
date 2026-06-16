@@ -54,7 +54,10 @@ public class groupService {
 
 	@Autowired
 	private ItemsDao itemsDao;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/ZJTestDocker
 	@Autowired
 	private globalVar globalVar;
 

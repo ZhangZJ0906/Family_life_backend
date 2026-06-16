@@ -55,7 +55,7 @@ public class WarrantyService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+	@Autowired
 	private globalVar globalVar;
 
 	public WarrantyRes getByGroup(Integer groupId, Integer userId) {

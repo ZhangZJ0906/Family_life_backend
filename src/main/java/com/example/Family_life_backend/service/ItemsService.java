@@ -62,7 +62,7 @@ public class ItemsService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+	@Autowired
 	private globalVar globalVar;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {

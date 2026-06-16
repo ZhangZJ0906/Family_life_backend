@@ -52,7 +52,7 @@ public class MedicineService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+	@Autowired
 	private globalVar globalVar;
 
 	public MedicineRes getByGroup(Integer groupId, Integer userId) {
