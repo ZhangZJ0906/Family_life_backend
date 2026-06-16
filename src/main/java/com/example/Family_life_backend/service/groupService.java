@@ -51,10 +51,10 @@ public class groupService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+
 	@Autowired
 	private ItemsDao itemsDao;
-	
+
 	private globalVar globalVar;
 
 	@Transactional
@@ -81,9 +81,19 @@ public class groupService {
 	}
 
 	public GetGroupRes getList(Long user_id) {
-		System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
-		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id),
-				groupDao.getMyGroupsPublicInventory(user_id));
+//		System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
+//		return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), groupDao.getMyGroups(user_id),
+//				groupDao.getMyGroupsPublicInventory(user_id));
+		try {
+			System.out.print("groupList: " + groupDao.getMyGroupsPublicInventory(user_id));
+
+			return new GetGroupRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
+					groupDao.getMyGroups(user_id), groupDao.getMyGroupsPublicInventory(user_id));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; // 🔥 讓 Spring 顯示真正錯誤，不要假裝成 CORS
+		}
 	}
 
 	@Transactional
@@ -131,11 +141,11 @@ public class groupService {
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
-					if(!Objects.equals(oldGroupName, NewGroupId)) {
+					if (!Objects.equals(oldGroupName, NewGroupId)) {
 						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
-					}
-					else {
-						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼", "update", false);
+					} else {
+						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼",
+								"update", false);
 					}
 
 					// 🔥 正確：要重新查 unread count
@@ -161,14 +171,14 @@ public class groupService {
 
 	}
 
-	/* 刪除群組前，先將User本人勾選物品轉成私人*/
+	/* 刪除群組前，先將User本人勾選物品轉成私人 */
 	@Transactional
 	public BasicResponse deleteGroup(Long group_id) {
-	    itemsDao.moveGroupItemsToPrivate(group_id);
+		itemsDao.moveGroupItemsToPrivate(group_id);
 
-	    groupMemberDao.deleteByGroupId(group_id);
-	    groupDao.deleteGroup(group_id);
+		groupMemberDao.deleteByGroupId(group_id);
+		groupDao.deleteGroup(group_id);
 
-	    return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
+		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 }

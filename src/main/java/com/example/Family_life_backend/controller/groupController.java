@@ -23,7 +23,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/family_life")
 //@CrossOrigin(origins = "http://localhost:8080")
-//@CrossOrigin(origins = "https://egomaniac-overall-unbalance.ngrok-free.dev")
+@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://authentic-michel-drink-temple.trycloudflare.com")
 
 public class groupController {
 

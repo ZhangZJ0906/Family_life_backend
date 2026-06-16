@@ -27,8 +27,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/calendar")
-//@CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:8080")
 public class CalendarController {
 
 	@Autowired
