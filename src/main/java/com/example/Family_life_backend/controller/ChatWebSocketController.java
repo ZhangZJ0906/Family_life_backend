@@ -3,6 +3,7 @@ package com.example.Family_life_backend.controller;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.UserInfo;
@@ -12,6 +13,7 @@ import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
 
 @Controller
+@CrossOrigin(origins = "*")
 public class ChatWebSocketController {
 
 	private final SimpMessagingTemplate messagingTemplate;
@@ -28,6 +30,8 @@ public class ChatWebSocketController {
 
 	@MessageMapping("/chat.send")
 	public void send(ChatRequest request) {
+
+		System.out.println("收到WS訊息：" + request.getMessage());
 
 		GroupChatMessage msg = new GroupChatMessage();
 
@@ -57,6 +61,8 @@ public class ChatWebSocketController {
 		// ⭐ default fields（重點）
 		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 		dto.setReadCount(0L);
+
+		System.out.println("推播到 topic: /topic/group/" + saved.getGroupId());
 
 		messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
 	}

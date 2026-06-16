@@ -23,7 +23,8 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/expense")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8080")
 public class ExpenseController {
 	@Autowired
 	private ExpenseService expenseService;
@@ -38,11 +39,10 @@ public class ExpenseController {
 
 	//可查 私人 或是群組
 	@GetMapping("/getInfo")
-	public GetExpenseInfoRes getExpenInfo(@RequestParam(value = "groupId") Long groupId,
-			@RequestParam(value = "userId", required = false) Long userId) {
+	public GetExpenseInfoRes getExpenInfo(@RequestParam(value = "userId") Long userId) {
 
 		expenseDao.recordLoginExpensePageTime(userId, LocalDateTime.now());
-		return expenseService.getExpenseInfo(groupId, userId);
+		return expenseService.getExpenseInfo(userId);
 	}
 
 	@PostMapping("/addInfo")

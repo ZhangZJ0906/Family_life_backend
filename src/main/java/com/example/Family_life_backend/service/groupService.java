@@ -22,6 +22,7 @@ import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.group;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.repositary.GroupRepository;
 import com.example.Family_life_backend.request.CreateGroupReq;
 import com.example.Family_life_backend.response.BasicResponse;
@@ -53,6 +54,8 @@ public class groupService {
 	
 	@Autowired
 	private ItemsDao itemsDao;
+	@Autowired
+	private globalVar globalVar;
 
 	@Transactional
 	public BasicResponse create(CreateGroupReq req) {
@@ -114,7 +117,8 @@ public class groupService {
 
 				Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+//				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			}
 
 			groupDao.updateGroup(groupName, avatarUrl, createdBy, groupId);

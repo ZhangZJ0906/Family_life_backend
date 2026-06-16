@@ -17,6 +17,7 @@ import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.entity.PublicInventoryItem;
 import com.example.Family_life_backend.entity.UserInfo;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserAllReq;
@@ -32,6 +33,9 @@ public class UserService {
 
 	@Autowired
 	private groupDao groupDao;
+	
+	@Autowired
+	private globalVar globalVar;
 
 	public BasicRes addInfo(AddInfoReq req) {
 		if (userInfoDao.existsByEmail(req.getEmail())) {
@@ -88,9 +92,12 @@ public class UserService {
 		}
 
 		String avatarUrl = userInfo.getAvatar();
+		System.out.println("avatarUrl = " + avatarUrl);
+
 		if (avatarFile != null && !avatarFile.isEmpty()) {
 			String fileName = System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
 			Path uploadPath = Paths.get("uploads");
+			
 
 			try {
 				if (!Files.exists(uploadPath)) {
@@ -98,7 +105,7 @@ public class UserService {
 				}
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-				avatarUrl = "http://localhost:8080/uploads/" + fileName;
+				avatarUrl = globalVar.getUrl() + fileName;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

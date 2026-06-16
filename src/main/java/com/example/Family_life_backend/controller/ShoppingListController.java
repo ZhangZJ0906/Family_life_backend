@@ -22,7 +22,8 @@ import com.example.Family_life_backend.service.ShoppingListService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RequestMapping("/shopping_lists")
 public class ShoppingListController {
 
