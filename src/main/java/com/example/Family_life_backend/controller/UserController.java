@@ -39,6 +39,7 @@ import jakarta.validation.Valid;
 //		  "https://zipping-cytoplast-laxative.ngrok-free.dev"
 //		})
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/users")
 public class UserController {
 

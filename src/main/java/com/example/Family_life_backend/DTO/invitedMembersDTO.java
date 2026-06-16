@@ -5,4 +5,5 @@ public interface invitedMembersDTO {
 	Long getUser_id();
 	String getName();
 	String getAvatar();
+	String getEmail();
 }
