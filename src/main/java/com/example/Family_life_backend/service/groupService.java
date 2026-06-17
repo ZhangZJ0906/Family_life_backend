@@ -121,7 +121,7 @@ public class groupService {
 				avatarUrl = globalVar.getUrl() + fileName;
 			}
 
-			groupDao.updateGroup(groupName, avatarUrl, createdBy, groupId);
+			groupDao.updateGroup(groupName, avatarUrl, groupId);
 
 			String NewGroupId = groupDao.getSelfGroupNameById(groupId);
 
