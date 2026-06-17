@@ -156,15 +156,36 @@ public class MessageController {
 	@PostMapping("/upload")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("groupId") Long groupId,
 			@RequestParam("senderId") Long senderId) throws Exception {
-		System.out.println("來到療天圖片上傳了");
-//		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
-		String fileName = UUID.randomUUID() + ".jpg";
+		System.out.println("來到聊天圖片上傳了");
+		System.out.println("file = " + file.getOriginalFilename());
+		System.out.println("groupId = " + groupId);
+		System.out.println("senderId = " + senderId);
 
-		Path path = Paths.get("uploads/" + fileName);
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("圖片不可為空");
+		}
 
-		Files.createDirectories(path.getParent());
+		// 取得副檔名
+		String originalName = file.getOriginalFilename();
+		String ext = ".jpg";
 
+		if (originalName != null && originalName.contains(".")) {
+			ext = originalName.substring(originalName.lastIndexOf("."));
+		}
+
+		String fileName = UUID.randomUUID() + ext;
+
+		// Docker container 裡的資料夾
+		Path uploadDir = Paths.get("/app/uploads");
+
+		// 建立資料夾
+		Files.createDirectories(uploadDir);
+
+		// 最終檔案路徑
+		Path path = uploadDir.resolve(fileName);
+
+		// 只 copy 一次
 		Files.copy(file.getInputStream(), path);
 
 		// 1. 存 DB
@@ -172,7 +193,6 @@ public class MessageController {
 		msg.setGroupId(groupId);
 		msg.setSenderId(senderId);
 		msg.setImageUrl("/uploads/" + fileName);
-//		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
 
 		GroupChatMessage saved = repository.save(msg);
 
@@ -183,17 +203,18 @@ public class MessageController {
 		ChatMessageResponse dto = new ChatMessageResponse();
 
 		dto.setId(saved.getId());
-		dto.setGroupId(groupId);
-		dto.setSenderId(senderId);
-		dto.setImageUrl(saved.getImageUrl()); // ⭐重點
-		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
+		dto.setGroupId(saved.getGroupId());
+		dto.setSenderId(saved.getSenderId());
+		dto.setImageUrl(saved.getImageUrl());
+		dto.setCreateTime(saved.getCreateTime());
+		dto.setType("IMAGE");
 
 		if (user != null) {
 			dto.setSenderName(user.getUserName());
 			dto.setSenderAvatar(user.getAvatar());
 		}
 
-		// 4. ⭐ WebSocket 推播（關鍵）
+		// 4. WebSocket 推播
 		messagingTemplate.convertAndSend("/topic/group/" + groupId, dto);
 
 		return ResponseEntity.ok(dto);
