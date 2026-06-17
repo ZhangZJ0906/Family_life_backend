@@ -38,11 +38,40 @@ public class ChatWebSocketController {
 		msg.setGroupId(request.getGroupId());
 		msg.setSenderId(request.getSenderId());
 		msg.setMessage(request.getMessage());
+		// ⭐ 新增：reply
+		msg.setReplyId(request.getReplyId());
 
 		GroupChatMessage saved = repository.save(msg);
 
 		UserInfo user = userRepository.findById(request.getSenderId()).orElse(null);
 
+		// =========================
+		// ⭐ 先處理 reply（放這裡）
+		// =========================
+		ChatMessageResponse replyDto = null;
+
+		if (saved.getReplyId() != null) {
+
+			GroupChatMessage reply = repository.findById(saved.getReplyId()).orElse(null);
+
+			if (reply != null) {
+
+				replyDto = new ChatMessageResponse();
+				replyDto.setId(reply.getId());
+				replyDto.setMessage(reply.getMessage());
+				replyDto.setSenderId(reply.getSenderId());
+
+				UserInfo replyUser = userRepository.findById(reply.getSenderId()).orElse(null);
+
+				if (replyUser != null) {
+					replyDto.setSenderName(replyUser.getUserName());
+				}
+			}
+		}
+
+		// =========================
+		// 再組主 dto
+		// =========================
 		ChatMessageResponse dto = new ChatMessageResponse();
 
 		dto.setId(saved.getId());
@@ -51,6 +80,11 @@ public class ChatWebSocketController {
 		dto.setMessage(saved.getMessage());
 		dto.setImageUrl(msg.getImageUrl());
 		dto.setCreateTime(saved.getCreateTime());
+		dto.setRecalled(msg.getRecalled());
+
+		// ⭐ replyId
+		dto.setReplyId(saved.getReplyId());
+		dto.setReplyMessage(replyDto); // ⭐關鍵
 
 		// ⭐ sender info
 		if (user != null) {
