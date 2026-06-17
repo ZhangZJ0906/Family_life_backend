@@ -2,12 +2,14 @@ package com.example.Family_life_backend.entity;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -20,8 +22,8 @@ public class notify {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name = "send_user_id")
-	private Long sendUserId;
+	@Column(name = "send_id")
+	private Long sendId;
 	
 	@Column(name = "get_user_id")
 	private Long getUserId;
@@ -49,6 +51,13 @@ public class notify {
 	
 	@Transient
 	private String avatar;
+	
+	 @PrePersist
+	    public void prePersist() {
+	        if (this.sendDate == null) {
+	            this.sendDate = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+	        }
+	    }
 
 	public Long getId() {
 		return id;
@@ -58,12 +67,12 @@ public class notify {
 		this.id = id;
 	}
 
-	public Long getSendUserId() {
-		return sendUserId;
+	public Long getSendId() {
+		return sendId;
 	}
 
-	public void setSendUserId(Long sendUserId) {
-		this.sendUserId = sendUserId;
+	public void setSendId(Long sendUserId) {
+		this.sendId = sendUserId;
 	}
 
 	public Long getGetUserId() {
@@ -138,11 +147,11 @@ public class notify {
 		this.avatar = avatar;
 	}
 
-	public notify(Long notifyId, Long sendUserId, Long getUserId, String content, String type, boolean isRead, LocalDateTime sendDate, 
+	public notify(Long notifyId, Long sendId, Long getUserId, String content, String type, boolean isRead, LocalDateTime sendDate, 
 			String status, Long targetGroupId, String name, String avatar) {
 		super();
 		this.id = notifyId;
-		this.sendUserId = sendUserId;
+		this.sendId = sendId;
 		this.getUserId = getUserId;
 		this.content = content;
 		this.type = type;

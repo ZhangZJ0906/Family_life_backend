@@ -1,5 +1,7 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,7 +68,15 @@ public class GroupMemberService {
 		String content = sendName + " 已傳送群組邀請給你";
 		String type = "invite";
 
-		groupMemberDao.sendInviteNotify(req.getSendUserId(), req.getUser_id(), content, type, false, req.getGroup_id());
+		groupMemberDao.sendInviteNotify(
+			    req.getSendUserId(),
+			    req.getUser_id(),
+			    content,
+			    type,
+			    false,
+			    req.getGroup_id(),
+			    LocalDateTime.now(ZoneId.of("Asia/Taipei"))
+			);
 		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
 
 		if (userInfoDao.getEmailNotifyById(req.getUser_id()) == true) {
@@ -87,7 +97,7 @@ public class GroupMemberService {
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != userId) {
-				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId, LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
@@ -132,7 +142,7 @@ public class GroupMemberService {
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != req.getUserId()) {
-				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId);
+				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
