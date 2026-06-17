@@ -86,4 +86,8 @@ public interface groupDao extends JpaRepository<group, Long> {
 	@Query(value = "delete from `groups` where group_id = :groupId", nativeQuery = true)
 	void deleteGroup(@Param("groupId") Long groupId);
 
+	@Modifying
+	@Transactional
+	@Query(value = "delete from `group_chat_message` where group_id = :groupId", nativeQuery = true)
+	void deleteGroupChatRoom(@Param("groupId") Long groupId);
 }

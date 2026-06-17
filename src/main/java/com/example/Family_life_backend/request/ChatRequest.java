@@ -8,6 +8,8 @@ public class ChatRequest {
 
 	private String message;
 
+	private Long replyId;
+
 	public Long getGroupId() {
 		return groupId;
 	}
@@ -30,6 +32,14 @@ public class ChatRequest {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Long getReplyId() {
+		return replyId;
+	}
+
+	public void setReplyId(Long replyId) {
+		this.replyId = replyId;
 	}
 
 }

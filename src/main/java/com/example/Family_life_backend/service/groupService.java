@@ -179,6 +179,7 @@ public class groupService {
 
 		groupMemberDao.deleteByGroupId(group_id);
 		groupDao.deleteGroup(group_id);
+		groupDao.deleteGroupChatRoom(group_id);
 
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}

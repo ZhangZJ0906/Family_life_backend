@@ -24,6 +24,13 @@ public class ChatMessageResponse extends BasicResponse {
 
 	private Long readCount;
 
+	private Boolean recalled;
+
+	private Long replyId;
+
+	// 回覆的訊息
+	private ChatMessageResponse replyMessage;
+
 	public Long getId() {
 		return id;
 	}
@@ -104,6 +111,30 @@ public class ChatMessageResponse extends BasicResponse {
 		this.readCount = readCount;
 	}
 
+	public Boolean getRecalled() {
+		return recalled;
+	}
+
+	public void setRecalled(Boolean recalled) {
+		this.recalled = recalled;
+	}
+
+	public Long getReplyId() {
+		return replyId;
+	}
+
+	public void setReplyId(Long replyId) {
+		this.replyId = replyId;
+	}
+
+	public ChatMessageResponse getReplyMessage() {
+		return replyMessage;
+	}
+
+	public void setReplyMessage(ChatMessageResponse replyMessage) {
+		this.replyMessage = replyMessage;
+	}
+
 	public ChatMessageResponse() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -115,7 +146,8 @@ public class ChatMessageResponse extends BasicResponse {
 	}
 
 	public ChatMessageResponse(Long id, Long groupId, Long senderId, String senderName, String senderAvatar,
-			String message, LocalDateTime createTime, String imageUrl, String type, Long readCount) {
+			String message, LocalDateTime createTime, String imageUrl, String type, Long readCount, Boolean recalled,
+			Long replyId, ChatMessageResponse replyMessage) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -127,6 +159,9 @@ public class ChatMessageResponse extends BasicResponse {
 		this.imageUrl = imageUrl;
 		this.type = type;
 		this.readCount = readCount;
+		this.recalled = recalled;
+		this.replyId = replyId;
+		this.replyMessage = replyMessage;
 	}
 
 }

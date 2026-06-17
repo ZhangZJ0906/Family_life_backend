@@ -32,6 +32,12 @@ public class GroupChatMessage {
 	@Column(name = "createTime")
 	private LocalDateTime createTime = LocalDateTime.now();
 
+	@Column(name = "is_recall")
+	private Boolean recalled = false;
+
+	@Column(name = "reply_id")
+	private Long replyId;
+
 	public Long getId() {
 		return id;
 	}
@@ -80,13 +86,29 @@ public class GroupChatMessage {
 		this.createTime = createTime;
 	}
 
+	public Boolean getRecalled() {
+		return recalled;
+	}
+
+	public void setRecalled(Boolean recalled) {
+		this.recalled = recalled;
+	}
+
+	public Long getReplyId() {
+		return replyId;
+	}
+
+	public void setReplyId(Long replyId) {
+		this.replyId = replyId;
+	}
+
 	public GroupChatMessage() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public GroupChatMessage(Long id, Long groupId, Long senderId, String message, String imageUrl,
-			LocalDateTime createTime) {
+			LocalDateTime createTime, Boolean recalled, Long replyId) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -94,6 +116,8 @@ public class GroupChatMessage {
 		this.message = message;
 		this.imageUrl = imageUrl;
 		this.createTime = createTime;
+		this.recalled = recalled;
+		this.replyId = replyId;
 	}
 
 }
