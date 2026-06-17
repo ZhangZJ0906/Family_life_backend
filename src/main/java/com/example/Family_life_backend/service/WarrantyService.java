@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -96,7 +97,7 @@ public class WarrantyService {
 		if (image != null && !image.isEmpty()) {
 			try {
 				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("uploads");
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -105,7 +106,7 @@ public class WarrantyService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = globalVar.getUrl() + fileName;
+				avatarUrl = "/uploads/"+ fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new WarrantyRes(500, "圖片上傳失敗");
@@ -125,7 +126,7 @@ public class WarrantyService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
-							false);
+							false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
@@ -170,7 +171,7 @@ public class WarrantyService {
 		if (image != null && !image.isEmpty()) {
 			try {
 				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("uploads");
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -179,7 +180,7 @@ public class WarrantyService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = globalVar.getUrl() + fileName;
+				avatarUrl = "/uploads/" + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new WarrantyRes(500, "圖片上傳失敗");
@@ -198,7 +199,7 @@ public class WarrantyService {
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
@@ -238,7 +239,7 @@ public class WarrantyService {
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);

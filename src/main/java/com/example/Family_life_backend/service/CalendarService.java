@@ -161,7 +161,7 @@ public class CalendarService {
 			for (Long assignedUserId : assignedUserIds) {
 
 				// 寫入通知資料表
-				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "calendar", false);
+				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "calendar", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				// 如果該使用者有開 Email 通知，就寄信
 				if (userInfoDao.getEmailNotifyById(assignedUserId) == true) {
@@ -310,7 +310,7 @@ public class CalendarService {
 
 			for (Long assignedUserId : assignedUserIds) {
 
-				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "update", false);
+				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				if (userInfoDao.getEmailNotifyById(assignedUserId) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(assignedUserId), "群組通知", content);
@@ -346,7 +346,7 @@ public class CalendarService {
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (!java.util.Objects.equals(member.getUser_id(), userId)) {
-					calendarDao.insertCalendarEventNotify(groupId, member.getUser_id(), content, "update", false);
+					calendarDao.insertCalendarEventNotify(groupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);

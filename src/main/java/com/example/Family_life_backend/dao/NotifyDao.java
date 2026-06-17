@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -47,11 +48,11 @@ public interface NotifyDao extends JpaRepository<notify, Long>{
 	@Modifying
 	@Transactional
 	@Query(value = """
-		    insert into notify (send_id, get_user_id, content, type, is_read)
-		    values (:sendId, :getUserId, :content, :type, :isRead)
+		    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
+		    values (:sendId, :getUserId, :content, :type, :isRead, :send_date)
 		""", nativeQuery = true)
 	public void sendGroupNameUpdateNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId, @Param("content") String content
-			, @Param("type") String type, @Param("isRead") boolean isRead);
+			, @Param("type") String type, @Param("isRead") boolean isRead, @Param("send_date") LocalDateTime send_date);
 	
 	@Query(value = """
 		    select count(*) from notify where get_user_id = :getUserId

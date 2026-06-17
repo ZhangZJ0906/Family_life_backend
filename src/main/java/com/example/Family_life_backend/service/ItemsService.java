@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,11 +118,10 @@ public class ItemsService {
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 		String avatarUrl = null;
-		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
 			try {
 				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("uploads");
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -130,7 +130,7 @@ public class ItemsService {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = globalVar.getUrl() + fileName;
+				avatarUrl = "/uploads/" + fileName;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new AddItemsInfoRes("圖片上傳失敗", 500);
@@ -150,7 +150,7 @@ public class ItemsService {
 
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false);
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
@@ -189,7 +189,7 @@ public class ItemsService {
 
 				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
 
-				Path uploadPath = Paths.get("uploads");
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -199,7 +199,7 @@ public class ItemsService {
 
 				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				avatarUrl = globalVar.getUrl() + fileName;
+				avatarUrl = "/uploads/" + fileName;
 			}
 
 
@@ -214,7 +214,7 @@ public class ItemsService {
 				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
 
 
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, LocalDateTime.now(), avatarUrl);
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
 
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
@@ -223,7 +223,7 @@ public class ItemsService {
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
@@ -263,7 +263,7 @@ public class ItemsService {
 			if (finalGroupId != 0) {
 				for (groupMembersDTO member : getGroupMembers) {
 					if (member.getUser_id() != userId) {
-						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
+						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
