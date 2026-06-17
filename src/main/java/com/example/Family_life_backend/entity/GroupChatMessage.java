@@ -1,12 +1,14 @@
 package com.example.Family_life_backend.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,13 +32,24 @@ public class GroupChatMessage {
 	private String imageUrl;
 
 	@Column(name = "createTime")
-	private LocalDateTime createTime = LocalDateTime.now();
+	private LocalDateTime createTime;
 
 	@Column(name = "is_recall")
 	private Boolean recalled = false;
 
 	@Column(name = "reply_id")
 	private Long replyId;
+
+	@PrePersist
+	public void prePersist() {
+		if (this.createTime == null) {
+			this.createTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+		}
+
+		if (this.recalled == null) {
+			this.recalled = false;
+		}
+	}
 
 	public Long getId() {
 		return id;
