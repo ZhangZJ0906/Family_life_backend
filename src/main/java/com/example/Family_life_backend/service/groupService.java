@@ -116,9 +116,17 @@ public class groupService {
 			// 只有有新圖片才更新
 			if (avatar != null && !avatar.isEmpty()) {
 
-				String fileName = System.currentTimeMillis() + "_" + avatar.getOriginalFilename();
+				String originalName = avatar.getOriginalFilename();
+				String ext = ".jpg";
 
-				Path uploadPath = Paths.get("uploads");
+				if (originalName != null && originalName.contains(".")) {
+					ext = originalName.substring(originalName.lastIndexOf("."));
+				}
+
+				String fileName = System.currentTimeMillis() + "_" + UUID.randomUUID() + ext;
+
+				// Docker volume 對應的位置
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -128,8 +136,8 @@ public class groupService {
 
 				Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-//				avatarUrl = "http://localhost:8080/uploads/" + fileName;
-				avatarUrl = globalVar.getUrl() + fileName;
+				// DB 只存相對路徑，不要存 localhost
+				avatarUrl = "/uploads/" + fileName;
 			}
 
 			groupDao.updateGroup(groupName, avatarUrl, groupId);
