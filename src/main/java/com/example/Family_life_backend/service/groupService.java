@@ -54,10 +54,7 @@ public class groupService {
 
 	@Autowired
 	private ItemsDao itemsDao;
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/internet
 	@Autowired
 	private globalVar globalVar;
 
