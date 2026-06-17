@@ -71,31 +71,13 @@ public interface NotifyDao extends JpaRepository<notify, Long>{
 	@Modifying
 	@Transactional
 	@Query(value = """
-	    insert into notify (
-	        send_id,
-	        get_user_id,
-	        content,
-	        type,
-	        is_read,
-	        send_date
-	    )
-	    values (
-	        :sendId,
-	        :getUserId,
-	        :content,
-	        :type,
-	        :isRead,
-	        :sendDate
-	    )
-	""", nativeQuery = true)
-	public void sendGroupNameUpdateNotify(
-	    @Param("sendId") Long sendId,
-	    @Param("getUserId") Long getUserId,
-	    @Param("content") String content,
-	    @Param("type") String type,
-	    @Param("isRead") boolean isRead,
-	    @Param("sendDate") LocalDateTime sendDate
-	);
+
+		    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
+		    values (:sendId, :getUserId, :content, :type, :isRead, :send_date)
+		""", nativeQuery = true)
+	public void sendGroupNameUpdateNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId, @Param("content") String content
+			, @Param("type") String type, @Param("isRead") boolean isRead, @Param("send_date") LocalDateTime send_date);
+
 	
 	@Query(value = """
 		    select count(*) from notify where get_user_id = :getUserId

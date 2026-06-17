@@ -152,10 +152,12 @@ public class groupService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					if (!Objects.equals(oldGroupName, NewGroupId)) {
-						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false , LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
+						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 					} else {
 						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼",
-								"update", false , LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+								"update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
 					}
 
 					// 🔥 正確：要重新查 unread count

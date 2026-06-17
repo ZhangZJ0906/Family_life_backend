@@ -1,6 +1,8 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +175,7 @@ public class ShoppingListService {
 		for (groupMembersDTO member : getGroupMembers) {
 			if ((long) userId != member.getUser_id() && groupId != 0) {
 				purchaseItemDao.sendPurchaseReqToAnotherNotify((long) groupId, member.getUser_id(), content, "group",
-						false);
+						false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "邀請通知", content);
@@ -243,7 +245,7 @@ public class ShoppingListService {
 			String content = sendName + "已傳送" + vo.getItem() + "購買請求給你";
 			// 不要傳給自己或私人通知
 			if ((long) createrId != (long) vo.getUserId() && groupID != 0L) {
-				purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), content, "group", false);
+				purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), content, "group", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 				if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
 					emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知", content);
@@ -294,10 +296,10 @@ public class ShoppingListService {
 				if ((long) req.getCreaterId() != (long) vo.getUserId() && groupID != 0L) {
 
 					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group",
-							false);
+							false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), contentToNewGetter,
-							"group", false);
+							"group", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 					if (userInfoDao.getEmailNotifyById(OldGetterId) == true) {
 						emailService.sendMail(userInfoDao.getEmailById(OldGetterId), "群組通知", contentToOldGetter);

@@ -79,11 +79,11 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into notify (send_id, get_user_id, content, type, is_read)
-			    values (:sendId, :getUserId, :content, :type, :isRead)
+			    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
+			    values (:sendId, :getUserId, :content, :type, :isRead, :send_date)
 			""", nativeQuery = true)
 	public void insertCalendarEventNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead);
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead, @Param("send_date") LocalDateTime send_date);
 
 	// 刪除事件
 	@Transactional
