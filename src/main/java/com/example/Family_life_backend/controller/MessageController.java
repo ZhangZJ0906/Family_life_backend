@@ -89,7 +89,12 @@ public class MessageController {
 		Map<Long, Long> readCountMap = messageIds.isEmpty() ? Map.of()
 				: readRepository.countByMessageIds(messageIds).stream().collect(
 						Collectors.toMap(GroupChatReadCountDTO::getMessageId, GroupChatReadCountDTO::getCount));
-
+		// =========================
+		// 3.5 batch 自己已讀的訊息（取代逐筆查詢）
+		// =========================
+		Set<Long> readByMeSet = messageIds.isEmpty() ? Set.of()
+				: readRepository.findByMessageIdInAndUserId(messageIds, currentUserId).stream()
+						.map(GroupChatRead::getMessageId).collect(Collectors.toSet());
 		// =========================
 		// 4. build DTO
 		// =========================
@@ -107,7 +112,7 @@ public class MessageController {
 			dto.setImageUrl(msg.getImageUrl());
 			dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
-			dto.setReadByMe(readRepository.existsByMessageIdAndUserId(msg.getId(), currentUserId));
+			dto.setReadByMe(readByMeSet.contains(msg.getId()));
 
 			dto.setReplyId(msg.getReplyId());
 
