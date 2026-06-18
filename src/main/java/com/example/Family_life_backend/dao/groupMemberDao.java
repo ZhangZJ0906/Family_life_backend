@@ -161,7 +161,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update' , 'itemlist', 'expense')
+			  AND n.type in ('group', 'update' , 'itemlist', 'expense', 'chat')
 			  
 			UNION ALL
 
