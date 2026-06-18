@@ -112,6 +112,16 @@ public class MessageController {
 			dto.setReplyId(msg.getReplyId());
 
 			// =====================
+//			// sender info
+//			// =====================
+			if (user != null) {
+
+				dto.setSenderName(user.getUserName());
+
+				dto.setSenderAvatar(user.getAvatar());
+			}
+
+			// =====================
 			// reply message
 			// =====================
 			if (msg.getReplyId() != null) {
@@ -136,16 +146,6 @@ public class MessageController {
 				}
 			}
 
-//			// =====================
-//			// sender info
-//			// =====================
-//			if (user != null) {
-//
-//				dto.setSenderName(user.getUserName());
-//
-//				dto.setSenderAvatar(user.getAvatar());
-//			}
-//
 //			// =====================
 //			// read count
 //			// =====================
