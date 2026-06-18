@@ -31,6 +31,9 @@ public class ChatMessageResponse extends BasicResponse {
 	// 回覆的訊息
 	private ChatMessageResponse replyMessage;
 
+	// 已讀
+	private Boolean readByMe;
+
 	public Long getId() {
 		return id;
 	}
@@ -145,9 +148,17 @@ public class ChatMessageResponse extends BasicResponse {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Boolean getReadByMe() {
+		return readByMe;
+	}
+
+	public void setReadByMe(Boolean readByMe) {
+		this.readByMe = readByMe;
+	}
+
 	public ChatMessageResponse(Long id, Long groupId, Long senderId, String senderName, String senderAvatar,
 			String message, LocalDateTime createTime, String imageUrl, String type, Long readCount, Boolean recalled,
-			Long replyId, ChatMessageResponse replyMessage) {
+			Long replyId, ChatMessageResponse replyMessage, Boolean readByMe) {
 		super();
 		this.id = id;
 		this.groupId = groupId;
@@ -162,6 +173,7 @@ public class ChatMessageResponse extends BasicResponse {
 		this.recalled = recalled;
 		this.replyId = replyId;
 		this.replyMessage = replyMessage;
+		this.readByMe = readByMe;
 	}
 
 }

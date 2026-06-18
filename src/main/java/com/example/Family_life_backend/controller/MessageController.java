@@ -5,9 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.DTO.GroupChatReadCountDTO;
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.GroupChatRead;
 import com.example.Family_life_backend.entity.UserInfo;
@@ -55,10 +58,11 @@ public class MessageController {
 	}
 
 	@GetMapping("/{groupId}")
-	public ResponseEntity<?> getMessages(@PathVariable("groupId") Long groupId) {
+	public ResponseEntity<?> getMessages(@PathVariable("groupId") Long groupId, @RequestParam("userId") Long userId) {
 
 		List<GroupChatMessage> messages = repository.findByGroupIdOrderByCreateTimeAsc(groupId);
 
+		Long currentUserId = userId;
 		// =========================
 		// 1. batch users
 		// =========================
@@ -68,7 +72,16 @@ public class MessageController {
 				.collect(Collectors.toMap(u -> (long) u.getUserId(), Function.identity()));
 
 		// =========================
-		// 2. batch reply messages (⭐重點)
+		// 2. readByMe batch（🔥重點）
+		// =========================
+		List<Long> messageIds = messages.stream().map(GroupChatMessage::getId).toList();
+
+		List<GroupChatRead> myReads = readRepository.findByMessageIdInAndUserId(messageIds, userId);
+
+		Set<Long> readSet = myReads.stream().map(GroupChatRead::getMessageId).collect(Collectors.toSet());
+
+		// =========================
+		// 2. batch reply messages
 		// =========================
 		List<Long> replyIds = messages.stream().map(GroupChatMessage::getReplyId).filter(Objects::nonNull).distinct()
 				.toList();
@@ -78,7 +91,7 @@ public class MessageController {
 						.collect(Collectors.toMap(GroupChatMessage::getId, Function.identity()));
 
 		// =========================
-		// 3. build DTO
+		// 4. build DTO
 		// =========================
 		List<ChatMessageResponse> result = messages.stream().map(msg -> {
 
@@ -94,10 +107,13 @@ public class MessageController {
 			dto.setImageUrl(msg.getImageUrl());
 			dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
-			// ⭐ replyId
+			dto.setReadByMe(readSet.contains(msg.getId()));
+
 			dto.setReplyId(msg.getReplyId());
 
-			// ⭐ replyMessage（O(1) lookup）
+			// =====================
+			// reply message
+			// =====================
 			if (msg.getReplyId() != null) {
 
 				GroupChatMessage reply = replyMap.get(msg.getReplyId());
@@ -105,6 +121,7 @@ public class MessageController {
 				if (reply != null) {
 
 					ChatMessageResponse replyDto = new ChatMessageResponse();
+
 					replyDto.setId(reply.getId());
 					replyDto.setMessage(reply.getMessage());
 					replyDto.setSenderId(reply.getSenderId());
@@ -119,11 +136,20 @@ public class MessageController {
 				}
 			}
 
-			// ⭐ sender info
-			if (user != null) {
-				dto.setSenderName(user.getUserName());
-				dto.setSenderAvatar(user.getAvatar());
-			}
+//			// =====================
+//			// sender info
+//			// =====================
+//			if (user != null) {
+//
+//				dto.setSenderName(user.getUserName());
+//
+//				dto.setSenderAvatar(user.getAvatar());
+//			}
+//
+//			// =====================
+//			// read count
+//			// =====================
+//			dto.setReadCount(readCountMap.getOrDefault(msg.getId(), 0L));
 
 			return dto;
 
@@ -135,21 +161,63 @@ public class MessageController {
 	@PostMapping("/read/{groupId}")
 	public void markRead(@PathVariable("groupId") Long groupId, @RequestParam("userId") Long userId) {
 
+		// 1️⃣ 撈群組訊息
 		List<GroupChatMessage> messages = repository.findByGroupId(groupId);
+
+		if (messages.isEmpty())
+			return;
+
+		// 2️⃣ 取 messageId list
+		List<Long> messageIds = messages.stream().map(GroupChatMessage::getId).toList();
+
+		// 3️⃣ 一次查已讀
+		List<GroupChatRead> reads = readRepository.findByMessageIdInAndUserId(messageIds, userId);
+
+		Set<Long> readIds = reads.stream().map(GroupChatRead::getMessageId).collect(Collectors.toSet());
+
+		// 4️⃣ 找未讀（排除自己訊息 + 已讀）
+		List<GroupChatRead> newReads = new ArrayList<>();
 
 		for (GroupChatMessage msg : messages) {
 
-			boolean exists = readRepository.existsByMessageIdAndUserId(msg.getId(), userId);
-
-			if (!exists) {
-
-				GroupChatRead read = new GroupChatRead();
-				read.setMessageId(msg.getId());
-				read.setUserId(userId);
-				read.setReadTime(LocalDateTime.now());
-
-				readRepository.save(read);
+			// 自己訊息不算已讀
+			if (msg.getSenderId().equals(userId)) {
+				continue;
 			}
+
+			// 已讀 skip
+			if (readIds.contains(msg.getId())) {
+				continue;
+			}
+
+			GroupChatRead read = new GroupChatRead();
+			read.setMessageId(msg.getId());
+			read.setUserId(userId);
+			read.setReadTime(LocalDateTime.now());
+
+			newReads.add(read);
+		}
+
+		// 5️⃣ 批次寫入
+		if (!newReads.isEmpty()) {
+			readRepository.saveAll(newReads);
+		}
+
+		// 6️⃣ 一次查 count（避免 N 次 SQL）
+		Map<Long, Long> countMap = readRepository.countByMessageIds(messageIds).stream()
+				.collect(Collectors.toMap(GroupChatReadCountDTO::getMessageId, GroupChatReadCountDTO::getCount));
+
+		// 7️⃣ 推 WS（只推必要資料）
+		for (GroupChatMessage msg : messages) {
+
+			if (msg.getSenderId().equals(userId)) {
+				continue;
+			}
+
+			Long count = countMap.getOrDefault(msg.getId(), 0L);
+
+			messagingTemplate.convertAndSend("/topic/group/" + groupId,
+					Map.of("type", "READ", "messageId", msg.getId(), "readCount", count));
 		}
 	}
 
