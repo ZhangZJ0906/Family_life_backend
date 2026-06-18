@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class UserService {
 
 	@Autowired
 	private groupDao groupDao;
-	
+
 	@Autowired
 	private globalVar globalVar;
 
@@ -85,6 +87,7 @@ public class UserService {
 	public BasicRes updateInfo(UpdateUserAllReq req, MultipartFile avatarFile) {
 		UpdateUserInfoReq user = req.getUserInfo();
 		List<PublicInventoryItem> list = req.getPublicInventoryList();
+
 		UserInfo userInfo = userInfoDao.findById(user.getUserId()).orElse(null);
 
 		if (userInfo == null) {
@@ -92,35 +95,55 @@ public class UserService {
 		}
 
 		String avatarUrl = userInfo.getAvatar();
-		System.out.println("avatarUrl = " + avatarUrl);
 
+		// 只有有新圖片才更新
 		if (avatarFile != null && !avatarFile.isEmpty()) {
-			String fileName = System.currentTimeMillis() + "_" + avatarFile.getOriginalFilename();
-			Path uploadPath = Paths.get("uploads");
-			
-
 			try {
+				String originalName = avatarFile.getOriginalFilename();
+				String ext = ".jpg";
+
+				if (originalName != null && originalName.contains(".")) {
+					ext = originalName.substring(originalName.lastIndexOf("."));
+				}
+
+				String fileName = System.currentTimeMillis() + "_" + UUID.randomUUID() + ext;
+
+				// Docker volume 對應位置：
+				// Windows ./uploads <-> Docker /app/uploads
+				Path uploadPath = Paths.get("/app/uploads");
+
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
 				}
+
 				Path filePath = uploadPath.resolve(fileName);
+
 				Files.copy(avatarFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-				avatarUrl = globalVar.getUrl() + fileName;
-			} catch (IOException e) {
+
+				// DB 只存相對路徑，不要存 localhost
+				avatarUrl = "/uploads/" + fileName;
+
+			} catch (Exception e) {
 				e.printStackTrace();
+
+				return new BasicRes("頭像上傳失敗：" + e.getMessage(), 500);
 			}
 		}
 
 		String userName = user.getUserName() == null ? userInfo.getUserName() : user.getUserName();
+
 		String email = user.getEmail() == null ? userInfo.getEmail() : user.getEmail();
-		String now = LocalDateTime.now().toString();
+
+		String now = LocalDateTime.now(ZoneId.of("Asia/Taipei")).toString();
 
 		userInfoDao.updateInfo(user.getUserId(), userName, email, avatarUrl, user.isNotifyByEndDate(),
 				user.isNotifyByEmail(), now);
 
-		for (PublicInventoryItem item : list) {
-			groupDao.updatePublicInventoryToThisGroup(item.getPublicInventory(), item.getGroupId(),
-					(long) user.getUserId());
+		if (list != null) {
+			for (PublicInventoryItem item : list) {
+				groupDao.updatePublicInventoryToThisGroup(item.getPublicInventory(), item.getGroupId(),
+						(long) user.getUserId());
+			}
 		}
 
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());

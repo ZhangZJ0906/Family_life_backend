@@ -80,12 +80,12 @@ public class CalendarNotifySchedulerService {
 		if (event.getGroupId() == 0) {
 
 			calendarDao.insertCalendarEventNotify(event.getAssignedUserId(), event.getAssignedUserId(), content,
-					"calendar_self", false);
+					"calendar_self", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
 		} else {
 
 			calendarDao.insertCalendarEventNotify(event.getGroupId(), event.getAssignedUserId(), content, "calendar",
-					false);
+					false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 		}
 	}
 

@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -116,9 +117,17 @@ public class groupService {
 			// 只有有新圖片才更新
 			if (avatar != null && !avatar.isEmpty()) {
 
-				String fileName = System.currentTimeMillis() + "_" + avatar.getOriginalFilename();
+				String originalName = avatar.getOriginalFilename();
+				String ext = ".jpg";
 
-				Path uploadPath = Paths.get("uploads");
+				if (originalName != null && originalName.contains(".")) {
+					ext = originalName.substring(originalName.lastIndexOf("."));
+				}
+
+				String fileName = System.currentTimeMillis() + "_" + UUID.randomUUID() + ext;
+
+				// Docker volume 對應的位置
+				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
 					Files.createDirectories(uploadPath);
@@ -128,8 +137,8 @@ public class groupService {
 
 				Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-//				avatarUrl = "http://localhost:8080/uploads/" + fileName;
-				avatarUrl = globalVar.getUrl() + fileName;
+				// DB 只存相對路徑，不要存 localhost
+				avatarUrl = "/uploads/" + fileName;
 			}
 
 			groupDao.updateGroup(groupName, avatarUrl, groupId);
@@ -143,10 +152,12 @@ public class groupService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != createdBy) {
 					if (!Objects.equals(oldGroupName, NewGroupId)) {
-						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false);
+
+						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 					} else {
 						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼",
-								"update", false);
+								"update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
 					}
 
 					// 🔥 正確：要重新查 unread count

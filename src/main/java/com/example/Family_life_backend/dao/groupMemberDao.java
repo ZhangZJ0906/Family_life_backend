@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.dao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,13 +33,36 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into notify (send_id, get_user_id, content, type, is_read, target_group_id)
-			    values (:sendUserId, :getUserId, :content, :type, :isRead, :targetGroupId)
-			""", nativeQuery = true)
-	public void sendInviteNotify(@Param("sendUserId") Long sendUserId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
-			@Param("targetGroupId") Long targretGroupId);
-
+	    insert into notify (
+	        send_id,
+	        get_user_id,
+	        content,
+	        type,
+	        is_read,
+	        target_group_id,
+	        send_date
+	    )
+	    values (
+	        :sendUserId,
+	        :getUserId,
+	        :content,
+	        :type,
+	        :isRead,
+	        :targetGroupId,
+	        :sendDate
+	    )
+	""", nativeQuery = true)
+	public void sendInviteNotify(
+	    @Param("sendUserId") Long sendUserId,
+	    @Param("getUserId") Long getUserId,
+	    @Param("content") String content,
+	    @Param("type") String type,
+	    @Param("isRead") boolean isRead,
+	    @Param("targetGroupId") Long targetGroupId,
+	    @Param("sendDate") LocalDateTime sendDate
+	);
+	
+	
 	@Modifying
 	@Transactional
 	@Query(value = """
@@ -137,7 +161,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			JOIN `groups` g
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
-			  AND n.type in ('group', 'update' , 'itemlist', 'expense')
+			  AND n.type in ('group', 'update' , 'itemlist', 'expense', 'chat')
 			  
 			UNION ALL
 

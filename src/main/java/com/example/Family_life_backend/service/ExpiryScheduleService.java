@@ -1,6 +1,8 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +94,7 @@ public class ExpiryScheduleService {
 		// 私人項目
 		if (groupId == 0L) {
 
-			itemsDao.addGroupItemNotify(userId, userId, remindMessage, "warring_self", false);
+			itemsDao.addGroupItemNotify(userId, userId, remindMessage, "warring_self", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 			
 			if (userInfoDao.getEmailNotifyById(userId) == true) {
 				emailService.sendMail(userInfoDao.getEmailById(userId), "到期通知", remindMessage);
@@ -106,7 +108,7 @@ public class ExpiryScheduleService {
 
 		for (groupMembersDTO member : members) {
 
-			itemsDao.addGroupItemNotify(groupId, member.getUser_id(), remindMessage, "warring", false);
+			itemsDao.addGroupItemNotify(groupId, member.getUser_id(), remindMessage, "warring", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 			
 			if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
 				emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "到期通知", remindMessage);
