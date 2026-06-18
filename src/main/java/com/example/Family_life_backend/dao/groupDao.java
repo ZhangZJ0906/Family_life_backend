@@ -71,9 +71,10 @@ public interface groupDao extends JpaRepository<group, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar, created_by = :createdBy where group_id = :groupId", nativeQuery = true)
+	@Query(value = "update `groups` set group_name = :groupName, avatar = :Avatar  where group_id = :groupId", nativeQuery = true)
+
 	void updateGroup(@Param("groupName") String groupName, @Param("Avatar") String Avatar,
-			@Param("createdBy") Long createdBy, @Param("groupId") Long groupId);
+			@Param("groupId") Long groupId);
 
 	@Modifying
 	@Transactional
@@ -86,4 +87,8 @@ public interface groupDao extends JpaRepository<group, Long> {
 	@Query(value = "delete from `groups` where group_id = :groupId", nativeQuery = true)
 	void deleteGroup(@Param("groupId") Long groupId);
 
+	@Modifying
+	@Transactional
+	@Query(value = "delete from `group_chat_message` where group_id = :groupId", nativeQuery = true)
+	void deleteGroupChatRoom(@Param("groupId") Long groupId);
 }

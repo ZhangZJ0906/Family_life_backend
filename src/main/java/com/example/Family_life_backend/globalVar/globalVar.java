@@ -6,11 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class globalVar {
 //	String Url = "https://labels-biz-sheep-concerning.trycloudflare.com/uploads/";
-	@Value("${app.upload-url}")
 	String Url;
 
 	public String getUrl() {
-		return "http://localhost:8080/uploads/";
+		return "http://localhost:8081/uploads/";
 	}
 
 	public void setUrl(String url) {

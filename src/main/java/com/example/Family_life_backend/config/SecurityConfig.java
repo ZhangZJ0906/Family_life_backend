@@ -29,9 +29,11 @@ public class SecurityConfig {
 
 //		config.setAllowedOriginPatterns(List.of("http://localhost", "http://localhost:4200", "http://127.0.0.1:4200",
 //				"https://*.trycloudflare.com", "https://*.ngrok-free.app", "https://*.ngrok-free.dev"));
-		config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://127.0.0.1:4200",
-				"https://*.ngrok-free.app", "https://*.ngrok-free.dev", "http://localhost:8080",
-				"https://*.trycloudflare.com"));
+//		config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://127.0.0.1:4200",
+//				"https://*.ngrok-free.app", "https://*.ngrok-free.dev", "http://localhost:8080",
+//				"https://*.trycloudflare.com"));
+		config.setAllowedOriginPatterns(List.of("http://localhost", "http://localhost:4200", "http://127.0.0.1:4200",
+				"https://*.trycloudflare.com", "https://*.ngrok-free.app", "https://*.ngrok-free.dev"));
 
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

@@ -3,9 +3,11 @@ package com.example.Family_life_backend.controller;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.GroupChatRead;
@@ -58,16 +59,33 @@ public class MessageController {
 
 		List<GroupChatMessage> messages = repository.findByGroupIdOrderByCreateTimeAsc(groupId);
 
-		// ✅ 一次撈出所有相關 user
+		// =========================
+		// 1. batch users
+		// =========================
 		List<Long> senderIds = messages.stream().map(GroupChatMessage::getSenderId).distinct().toList();
 
 		Map<Long, UserInfo> userMap = userRepository.findAllById(senderIds).stream()
 				.collect(Collectors.toMap(u -> (long) u.getUserId(), Function.identity()));
 
+		// =========================
+		// 2. batch reply messages (⭐重點)
+		// =========================
+		List<Long> replyIds = messages.stream().map(GroupChatMessage::getReplyId).filter(Objects::nonNull).distinct()
+				.toList();
+
+		Map<Long, GroupChatMessage> replyMap = replyIds.isEmpty() ? Map.of()
+				: repository.findAllById(replyIds).stream()
+						.collect(Collectors.toMap(GroupChatMessage::getId, Function.identity()));
+
+		// =========================
+		// 3. build DTO
+		// =========================
 		List<ChatMessageResponse> result = messages.stream().map(msg -> {
-			UserInfo user = userMap.get(msg.getSenderId()); // ✅ 從 Map 取，不打 DB
+
+			UserInfo user = userMap.get(msg.getSenderId());
 
 			ChatMessageResponse dto = new ChatMessageResponse();
+
 			dto.setId(msg.getId());
 			dto.setGroupId(msg.getGroupId());
 			dto.setSenderId(msg.getSenderId());
@@ -76,11 +94,39 @@ public class MessageController {
 			dto.setImageUrl(msg.getImageUrl());
 			dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
+			// ⭐ replyId
+			dto.setReplyId(msg.getReplyId());
+
+			// ⭐ replyMessage（O(1) lookup）
+			if (msg.getReplyId() != null) {
+
+				GroupChatMessage reply = replyMap.get(msg.getReplyId());
+
+				if (reply != null) {
+
+					ChatMessageResponse replyDto = new ChatMessageResponse();
+					replyDto.setId(reply.getId());
+					replyDto.setMessage(reply.getMessage());
+					replyDto.setSenderId(reply.getSenderId());
+
+					UserInfo replyUser = userMap.get(reply.getSenderId());
+
+					if (replyUser != null) {
+						replyDto.setSenderName(replyUser.getUserName());
+					}
+
+					dto.setReplyMessage(replyDto);
+				}
+			}
+
+			// ⭐ sender info
 			if (user != null) {
 				dto.setSenderName(user.getUserName());
 				dto.setSenderAvatar(user.getAvatar());
 			}
+
 			return dto;
+
 		}).toList();
 
 		return ResponseEntity.ok(Map.of("messages", result));
@@ -110,8 +156,8 @@ public class MessageController {
 	@PostMapping("/upload")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("groupId") Long groupId,
 			@RequestParam("senderId") Long senderId) throws Exception {
-
-		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+		System.out.println("來到療天圖片上傳了");
+//		String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
 
 		String fileName = UUID.randomUUID() + ".jpg";
 
@@ -125,7 +171,8 @@ public class MessageController {
 		GroupChatMessage msg = new GroupChatMessage();
 		msg.setGroupId(groupId);
 		msg.setSenderId(senderId);
-		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
+		msg.setImageUrl("/uploads/" + fileName);
+//		msg.setImageUrl(baseUrl + "/uploads/" + fileName);
 
 		GroupChatMessage saved = repository.save(msg);
 
@@ -150,6 +197,31 @@ public class MessageController {
 		messagingTemplate.convertAndSend("/topic/group/" + groupId, dto);
 
 		return ResponseEntity.ok(dto);
+	}
+
+	// 收回訊息
+	@PostMapping("/message/{id}/recall")
+	public ResponseEntity<?> recallMessage(@PathVariable(value = "id") Long id) {
+
+		System.out.println("===== recall start =====");
+		System.out.println("messageId = " + id);
+
+		GroupChatMessage msg = repository.findById(id).orElseThrow();
+
+		long seconds = Duration.between(msg.getCreateTime(), LocalDateTime.now()).getSeconds();
+
+		if (seconds > 120) {
+			return ResponseEntity.badRequest().body("訊息超過2分鐘無法收回");
+		}
+
+		msg.setRecalled(true);
+
+		repository.save(msg);
+
+		messagingTemplate.convertAndSend("/topic/group/" + msg.getGroupId(),
+				Map.of("type", "RECALL", "messageId", msg.getId()));
+
+		return ResponseEntity.ok().build();
 	}
 
 }
