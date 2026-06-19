@@ -12,6 +12,7 @@ import com.example.Family_life_backend.service.CategoiesServices;
 @RestController
 @RequestMapping(value = "/categories")
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "*")
 public class CategoiesController {
 	
 	@Autowired

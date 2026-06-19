@@ -1,33 +1,44 @@
 package com.example.Family_life_backend.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-/**
- * Spring Security 設定
- * 如果專案有使用 Security，一定要開啟 cors()
- */
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            // 開啟 CORS，讓 CorsConfig 生效
-            .cors(cors -> {})
+		http.csrf(csrf -> csrf.disable()).cors(cors -> {
+		}).authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 
-            // 先關閉 CSRF，避免前端 POST 被擋
-            .csrf(csrf -> csrf.disable())
+		return http.build();
+	}
 
-            // 目前開發階段先允許所有 API
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/users/login", "/users/register").permitAll()
-                .anyRequest().permitAll()
-            );
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
 
-        return http.build();
-    }
+		CorsConfiguration config = new CorsConfiguration();
+
+		config.setAllowedOriginPatterns(List.of("http://localhost", "http://localhost:4200", "http://127.0.0.1:4200",
+				"https://*.trycloudflare.com", "https://*.ngrok-free.app", "https://*.ngrok-free.dev"));
+
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		config.setAllowedHeaders(List.of("*"));
+
+		config.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+
+		return source;
+	}
 }

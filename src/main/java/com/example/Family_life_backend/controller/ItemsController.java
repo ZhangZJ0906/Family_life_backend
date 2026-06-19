@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.request.ItemAddInfoReq;
 import com.example.Family_life_backend.request.ItemUpdateReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
 import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
@@ -23,35 +28,53 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(value = "/item")
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "*")
 public class ItemsController {
-	
+
 	@Autowired
 	private ItemsService itemsService;
 
-	@GetMapping("/getItems")
-	public GetItemsRes getItems(
-	        @RequestParam("userId") Integer userId,
-	        @RequestParam(value = "groupId", required = false) Integer groupId) {
+	@Autowired
+	private ItemsDao itemDao;
 
-	    System.out.println("UID:" + userId);
-	    System.out.println("GID:" + groupId);
-
-	    return itemsService.getItems(groupId, userId);
+	@GetMapping("/getLoginItemPageTime")
+	public LocalDateTime getLoginItemPageTime(@RequestParam("userId") Integer userId) {
+		return itemDao.getLoginItemPageTime((long) userId);
 	}
-	@PostMapping("/add")
-	public AddItemsInfoRes addItem(@Valid @RequestBody ItemAddInfoReq req) {
 
-		return itemsService.saveItem(req);
+	@GetMapping("/getItems")
+	public GetItemsRes getItems(@RequestParam("userId") Integer userId,
+			@RequestParam(value = "groupId", required = false) Integer groupId) {
+
+		System.out.println("UID:" + userId);
+		System.out.println("GID:" + groupId);
+		itemDao.recordLoginItemPageTime((long) userId, LocalDateTime.now());
+
+		return itemsService.getItems(groupId, userId);
+	}
+
+	@PostMapping("/add")
+	public AddItemsInfoRes addItem(@Valid @RequestPart("req") ItemAddInfoReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
+
+		return itemsService.saveItem(req, image);
 	}
 
 	@PostMapping("/update")
-	public BasicRes updateItem(@Valid @RequestBody ItemUpdateReq req) {
+	public BasicRes updateItem(@Valid @RequestPart("req") ItemUpdateReq req,
+			@RequestPart(value = "avatar", required = false) MultipartFile image) {
 
-		return itemsService.updateItem(req);
+		return itemsService.updateItem(req, image);
+	}
+
+	@PostMapping("/updateNotify")
+	public BasicRes updateNotify(@RequestBody UpdateNotifyReq req) {
+		return itemsService.updateNotify(req);
 	}
 
 	@PostMapping("/delete")
-	public BasicRes deleteItem(@RequestBody List<Integer> id, @RequestParam(value = "userId", required = false) Long userId) {
+	public BasicRes deleteItem(@RequestBody List<Integer> id,
+			@RequestParam(value = "userId", required = false) Long userId) {
 
 		return itemsService.deleteItem(id, userId);
 	}

@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "*")
 @RequestMapping("/shopping_lists")
 public class ShoppingListController {
 
@@ -35,8 +37,8 @@ public class ShoppingListController {
 
 	// Frontend shopping-list page uses this endpoint to render "my lists".
 	@GetMapping
-	public List<ShoppingList> getLists(@RequestParam("createrId") int createrId) {
-		return shoppingListService.getLists(createrId);
+	public List<ShoppingList> getLists(@RequestParam("userId") int userId) {
+	    return shoppingListService.getLists(userId);
 	}
 
 	@PostMapping("/delete")
@@ -59,20 +61,26 @@ public class ShoppingListController {
 		return shoppingListService.addItems(req);
 	}
 
+	@PostMapping("/items/update")
+	public BasicRes updateItem(@Valid @RequestBody AddPurchaseItemReq req) {
+		return shoppingListService.updateItem(req);
+	}
+
 	@PostMapping("/items/delete")
-	public BasicRes deleteItem(
-			@RequestParam("listId") int listId,
-			@RequestParam("itemId") int itemId) {
-		return shoppingListService.deleteItem(listId, itemId);
+	public BasicRes deleteItem(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId, 
+			@RequestParam("userId") int userId, @RequestParam("groupId") int groupId) {
+		return shoppingListService.deleteItem(listId, itemId, userId, groupId);
 	}
 
 	@PostMapping("/items/check")
-	public BasicRes updateCheck(
-			@RequestParam("listId") int listId,
-			@RequestParam("itemId") int itemId,
-			@RequestParam("check") boolean check,
-			@RequestParam("checkMan") int checkMan) {
+	public BasicRes updateCheck(@RequestParam("listId") int listId, @RequestParam("itemId") int itemId,
+			@RequestParam("check") boolean check, @RequestParam("checkMan") int checkMan) {
 		return shoppingListService.updateCheck(listId, itemId, check, checkMan);
+	}
+	
+	@GetMapping("/items/batch")
+	public Map<Integer, List<PurchaseItem>> getItemsBatch(@RequestParam("listIds") List<Integer> listIds) {
+	    return shoppingListService.getItemsByListIds(listIds);
 	}
 
 }

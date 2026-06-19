@@ -1,5 +1,6 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,12 @@ import com.example.Family_life_backend.response.GetExpenseInfoRes;
 @Service
 public class ExpenseService {
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	@Autowired
 	private ExpenseDao expenseDao;
 	@Autowired
 	private groupMemberDao groupMemberDao;
@@ -39,42 +46,47 @@ public class ExpenseService {
 	private UserInfoDao userDao;
 
 //沒有group 用自己去查
-	public GetExpenseInfoRes getExpenseInfo(Long groupId, Long userId) {
+	public GetExpenseInfoRes getExpenseInfo(Long userId) {
 		if (userId == null || userId <= 0) {
 			return new GetExpenseInfoRes("userId 錯誤", 400);
 		}
+		List<Expense> result = expenseDao.findPersonalExpenses(userId);
+		if (result == null) {
+			return new GetExpenseInfoRes("查詢錯誤", 400);
+		}
+		return new GetExpenseInfoRes("成功", 200, result);
+		// 下面為原來可以查群組跟私人 code 上面現在改為只撈登入USER 的全部記帳詳情
 // 查私人
-		if (groupId == 0L /* 0L 為強制轉形成 Long */) {
-			List<Expense> result = expenseDao.findPersonalExpenses(userId);
-			return buildRes(result, null);
-		}
-
-		int isMember = groupMemberDao.checkUserIdExistInGroup(groupId, userId);
-		if (isMember <= 0) {
-			return new GetExpenseInfoRes("你不是該群組成員", 400);
-		}
-// 查群組 
-		List<Expense> result = expenseDao.findExpenses(groupId, null);
-		if (result == null || result.isEmpty()) {
-			return buildRes(result, null);// 等於群組 媒人消費
-		}
-
-		List<Long> userIds = result.stream().map(Expense::getUserId).filter(Objects::nonNull) // 💡 修正原本寫錯的 filter 變數
-				.distinct().collect(Collectors.toList());
-
-		Map<Long, UserInfo> userMap = null;
-		if (!userIds.isEmpty()) {
-			List<UserInfo> userList = userDao.getSelfInfoByIds(userIds);
-
-			userMap = userList.stream().collect(Collectors.toMap(//
-					user -> Long.valueOf(user.getUserId()), //
-					user -> {
-						user.setPwd(null); // 💡 直接把密碼欄位清空
-						return user;
-					}, (existing, replacement) -> existing));
-		}
-
-		return buildRes(result, userMap);
+//		if (groupId == 0L /* 0L 為強制轉形成 Long */) {
+//			List<Expense> result = expenseDao.findPersonalExpenses(userId);
+//			return buildRes(result, null);
+//		}
+//		int isMember = groupMemberDao.checkUserIdExistInGroup(groupId, userId);
+//		if (isMember <= 0) {
+//			return new GetExpenseInfoRes("你不是該群組成員", 400);
+//		}
+//// 查群組 
+//		List<Expense> result = expenseDao.findExpenses(groupId, null);
+//		if (result == null || result.isEmpty()) {
+//			return buildRes(result, null);// 等於群組 媒人消費
+//		}
+//
+//		List<Long> userIds = result.stream().map(Expense::getUserId).filter(Objects::nonNull) // 💡 修正原本寫錯的 filter 變數
+//				.distinct().collect(Collectors.toList());
+//
+//		Map<Long, UserInfo> userMap = null;
+//		if (!userIds.isEmpty()) {
+//			List<UserInfo> userList = userDao.getSelfInfoByIds(userIds);
+//
+//			userMap = userList.stream().collect(Collectors.toMap(//
+//					user -> Long.valueOf(user.getUserId()), //
+//					user -> {
+//						user.setPwd(null); // 💡 直接把密碼欄位清空
+//						return user;
+//					}, (existing, replacement) -> existing));
+//		}
+//
+//		return buildRes(result, userMap);
 	}
 
 	private GetExpenseInfoRes buildRes(List<Expense> result, Map<Long, UserInfo> userMap) {
@@ -98,39 +110,58 @@ public class ExpenseService {
 
 	public BasicRes addExpenseInfo(AddExpensesInfoReq req) {
 		expenseDao.insertExpense(req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
-				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
-		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
+				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote(),
+				LocalDateTime.now());
+//		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "新增");
+//
+//		if (userInfoDao.getEmailNotifyById(req.getUserId()) == true) {
+//			emailService.sendMail(userInfoDao.getEmailById(req.getUserId()), "群組通知", "新增");
+//		}
 		return new BasicRes("成功", 200);
 	}
 
 	public BasicRes updateExpenseInfo(UpdateExpensesInfoReq req) {
 
 		expenseDao.updateExpense(req.getId(), req.getGroupId(), req.getUserId(), req.getPrice(), req.getCategoryId(), //
-				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote());
-		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "更新");
+				req.getRelatedItemId(), req.getRelatedItemName(), req.getExpenseDate(), req.getNote(),
+				LocalDateTime.now());
+//		sendNotifyForGroupMember(req.getGroupId(), req.getOperationUser(), "更新");
 		return new BasicRes("成功", 200);
 	}
 
 	public BasicRes deleteExpenseInfo(DeleteExpensesReq req) {
 
 		expenseDao.deleteExpense(req.getId());
-		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "刪除");
+//		sendNotifyForGroupMember(req.getGroupId(), req.getUserId(), "刪除");
 		return new BasicRes("成功", 200);
 	}
 
 	// 通知 2026-05-27 by ZJ
 	private void sendNotifyForGroupMember(Long groupId, Long userId, String type) {
 
-		// ✅ 先擋 null，再比較數值
 		if (groupId == null || groupId == 0L) {
 			return; // 私人消費，不發通知，直接結束
 		}
 
 		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
 		String content = groupDao.getSelfName(userId) + type + "了一筆消費";
+		System.out.println(groupDao.getSelfName(userId));
 		for (groupMembersDTO member : members) {
 			if (!member.getUser_id().equals(userId)) {
-				expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+				if (type == "刪除") {
+					expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "update", false);
+
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+				} else {
+					expenseDao.insertExpensesEventNotify(groupId, member.getUser_id(), content, "expense", false);
+
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+				}
+
 			}
 		}
 	}

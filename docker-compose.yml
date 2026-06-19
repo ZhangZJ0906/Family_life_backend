@@ -1,0 +1,18 @@
+services:
+  backend-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "18081:8081"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: always
+    environment:
+      - SERVER_PORT=8081
+    networks:
+      - family_net
+
+networks:
+  family_net:
+    name: family_shared_network

@@ -1,6 +1,7 @@
 package com.example.Family_life_backend.vo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class SubscriptionVo {
 
@@ -19,38 +20,37 @@ public class SubscriptionVo {
     private Boolean notify;
     private String note;
 
-    public SubscriptionVo(
-            Integer id,
-            Integer groupId,
-            Integer userId,
-            String name,
-            Integer price,
-            String billingCycle,
-            LocalDate purchaseDate,
-            LocalDate trialEndDate,
-            LocalDate nextBillingDate,
-            String status,
-            String remindMessage,
-            Boolean notify,
-            String note) {
+	private LocalDateTime createdAt;
 
-        this.id = id;
-        this.groupId = groupId;
-        this.userId = userId;
-        this.name = name;
-        this.price = price;
-        this.billingCycle = billingCycle;
-        this.purchaseDate = purchaseDate;
-        this.trialEndDate = trialEndDate;
-        this.nextBillingDate = nextBillingDate;
-        this.status = status;
-        this.remindMessage = remindMessage;
-        this.notify = notify;
-        this.note = note;
-        
-    }
+	private String avatar;
 
-    public Integer getId() {
+
+
+
+	public SubscriptionVo(Integer id, Integer groupId, Integer userId, String name, Integer price, String billingCycle,
+			LocalDate purchaseDate, LocalDate trialEndDate, LocalDate nextBillingDate, String status,
+			String remindMessage, Boolean notify, String note, String avatar, LocalDateTime createdAt) {
+		super();
+		this.id = id;
+		this.groupId = groupId;
+		this.userId = userId;
+		this.name = name;
+		this.price = price;
+		this.billingCycle = billingCycle;
+		this.purchaseDate = purchaseDate;
+		this.trialEndDate = trialEndDate;
+		this.nextBillingDate = nextBillingDate;
+		this.status = status;
+		this.remindMessage = remindMessage;
+		this.notify = notify;
+		this.note = note;
+		this.avatar = avatar;
+		this.createdAt = createdAt;
+	}
+
+	
+
+	public Integer getId() {
         return id;
     }
 
@@ -101,4 +101,22 @@ public class SubscriptionVo {
     public String getNote() {
         return note;
     }
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+    
+    
 }

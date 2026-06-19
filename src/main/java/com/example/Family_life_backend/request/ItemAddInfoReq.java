@@ -53,6 +53,10 @@ public class ItemAddInfoReq {
 
 	private String note;
 
+
+
+
+
 	public int getUserId() {
 		return userId;
 	}
@@ -171,8 +175,8 @@ public class ItemAddInfoReq {
 	}
 
 	public ItemAddInfoReq(int userId, Integer groupId, Integer categoryId, String name, Integer quantity, String unit,
-			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate, Boolean notify,
-			String note, Integer safeQuantity) {
+			Long locationId, Integer price, int unitPrice, LocalDate purchaseDate, LocalDate expireDate,
+			Integer safeQuantity, Boolean notify, String note) {
 		super();
 		this.userId = userId;
 		this.groupId = groupId;
@@ -185,9 +189,10 @@ public class ItemAddInfoReq {
 		this.unitPrice = unitPrice;
 		this.purchaseDate = purchaseDate;
 		this.expireDate = expireDate;
+		this.safeQuantity = safeQuantity;
 		this.notify = notify;
 		this.note = note;
-		this.safeQuantity = safeQuantity;
+
 	}
 
 }

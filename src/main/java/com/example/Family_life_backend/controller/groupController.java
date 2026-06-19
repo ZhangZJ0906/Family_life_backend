@@ -22,31 +22,35 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/family_life")
+//@CrossOrigin(origins = "http://localhost:8080")
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "https://authentic-michel-drink-temple.trycloudflare.com")
+
 public class groupController {
-	
+
 	@Autowired
 	private groupService groupService;
-	
+
 	@PostMapping("/create")
 	public BasicResponse create(@Valid @RequestBody CreateGroupReq req) {
 		return groupService.create(req);
 	}
-	
+
 	@GetMapping("get_group_list")
 	public GetGroupRes getGroup(@RequestParam("user_id") Long user_id) {
 		return groupService.getList(user_id);
 	}
-		
+
 	@PostMapping("update_group")
-	public BasicResponse updateGroup(@RequestParam("groupId") Long groupId, @RequestParam("groupName") String groupName, @RequestPart(value = "avatar", required = false) MultipartFile avatar
-			, @RequestParam("createdBy") Long createdBy) {
-	    return groupService.updateGroup(groupId, groupName, avatar, createdBy);
+	public BasicResponse updateGroup(@RequestParam("groupId") Long groupId, @RequestParam("groupName") String groupName,
+			@RequestPart(value = "avatar", required = false) MultipartFile avatar,
+			@RequestParam("createdBy") Long createdBy) {
+		return groupService.updateGroup(groupId, groupName, avatar, createdBy);
 	}
-	
+
 	@DeleteMapping("delete_group/{group_id}")
 	public BasicResponse deleteGroup(@PathVariable("group_id") Long group_id) {
-	    return groupService.deleteGroup(group_id);
+		return groupService.deleteGroup(group_id);
 	}
-	
+
 }

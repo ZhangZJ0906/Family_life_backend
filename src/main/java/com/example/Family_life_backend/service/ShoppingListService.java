@@ -1,18 +1,28 @@
 package com.example.Family_life_backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constants.ReplyMessage;
+import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.PurchaseItemDao;
 import com.example.Family_life_backend.dao.ShoppingListDao;
 import com.example.Family_life_backend.dao.UserInfoDao;
+import com.example.Family_life_backend.dao.groupDao;
+import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.PurchaseItem;
 import com.example.Family_life_backend.entity.PurchaseItemId;
 import com.example.Family_life_backend.entity.ShoppingList;
@@ -27,6 +37,9 @@ import jakarta.transaction.Transactional;
 public class ShoppingListService {
 
 	@Autowired
+	private EmailService emailService;
+
+	@Autowired
 	private UserInfoDao userInfoDao;
 
 	@Autowired
@@ -34,6 +47,18 @@ public class ShoppingListService {
 
 	@Autowired
 	private PurchaseItemDao purchaseItemDao;
+
+	@Autowired
+	private NotifyDao notifyDao;
+
+	@Autowired
+	private groupDao groupDao;
+
+	@Autowired
+	private groupMemberDao groupMemebrDao;
+
+	@Autowired
+	private NotifySocketService notifySocketService;
 
 	@Transactional(rollbackOn = Exception.class)
 	public BasicRes create(CreateListReq req) {
@@ -56,8 +81,8 @@ public class ShoppingListService {
 			return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 		}
 
-		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(
-				savedShoppingList.getId(), shoppingList.getCreaterId(), purchaseItemVoList, now);
+		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(savedShoppingList.getId(),
+				shoppingList.getCreaterId(), purchaseItemVoList, now);
 		if (purchaseItemList.size() != purchaseItemVoList.size()) {
 			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
@@ -101,8 +126,8 @@ public class ShoppingListService {
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
-	public List<ShoppingList> getLists(int createrId) {
-		return shoppingListDao.findByCreaterId(createrId);
+	public List<ShoppingList> getLists(int userId) {
+		return shoppingListDao.findVisibleListsByUserId((long) userId);
 	}
 
 	public List<PurchaseItem> getItems(int listId) {
@@ -121,8 +146,9 @@ public class ShoppingListService {
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
 		}
 
-		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(
-				req.getListId(), req.getCreaterId(), req.getPurchaseItemVoList(), LocalDate.now());
+		List<PurchaseItem> purchaseItemList = buildPurchaseItemList(req.getListId(), req.getCreaterId(),
+				req.getPurchaseItemVoList(), LocalDate.now());
+
 		if (purchaseItemList.size() != req.getPurchaseItemVoList().size()) {
 			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
@@ -132,11 +158,34 @@ public class ShoppingListService {
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}
 
-	public BasicRes deleteItem(int listId, int itemId) {
+	public BasicRes deleteItem(int listId, int itemId, int userId, int groupId) {
 		PurchaseItemId purchaseItemId = new PurchaseItemId(itemId, listId);
 		if (!purchaseItemDao.existsById(purchaseItemId)) {
 			return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
 					ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
+		}
+
+		// 發送通知
+		List<groupMembersDTO> getGroupMembers = groupMemebrDao.getMembersByGroupId((long) groupId);
+		String DeletedName = purchaseItemDao.getItemNameById((long) listId, (long) itemId);
+		String sendName = groupDao.getSelfName((long) userId);
+		String content = sendName + "已將" + DeletedName + "購買請求刪除";
+		// 不要傳給自己或私人通知
+
+		for (groupMembersDTO member : getGroupMembers) {
+			if ((long) userId != member.getUser_id() && groupId != 0) {
+				purchaseItemDao.sendPurchaseReqToAnotherNotify((long) groupId, member.getUser_id(), content, "group",
+						false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
+				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "邀請通知", content);
+				}
+
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
+			}
 		}
 
 		purchaseItemDao.deleteById(purchaseItemId);
@@ -170,6 +219,8 @@ public class ShoppingListService {
 	private List<PurchaseItem> buildPurchaseItemList(int listId, int createrId, List<PurchaseItemVo> purchaseItemVoList,
 			LocalDate createdDate) {
 		List<PurchaseItem> purchaseItemList = new ArrayList<>();
+		// 拿群組ID
+		Long groupID = shoppingListDao.getgroupIdByListId((long) listId);
 		int nextItemId = purchaseItemDao.getMaxIdByListId(listId) + 1;
 
 		for (PurchaseItemVo vo : purchaseItemVoList) {
@@ -188,13 +239,106 @@ public class ShoppingListService {
 			purchaseItem.setQuantity(vo.getQuantity());
 			purchaseItem.setCheck(false);
 			purchaseItemList.add(purchaseItem);
+
+			// 發送通知
+			String sendName = groupDao.getSelfName((long) createrId);
+			String content = sendName + "已傳送" + vo.getItem() + "購買請求給你";
+			// 不要傳給自己或私人通知
+			if ((long) createrId != (long) vo.getUserId() && groupID != 0L) {
+				purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), content, "group", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
+				if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
+					emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知", content);
+				}
+
+				// 🔥 正確：要重新查 unread count
+				int unreadCount = notifyDao.countUnreadByUserId((long) vo.getUserId());
+
+				notifySocketService.pushUnreadCount((long) vo.getUserId(), unreadCount);
+			}
+
 		}
 
 		return purchaseItemList;
 	}
 
+<<<<<<< HEAD
 
 
+=======
+	public BasicRes updateItem(AddPurchaseItemReq req) {
+		for (PurchaseItemVo vo : req.getPurchaseItemVoList()) {
+
+			PurchaseItemId id = new PurchaseItemId(vo.getId(), req.getListId());
+
+			// 拿群組ID
+			Long groupID = shoppingListDao.getgroupIdByListId((long) req.getListId());
+
+			PurchaseItem item = purchaseItemDao.findById(id).orElse(null);
+
+			if (item == null) {
+				return new BasicRes(ReplyMessage.PURCHASE_ITEM_ERROR.getMessage(),
+						ReplyMessage.PURCHASE_ITEM_ERROR.getCode());
+			}
+
+			Long OldGetterId = (long) item.getUserId();// 拿原先轉給的成員ID
+
+			item.setUserId(vo.getUserId());
+			item.setCategoryId(vo.getCategoryId());
+			item.setItem(vo.getItem());
+			item.setQuantity(vo.getQuantity());
+
+			boolean userChanged = !Objects.equals(OldGetterId, (long) vo.getUserId());
+
+			if (userChanged) { // 只有變更委託人才會送通知
+				// 發送通知
+				String sendName = groupDao.getSelfName((long) req.getCreaterId());
+				String getName = groupDao.getSelfName((long) vo.getUserId());
+				String contentToOldGetter = sendName + "已將" + vo.getItem() + "購買請求轉給" + getName;
+				String contentToNewGetter = sendName + "已將" + vo.getItem() + "購買請求轉給你";
+
+				if ((long) req.getCreaterId() != (long) vo.getUserId() && groupID != 0L) {
+
+					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, OldGetterId, contentToOldGetter, "group",
+							false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
+					purchaseItemDao.sendPurchaseReqToAnotherNotify(groupID, (long) vo.getUserId(), contentToNewGetter,
+							"group", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+
+					if (userInfoDao.getEmailNotifyById(OldGetterId) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(OldGetterId), "群組通知", contentToOldGetter);
+					}
+
+					if (userInfoDao.getEmailNotifyById((long) vo.getUserId()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById((long) vo.getUserId()), "群組通知",
+								contentToNewGetter);
+					}
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId((long) vo.getUserId());
+
+					notifySocketService.pushUnreadCount((long) vo.getUserId(), unreadCount);
+				}
+			}
+
+			purchaseItemDao.save(item);
+		}
+
+		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
+	}
+	
+	
+	/* 一次回傳所有清單的購物項目 */
+	public Map<Integer, List<PurchaseItem>> getItemsByListIds(List<Integer> listIds) {
+	    if (listIds == null || listIds.isEmpty()) {
+	        return new HashMap<>();
+	    }
+
+	    return purchaseItemDao.getByListIds(listIds)
+	        .stream()
+	        .collect(Collectors.groupingBy(PurchaseItem::getListId));
+	}
+>>>>>>> origin/internet
 
 }
 

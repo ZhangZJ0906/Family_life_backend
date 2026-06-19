@@ -15,6 +15,7 @@ import com.example.Family_life_backend.service.notifyService;
 @RestController
 @RequestMapping("/family_life")
 @CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "*")
 public class notifyController {
 
 	@Autowired

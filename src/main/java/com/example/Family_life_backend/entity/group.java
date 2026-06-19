@@ -2,76 +2,82 @@ package com.example.Family_life_backend.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`groups`")
 public class group {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
-    private Long groupId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "group_id")
+	private Long groupId;
 
-    @Column(name = "group_name", nullable = false, length = 100)
-    private String groupName;
+	@Column(name = "group_name", nullable = false, length = 100)
+	private String groupName;
 
-    @Column(name = "invite_code", nullable = false, length = 20, unique = true)
-    private String inviteCode;
+	@Column(name = "invite_code", nullable = false, length = 20, unique = true)
+	private String inviteCode;
 
-    @Column(name = "created_by", nullable = false)
-    private Long createdBy;
+	@Column(name = "created_by", nullable = false)
+	private Long createdBy;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+	@Column(name = "created_at", nullable = false)
+	private LocalDateTime createdAt;
 
-    @Column(name = "avatar", nullable = false, length = 100)
-    private String Avatar;
-    
-    @Column(name = "creater", nullable = false)
-    private String creater;
-    
-    // ===== Getter / Setter =====
+	@Column(name = "avatar", nullable = false, length = 100)
+	private String Avatar;
 
-    public Long getGroupId() {
-        return groupId;
-    }
+	@Transient
+	private String creater;
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
+	// ===== Getter / Setter =====
 
-    public String getGroupName() {
-        return groupName;
-    }
+	public Long getGroupId() {
+		return groupId;
+	}
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
 
-    public String getInviteCode() {
-        return inviteCode;
-    }
+	public String getGroupName() {
+		return groupName;
+	}
 
-    public void setInviteCode(String inviteCode) {
-        this.inviteCode = inviteCode;
-    }
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
+	public String getInviteCode() {
+		return inviteCode;
+	}
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+	public Long getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
 	public String getAvatar() {
 		return Avatar;
@@ -94,7 +100,8 @@ public class group {
 		// TODO Auto-generated constructor stub
 	}
 
-	public group(Long groupId, String groupName, String inviteCode, Long createdBy, LocalDateTime createdAt, String avatar, String creater) {
+	public group(Long groupId, String groupName, String inviteCode, Long createdBy, LocalDateTime createdAt,
+			String avatar, String creater) {
 		super();
 		this.groupId = groupId;
 		this.groupName = groupName;
@@ -104,5 +111,5 @@ public class group {
 		this.Avatar = avatar;
 		this.creater = creater;
 	}
-    
+
 }

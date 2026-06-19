@@ -1,24 +1,40 @@
 package com.example.Family_life_backend.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.ItemsDao;
 import com.example.Family_life_backend.dao.MedicineDao;
 import com.example.Family_life_backend.dao.NotifyDao;
+import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+import com.example.Family_life_backend.globalVar.globalVar;
 import com.example.Family_life_backend.request.AddMedicineReq;
 import com.example.Family_life_backend.request.UpdateMedicineReq;
+import com.example.Family_life_backend.request.UpdateNotifyReq;
+import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.MedicineRes;
 
 @Service
 public class MedicineService {
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private UserInfoDao userInfoDao;
 
 	@Autowired
 	private MedicineDao medicineDao;
@@ -31,27 +47,24 @@ public class MedicineService {
 
 	@Autowired
 	private groupDao groupDao;
-	
+
 	@Autowired
 	private NotifyDao notifyDao;
-	
+
 	@Autowired
 	private NotifySocketService notifySocketService;
+	@Autowired
+	private globalVar globalVar;
 
-    public MedicineRes getByGroup(Integer groupId, Integer userId) {
+	public MedicineRes getByGroup(Integer groupId, Integer userId) {
 
+		if (userId == null || userId <= 0) {
+			return new MedicineRes(400, "userId 不可為空");
+		}
 
-    	    if (userId == null || userId <= 0) {
-    	        return new MedicineRes(400, "userId 不可為空");
-    	    }
+		return new MedicineRes(200, "查詢成功", medicineDao.findByGroupId(userId, groupId));
+	}
 
-    	    return new MedicineRes(
-    	            200,
-    	            "查詢成功",
-    	            medicineDao.findByGroupId(userId, groupId)
-    	    );
-    	}
-    
 	public MedicineRes getByGroup(Integer groupId, Long userId) {
 
 		if (groupId == 0) {
@@ -61,7 +74,7 @@ public class MedicineService {
 		return new MedicineRes(200, "查詢成功", medicineDao.findByGroupId(groupId));
 	}
 
-	public MedicineRes add(AddMedicineReq req) {
+	public MedicineRes add(AddMedicineReq req, MultipartFile image) {
 
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new MedicineRes(400, "userId 不可為空");
@@ -88,12 +101,33 @@ public class MedicineService {
 		Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
 		Integer price = quantity * unitPrice;
 		String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
+		String avatarUrl = null;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("/app/uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "/uploads/"+ fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new MedicineRes(500, "圖片上傳失敗");
+			}
+		}
 		medicineDao.addMedicine(req.getGroupId(), req.getUserId(), req.getName(), req.getMedicineType(), quantity,
 				req.getUnit(), safeQuantity, req.getPurchaseDate(), req.getExpireDate(), req.getDosage(),
 				req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage);
+
+				remindMessage, avatarUrl, LocalDateTime.now());
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到藥品清單";
@@ -102,15 +136,16 @@ public class MedicineService {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
 					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
-							false);
-					
-					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+							false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
+					}
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -118,7 +153,7 @@ public class MedicineService {
 		return new MedicineRes(200, "新增成功");
 	}
 
-	public MedicineRes update(UpdateMedicineReq req) {
+	public MedicineRes update(UpdateMedicineReq req, MultipartFile image) {
 
 		String oldName = medicineDao.getMedicineNameById(req.getId());
 
@@ -144,12 +179,34 @@ public class MedicineService {
 		Integer unitPrice = req.getUnitPrice() != null ? req.getUnitPrice() : 0;
 		Integer price = quantity * unitPrice;
 		String remindMessage = calcMedicineRemindMessage(quantity, safeQuantity, req.getExpireDate());
+		String oldAvatarString = medicineDao.getMedicineImage(Long.valueOf(req.getId()));
+		String avatarUrl = oldAvatarString;
+		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
+		if (image != null && !image.isEmpty()) {
+			try {
+				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+				Path uploadPath = Paths.get("/app/uploads");
 
+				if (!Files.exists(uploadPath)) {
+					Files.createDirectories(uploadPath);
+				}
+
+				Path filePath = uploadPath.resolve(fileName);
+				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+				avatarUrl = "/uploads/" + fileName;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new MedicineRes(500, "圖片上傳失敗");
+			}
+		}
 		int result = medicineDao.updateMedicine(req.getId(), req.getGroupId(), req.getUserId(), req.getName(),
 				req.getMedicineType(), quantity, req.getUnit(), safeQuantity, req.getPurchaseDate(),
 				req.getExpireDate(), req.getDosage(), req.getUsageMethod(), req.getLocation(), req.getSource(),
 				req.getNotify() != null ? req.getNotify() : true, req.getNote(), unitPrice, price, status,
-				remindMessage);
+
+				remindMessage, LocalDateTime.now(), avatarUrl);
+
 
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldName + "藥品清單改成" + req.getName();
@@ -157,14 +214,16 @@ public class MedicineService {
 		if (req.getGroupId() != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false);
-					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
@@ -174,6 +233,13 @@ public class MedicineService {
 		}
 
 		return new MedicineRes(200, "修改成功");
+	}
+
+// 更新notify
+	public BasicRes updateNotify(UpdateNotifyReq req) {
+
+		medicineDao.updateNotifyById(req.getId(), req.getNotify());
+		return new BasicRes("成功", 200);
 	}
 
 	public MedicineRes delete(Integer id, Long userId) {
@@ -187,14 +253,16 @@ public class MedicineService {
 		if (finalGroupId != 0) {
 			for (groupMembersDTO member : getGroupMembers) {
 				if (member.getUser_id() != userId) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false);
-					// 🔥 正確：要重新查 unread count
-			        int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 
-			        notifySocketService.pushUnreadCount(
-			                member.getUser_id(),
-			                unreadCount
-			        );
+					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
+						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
+					}
+
+					// 🔥 正確：要重新查 unread count
+					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
+
+					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
 				}
 			}
 		}
