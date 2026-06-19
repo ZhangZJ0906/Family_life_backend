@@ -57,19 +57,30 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("userId") Integer userId,
 			@Param("unitPrice") int unitPrice, @Param("safeQuantity") Integer safeQuantity,
 			@Param("status") String status, @Param("remindMessage") String remindMessage,
-			@Param("createdAt") LocalDateTime createdTime,
-			@Param("avatar") String avatar);
-
+			@Param("createdAt") LocalDateTime createdTime, @Param("avatar") String avatar);
 
 	// 通知
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
-			    values (:sendId, :getUserId, :content, :type, :isRead,:send_date)
+			insert into notify (send_id, get_user_id, content, type, is_read,send_date)
+			values (:sendId, :getUserId, :content, :type, :isRead,:send_date)
 			""", nativeQuery = true)
 	public void addGroupItemNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead, @Param("send_date") LocalDateTime send_date);
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
+			@Param("send_date") LocalDateTime send_date);
+
+	// 批次通知
+	@Modifying
+	@Transactional
+	@Query(value = """
+			INSERT INTO notify (send_id, get_user_id, content, type, is_read, send_date)
+			SELECT :sendId, u.user_id, :content, :type, false, :now
+			FROM users u
+			WHERE u.user_id IN (:userIds)
+			""", nativeQuery = true)
+	void addGroupItemNotifyBatch(@Param("sendId") long sendId, @Param("userIds") List<Long> userIds,
+			@Param("content") String content, @Param("type") String type, @Param("now") LocalDateTime now);
 
 	/* 更新 */
 	@Modifying
@@ -79,8 +90,8 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			+ "location_id = :locationId, " + "price = :price, " + "purchase_date = :purchaseDate, "
 			+ "expire_date = :expireDate, " + "notify = :notify, " + "note = :note, " + "unit_price = :unitPrice, "
 
-			+ "safe_quantity = :safeQuantity, " + "status = :status, "
-			+ "remind_message = :remindMessage ," + " avatar = :avatar " + ",created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
+			+ "safe_quantity = :safeQuantity, " + "status = :status, " + "remind_message = :remindMessage ,"
+			+ " avatar = :avatar " + ",created_at = :createdAt " + "WHERE id = :id", nativeQuery = true)
 
 	int updateItem(@Param("id") int id, @Param("groupId") Integer groupId, @Param("userId") Long userId,
 			@Param("categoryId") Integer categoryId, @Param("name") String name, @Param("quantity") Integer quantity,
@@ -89,8 +100,7 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 			@Param("notify") Boolean notify, @Param("note") String note, @Param("unitPrice") int unitPrice,
 			@Param("safeQuantity") Integer safeQuantity, @Param("status") String status,
 			@Param("remindMessage") String remindMessage, @Param("createdAt") LocalDateTime createdTime,
-			 @Param("avatar") String avatar);
-
+			@Param("avatar") String avatar);
 
 	@Modifying
 	@Transactional

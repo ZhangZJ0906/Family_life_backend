@@ -1,9 +1,5 @@
 package com.example.Family_life_backend.service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,6 +33,7 @@ import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
 import jakarta.transaction.Transactional;
+
 @Service
 public class ItemsService {
 	@Autowired
@@ -65,6 +62,8 @@ public class ItemsService {
 	private NotifySocketService notifySocketService;
 	@Autowired
 	private globalVar globalVar;
+	@Autowired
+	private ItemListNotifyAndSaveImageService itemListNotify;
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
@@ -117,51 +116,17 @@ public class ItemsService {
 		String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
 		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
-		String avatarUrl = null;
-		if (image != null && !image.isEmpty()) {
-			try {
-				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("/app/uploads");
-
-				if (!Files.exists(uploadPath)) {
-					Files.createDirectories(uploadPath);
-				}
-
-				Path filePath = uploadPath.resolve(fileName);
-				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-				avatarUrl = "/uploads/" + fileName;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new AddItemsInfoRes("圖片上傳失敗", 500);
-			}
-		}
-
+		// 圖片上傳
+		String avatarUrl = itemListNotify.store(image);
 		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
 				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
 				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
 
 				finalSafeQuantity, status, remindMessage, LocalDateTime.now(), avatarUrl);
 
-
 		if (finalGroupId != 0) {
-			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到一般用品清單";
-
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "itemlist", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-					}
-
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
-			}
+			itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
 		}
 
 		return new AddItemsInfoRes("成功", 200);
@@ -182,64 +147,31 @@ public class ItemsService {
 //跟groupService 一樣 先拿舊的 avatar
 		String oldAvatarString = itemDao.getItemImage(Long.valueOf(req.getId()));
 		String avatarUrl = oldAvatarString; // 預設使用舊圖
-
-		try {
-			// 只有有新圖片才更新
-			if (image != null && !image.isEmpty()) {
-
-				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-
-				Path uploadPath = Paths.get("/app/uploads");
-
-				if (!Files.exists(uploadPath)) {
-					Files.createDirectories(uploadPath);
-				}
-
-				Path filePath = uploadPath.resolve(fileName);
-
-				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-				avatarUrl = "/uploads/" + fileName;
-			}
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			return new BasicRes("update fail", 500);
+		// 只有有新圖片才更新
+		if (image != null && !image.isEmpty()) {
+			avatarUrl = itemListNotify.store(image);
 		}
 
-		itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(), req.getName(),
-				req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(), req.getPurchaseDate(),
-				req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false, req.getNote(),
+		int result = itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(),
+				req.getName(), req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(),
+				req.getPurchaseDate(), req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false,
+				req.getNote(),
 
-
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage, LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
-
-
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
+				req.getUnitPrice(), finalSafeQuantity, status, remindMessage,
+				LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
+		if (result == 0) {
+			return new BasicRes(404, "查無此物品資料");
+		}
 		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
 
 		if (finalGroupId != 0) {
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-					}
-
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
-			}
+			itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
 		}
 
 		return new BasicRes("成功", 200);
 	}
 
+	@Transactional
 	public BasicRes updateNotify(UpdateNotifyReq req) {
 		itemDao.updateNotifyById(req.getId(), req.getNotify());
 		return new BasicRes("成功", 200);
@@ -261,20 +193,7 @@ public class ItemsService {
 			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(finalGroupId);
 			String content = groupDao.getSelfName(userId) + "已將一般用品" + itemDao.getItemNameById((long) i) + "刪除";
 			if (finalGroupId != 0) {
-				for (groupMembersDTO member : getGroupMembers) {
-					if (member.getUser_id() != userId) {
-						itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-						if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-							emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-						}
-
-						// 🔥 正確：要重新查 unread count
-						int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-						notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-					}
-				}
+				itemListNotify.notifyGroupMembers(Math.toIntExact(finalGroupId), userId, content);
 			}
 		}
 

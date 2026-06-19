@@ -3,6 +3,7 @@ package com.example.Family_life_backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
@@ -236,5 +237,10 @@ public class EmailService {
 		} catch (Exception e) {
 			throw new RuntimeException("Email sending failed", e);
 		}
+	}
+
+	@Async
+	public void sendMailAsync(String to, String subject, String content) {
+		sendMail(to, subject, content);
 	}
 }

@@ -1,12 +1,7 @@
 package com.example.Family_life_backend.service;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -58,6 +53,8 @@ public class WarrantyService {
 	private NotifySocketService notifySocketService;
 	@Autowired
 	private globalVar globalVar;
+	@Autowired
+	private ItemListNotifyAndSaveImageService itemListNotify;
 
 	public WarrantyRes getByGroup(Integer groupId, Integer userId) {
 
@@ -92,52 +89,18 @@ public class WarrantyService {
 
 		String status = calcWarrantyStatus(req.getWarrantyEndDate());
 		String remindMessage = calcWarrantyRemindMessage(req.getWarrantyEndDate());
-		String avatarUrl = null;
-		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
-		if (image != null && !image.isEmpty()) {
-			try {
-				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("/app/uploads");
+		// 圖片上傳
+		String avatarUrl = itemListNotify.store(image);
 
-				if (!Files.exists(uploadPath)) {
-					Files.createDirectories(uploadPath);
-				}
-
-				Path filePath = uploadPath.resolve(fileName);
-				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-				avatarUrl = "/uploads/"+ fileName;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new WarrantyRes(500, "圖片上傳失敗");
-			}
-		}
 		warrantyDao.addWarranty(req.getGroupId(), req.getUserId(), req.getProductName(), req.getBrand(), req.getModel(),
 				req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(), req.getStoreName(),
 				req.getPrice() != null ? req.getPrice() : 0, req.getNotify() != null ? req.getNotify() : true,
 
 				req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
-
-
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
-
+		// ✅ 通知：私人模式不進來，群組模式非同步處理
 		if (req.getGroupId() != 0) {
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "itemlist",
-							false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-					}
-
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
-			}
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getProductName() + "到保固清單";
+			itemListNotify.notifyGroupMembers(req.getGroupId(), req.getUserId(), content);
 		}
 		return new WarrantyRes(200, "新增成功");
 	}
@@ -169,54 +132,25 @@ public class WarrantyService {
 		String avatarUrl = oldAvatarString;
 		// 💡 修正點 1：先檢查 image 是否存在且不為空，才進行圖片儲存邏輯
 		if (image != null && !image.isEmpty()) {
-			try {
-				String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-				Path uploadPath = Paths.get("/app/uploads");
-
-				if (!Files.exists(uploadPath)) {
-					Files.createDirectories(uploadPath);
-				}
-
-				Path filePath = uploadPath.resolve(fileName);
-				Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-				avatarUrl = "/uploads/" + fileName;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new WarrantyRes(500, "圖片上傳失敗");
-			}
+			// 圖片上傳
+			avatarUrl = itemListNotify.store(image);
 		}
 		int result = warrantyDao.updateWarranty(req.getId(), req.getGroupId(), req.getUserId(), req.getProductName(),
 				req.getBrand(), req.getModel(), req.getSerialNumber(), req.getPurchaseDate(), req.getWarrantyEndDate(),
 				req.getStoreName(), req.getPrice() != null ? req.getPrice() : 0,
 
-				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage, LocalDateTime.now(), avatarUrl);
-
-
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) req.getGroupId());
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固" + oldName + "改成" + req.getProductName();
-
-		if (req.getGroupId() != 0) {
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != (long) req.getUserId()) {
-					itemDao.addGroupItemNotify((long) req.getGroupId(), member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
-					}
-
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
-			}
-		}
-
+				req.getNotify() != null ? req.getNotify() : true, req.getNote(), status, remindMessage,
+				LocalDateTime.now(), avatarUrl);
 		if (result == 0) {
 			return new WarrantyRes(404, "查無此保固資料");
 		}
 
+		// ✅ 通知：私人模式不進來，群組模式非同步處理
+		if (req.getGroupId() != 0) {
+			String content = groupDao.getSelfName((long) req.getUserId()) + "已將保固「" + oldName + "」改成「"
+					+ req.getProductName() + "」";
+			itemListNotify.notifyGroupMembers(req.getGroupId(), req.getUserId(), content);
+		}
 		return new WarrantyRes(200, "修改成功");
 	}
 
@@ -237,19 +171,7 @@ public class WarrantyService {
 		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId((long) finalGroupId);
 		String content = groupDao.getSelfName(userId) + "已將保固" + warrantyDao.getNameById(id) + "刪除";
 		if (finalGroupId != 0) {
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != userId) {
-					itemDao.addGroupItemNotify((long) finalGroupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
-					}
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
-			}
+			itemListNotify.notifyGroupMembers(Math.toIntExact(finalGroupId), userId, content);
 		}
 
 		int result = warrantyDao.deleteWarranty(id);
