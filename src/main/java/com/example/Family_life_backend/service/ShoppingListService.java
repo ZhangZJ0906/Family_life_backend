@@ -262,10 +262,6 @@ public class ShoppingListService {
 		return purchaseItemList;
 	}
 
-<<<<<<< HEAD
-
-
-=======
 	public BasicRes updateItem(AddPurchaseItemReq req) {
 		for (PurchaseItemVo vo : req.getPurchaseItemVoList()) {
 
@@ -338,7 +334,6 @@ public class ShoppingListService {
 	        .stream()
 	        .collect(Collectors.groupingBy(PurchaseItem::getListId));
 	}
->>>>>>> origin/internet
 
 }
 
