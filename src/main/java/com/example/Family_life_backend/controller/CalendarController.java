@@ -50,9 +50,14 @@ public class CalendarController {
 
 	// 查詢某一個家庭群組的所有行事曆事件
 	@GetMapping("/getByGroup")
-	public CalendarRes getByGroup(@RequestParam("groupId") Long groupId, @RequestParam("userId") Long userId) {
-		calendarDao.recordLoginCalendarPageTime(userId, LocalDateTime.now());
-		return calendarService.getByGroup(groupId, userId);
+	public CalendarRes getByGroup(@RequestParam("groupId") Long groupId,
+	                              @RequestParam("userId") Long userId) {
+	    return calendarService.getByGroup(groupId, userId);
+	}
+
+	@PostMapping("/recordLoginCalendarPageTime")
+	public void recordLoginCalendarPageTime(@RequestParam("userId") Long userId) {
+	    calendarDao.recordLoginCalendarPageTime(userId, LocalDateTime.now());
 	}
 
 	// 2026-05- 24 by ZJ 新get 資訊

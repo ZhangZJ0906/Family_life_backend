@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.Family_life_backend.DTO.EmailNotifyUserDTO;
 import com.example.Family_life_backend.entity.UserInfo;
 
 import jakarta.transaction.Transactional;
@@ -73,5 +74,15 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Transactional
 	@Query(value = "update users set email_verify = 1 where email = :email", nativeQuery = true)
 	public void updateEmailVerify(@Param("email") String email);
+	
+	@Query(value = """
+		    SELECT
+		        user_id AS userId,
+		        email AS email,
+		        is_notify_by_email AS notifyByEmail
+		    FROM users
+		    WHERE user_id IN (:userIds)
+		""", nativeQuery = true)
+		List<EmailNotifyUserDTO> findEmailNotifyUsers(@Param("userIds") List<Long> userIds);
 
 }
