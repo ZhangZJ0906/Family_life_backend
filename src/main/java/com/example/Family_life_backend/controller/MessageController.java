@@ -110,6 +110,8 @@ public class MessageController {
 			dto.setReadByMe(readSet.contains(msg.getId()));
 
 			dto.setReplyId(msg.getReplyId());
+			System.out.println("id: " + msg.getId() + "isrecall: " + msg.getRecalled());
+			dto.setRecalled(msg.getRecalled());
 
 			// =====================
 //			// sender info
@@ -299,8 +301,8 @@ public class MessageController {
 
 		long seconds = Duration.between(msg.getCreateTime(), LocalDateTime.now()).getSeconds();
 
-		if (seconds > 120) {
-			return ResponseEntity.badRequest().body("訊息超過2分鐘無法收回");
+		if (seconds > 86400) {
+			return ResponseEntity.badRequest().body("訊息超過一天無法收回");
 		}
 
 		msg.setRecalled(true);
