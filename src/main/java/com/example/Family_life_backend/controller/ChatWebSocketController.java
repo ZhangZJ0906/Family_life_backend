@@ -1,7 +1,11 @@
 package com.example.Family_life_backend.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -9,17 +13,17 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.example.Family_life_backend.DTO.OnlineUserDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.NotifyDao;
-import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.UserInfo;
 import com.example.Family_life_backend.repositary.GroupChatRepository;
 import com.example.Family_life_backend.repositary.UserRepository;
+import com.example.Family_life_backend.request.ChatEnterRequest;
 import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
-import com.example.Family_life_backend.service.EmailService;
 import com.example.Family_life_backend.service.NotifySocketService;
 
 @Controller
@@ -79,7 +83,8 @@ public class ChatWebSocketController {
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != request.getSenderId()) {
-				notifyDao.sendChatNotify(request.getGroupId(), member.getUser_id(), content, "chat", false);
+				notifyDao.sendChatNotify(request.getGroupId(), member.getUser_id(), content, "chat", false,
+						LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
@@ -147,5 +152,51 @@ public class ChatWebSocketController {
 		System.out.println("推播到 topic: /topic/group/" + saved.getGroupId());
 
 		messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
+	}
+
+	// 在線上
+	private static final ConcurrentHashMap<Long, Set<Long>> onlineUsers = new ConcurrentHashMap<>();
+
+	private void broadcastOnline(Long groupId) {
+
+		Set<Long> ids = onlineUsers.getOrDefault(groupId, Set.of());
+
+		if (ids == null) {
+			ids = Set.of();
+		}
+
+		List<Long> userIds = ids.stream().toList();
+
+		if (userIds.isEmpty()) {
+			return;
+		}
+
+		List<UserInfo> users = userRepository.findAllById(userIds);
+
+		List<OnlineUserDTO> userList = users.stream()
+				.map(u -> new OnlineUserDTO((long) u.getUserId(), u.getUserName(), u.getAvatar())).toList();
+
+		messagingTemplate.convertAndSend("/topic/group/" + groupId,
+				Map.of("type", "ONLINE", "count", userList.size(), "users", userList));
+	}
+
+	@MessageMapping("/chat.enter")
+	public void enter(ChatEnterRequest request) {
+
+		onlineUsers.computeIfAbsent(request.getGroupId(), k -> ConcurrentHashMap.newKeySet()).add(request.getUserId());
+
+		broadcastOnline(request.getGroupId());
+	}
+
+	@MessageMapping("/chat.leave")
+	public void leave(ChatEnterRequest request) {
+
+		Set<Long> set = onlineUsers.get(request.getGroupId());
+
+		if (set != null) {
+			set.remove(request.getUserId());
+		}
+
+		broadcastOnline(request.getGroupId());
 	}
 }

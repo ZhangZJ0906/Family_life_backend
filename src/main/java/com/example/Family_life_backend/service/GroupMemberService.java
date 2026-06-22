@@ -111,7 +111,7 @@ public class GroupMemberService {
 		}
 
 		groupMemberDao.insert(groupId, userId, 0);
-		notifyDao.isReadNotify(notifyId);
+		notifyDao.isReadOneNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("accepted", userId, notifyId);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
@@ -119,7 +119,7 @@ public class GroupMemberService {
 
 	@Transactional
 	public BasicResponse rejectJoinGroup(Long userId, Long groupId, Long notifyId) {
-		notifyDao.isReadNotify(notifyId);
+		notifyDao.isReadOneNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("rejected", userId, notifyId);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
@@ -155,6 +155,8 @@ public class GroupMemberService {
 			}
 		}
 
+		groupMemberDao.deleteInvitedMember(groupId, req.getUserId());
+		groupMemberDao.deleteInvitedMemberNotify(groupId, req.getUserId());
 		groupMemberDao.insert(groupId, req.getUserId(), 0);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
