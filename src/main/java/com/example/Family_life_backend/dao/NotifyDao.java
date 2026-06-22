@@ -18,7 +18,15 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = "delete from notify n where n.notify_id = :notifyId", nativeQuery = true)
-	public void deleteNotify(@Param("notifyId") Long notifyId);
+	public void deleteOneNotify(@Param("notifyId") Long notifyId);
+
+	@Modifying
+	@Transactional
+	@Query(value = """
+			    DELETE FROM notify n
+			    WHERE n.notify_id IN :ids
+			""", nativeQuery = true)
+	int batchDeleteNotify(@Param("ids") List<Long> ids);
 
 	@Modifying
 	@Transactional
@@ -27,7 +35,15 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 			SET is_read = 1
 			WHERE n.notify_id = :notifyId
 			""", nativeQuery = true)
-	public void isReadNotify(@Param("notifyId") Long notifyId);
+	public void isReadOneNotify(@Param("notifyId") Long notifyId);
+
+	@Modifying
+	@Query(value = """
+			    UPDATE notify n
+			    SET n.is_read = 1
+			    WHERE n.notify_id IN :ids and n.type != 'invite'
+			""", nativeQuery = true)
+	int batchReadNotify(@Param("ids") List<Long> ids);
 
 	@Modifying
 	@Transactional
