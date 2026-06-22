@@ -1,56 +1,79 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.example.Family_life_backend.constant.replyMsg;
+import com.example.Family_life_backend.DTO.EmailNotifyUserDTO;
 import com.example.Family_life_backend.dao.NotifyDao;
-import com.example.Family_life_backend.request.UpdateAllNotifyReq;
-import com.example.Family_life_backend.response.BasicResponse;
+
+import jakarta.transaction.Transactional;
+import com.example.Family_life_backend.entity.notify;
 
 @Service
-public class notifyService {
+public class NotificationService {
+
 	@Autowired
-	NotifyDao notifyDao;
+	private NotifyDao notifyDao;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Transactional
-	public BasicResponse isRead(Long notify_id) {
-		notifyDao.isReadOneNotify(notify_id);
-		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
-	}
+	public void batchInsertNotify(Long senderId, List<Long> receiverIds, String content, String type) {
 
-	@Transactional
-	public BasicResponse readAllNotify(UpdateAllNotifyReq req) {
-		List<Long> notifyIdList = req.getIds();
-
-		if (notifyIdList == null || notifyIdList.isEmpty()) {
-			return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
+		if (receiverIds == null || receiverIds.isEmpty()) {
+			return;
 		}
 
-		notifyDao.batchReadNotify(notifyIdList);
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
 
-		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
+		List<notify> list = receiverIds.stream().map(receiverId -> {
+
+			notify n = new notify();
+
+			n.setSendId(senderId);
+			n.setGetUserId(receiverId);
+			n.setContent(content);
+			n.setType(type);
+			n.setRead(false);
+			n.setSendDate(now);
+
+			return n;
+
+		}).toList();
+
+		notifyDao.saveAll(list);
 	}
 
-	@Transactional
-	public BasicResponse deleteNotify(Long notify_id) {
-		notifyDao.deleteOneNotify(notify_id);
-		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
-	}
+	@Async
+	public void sendEmailNotify(List<Long> receiverIds, String content, Map<Long, EmailNotifyUserDTO> userMap) {
 
-	@Transactional
-	public BasicResponse deleteIsReadAllNotify(UpdateAllNotifyReq req) {
-		List<Long> notifyIdList = req.getIds();
+		receiverIds.forEach(receiverId -> {
 
-		if (notifyIdList == null || notifyIdList.isEmpty()) {
-			return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
-		}
+			EmailNotifyUserDTO user = userMap.get(receiverId);
 
-		notifyDao.batchDeleteNotify(notifyIdList);
+			if (user == null) {
+				return;
+			}
 
-		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
+			if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
+
+				try {
+
+					emailService.sendMail(user.getEmail(), "更新通知", content);
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+					throw e; // 🔥 讓 Spring 顯示真正錯誤，不要假裝成 CORS
+				}
+			}
+		});
 	}
 }
