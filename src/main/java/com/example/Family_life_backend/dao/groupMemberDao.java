@@ -33,47 +33,37 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Modifying
 	@Transactional
 	@Query(value = """
-	    insert into notify (
-	        send_id,
-	        get_user_id,
-	        content,
-	        type,
-	        is_read,
-	        target_group_id,
-	        send_date
-	    )
-	    values (
-	        :sendUserId,
-	        :getUserId,
-	        :content,
-	        :type,
-	        :isRead,
-	        :targetGroupId,
-	        :sendDate
-	    )
-	""", nativeQuery = true)
-	public void sendInviteNotify(
-	    @Param("sendUserId") Long sendUserId,
-	    @Param("getUserId") Long getUserId,
-	    @Param("content") String content,
-	    @Param("type") String type,
-	    @Param("isRead") boolean isRead,
-	    @Param("targetGroupId") Long targetGroupId,
-	    @Param("sendDate") LocalDateTime sendDate
-	);
-	
-	
+			    insert into notify (
+			        send_id,
+			        get_user_id,
+			        content,
+			        type,
+			        is_read,
+			        target_group_id,
+			        send_date
+			    )
+			    values (
+			        :sendUserId,
+			        :getUserId,
+			        :content,
+			        :type,
+			        :isRead,
+			        :targetGroupId,
+			        :sendDate
+			    )
+			""", nativeQuery = true)
+	public void sendInviteNotify(@Param("sendUserId") Long sendUserId, @Param("getUserId") Long getUserId,
+			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
+			@Param("targetGroupId") Long targetGroupId, @Param("sendDate") LocalDateTime sendDate);
+
 	@Modifying
 	@Transactional
 	@Query(value = """
 			    insert into group_members (group_id, user_id, public_inventory)
 			    values (:groupId, :userId, :publicInventory)
 			""", nativeQuery = true)
-	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId, @Param("publicInventory") int publicInventory);
-	
-
-
-
+	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId,
+			@Param("publicInventory") int publicInventory);
 
 	@Query(value = """
 			    select count(*)
@@ -126,6 +116,15 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			and user_id = ?2
 			""", nativeQuery = true)
 	public void deleteInvitedMember(Long group_id, Long user_id);
+	
+	@Modifying
+	@Transactional
+	@Query(value = """
+			delete from notify
+			where target_group_id = ?1
+			and get_user_id = ?2
+			""", nativeQuery = true)
+	public void deleteInvitedMemberNotify(Long group_id, Long user_id);
 
 	@Query(value = """
 			   SELECT
@@ -165,7 +164,7 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
 			  AND n.type in ('group', 'update' , 'itemlist', 'expense', 'chat')
-			  
+
 			UNION ALL
 
 			  SELECT
@@ -185,9 +184,9 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 			    ON n.send_id = g.group_id
 			WHERE n.get_user_id = :user_id
 			  AND n.type in ('calendar', 'warring')
-			  
+
 			UNION ALL
-			  
+
 			SELECT
 			    n.notify_id AS id,
 			    n.get_user_id sendUserId,
@@ -251,19 +250,14 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 
 			""", nativeQuery = true)
 	public List<Object[]> getGroupIdByUserId(@Param("userId") Long userID);
-	
+
 	// 檢查使用者是否存在於指定群組
 	@Query(value = """
-	    SELECT COUNT(*)
-	    FROM group_members
-	    WHERE group_id = :groupId
-	      AND user_id = :userId
-	    """, nativeQuery = true)
-	int countByGroupIdAndUserId(
-	    @Param("groupId") Long groupId,
-	    @Param("userId") Long userId
-	);
-	
-	
+			SELECT COUNT(*)
+			FROM group_members
+			WHERE group_id = :groupId
+			  AND user_id = :userId
+			""", nativeQuery = true)
+	int countByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
 
 }
