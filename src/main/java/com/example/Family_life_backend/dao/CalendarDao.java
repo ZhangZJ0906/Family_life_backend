@@ -183,21 +183,24 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 
 	// 提前提醒
 	@Query(value = """
-					SELECT *
-			FROM calendar_events
-			WHERE DATE_SUB(event_time, INTERVAL notify_before MINUTE) <= :now
-			AND is_send_before_notify = 0 and notify_before != 0
-					""", nativeQuery = true)
-	List<Calendar> findEventsBeforeToNotify(@Param("now") LocalDateTime now);
+		    SELECT *
+		    FROM calendar_events
+		    WHERE is_send_before_notify = 0
+		      AND notify_before != 0
+		      AND event_time >= :now
+		      AND event_time <= DATE_ADD(:now, INTERVAL notify_before MINUTE)
+		""", nativeQuery = true)
+		List<Calendar> findEventsBeforeToNotify(@Param("now") LocalDateTime now);
 
 	// 開始提醒
 	@Query(value = """
-					SELECT *
-			FROM calendar_events
-			WHERE event_time <= :now
-			AND is_send_start_notify = 0
-					""", nativeQuery = true)
-	List<Calendar> findEventsStartToNotify(@Param("now") LocalDateTime now);
+		    SELECT *
+		    FROM calendar_events
+		    WHERE is_send_start_notify = 0
+		      AND event_time <= :now
+		      AND event_time >= DATE_SUB(:now, INTERVAL 1 DAY)
+		""", nativeQuery = true)
+		List<Calendar> findEventsStartToNotify(@Param("now") LocalDateTime now);
 
 	// 已發送通知不再重複送
 	@Modifying
@@ -227,4 +230,29 @@ public interface CalendarDao extends JpaRepository<Calendar, Long> {
 			select login_calendar_page_time from users where user_id = :userId
 			""", nativeQuery = true)
 	public LocalDateTime getLoginCalendarPageTime(@Param("userId") Long userId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = """
+	    UPDATE calendar_events
+	    SET
+	        title = :title,
+	        description = :description,
+	        event_time = :eventTime,
+	        end_time = :endTime,
+	        notify_before = :notifyBefore,
+	        created_by = :createdBy,
+	        is_send_before_notify = 0,
+	        is_send_start_notify = 0
+	    WHERE event_batch_id = :eventBatchId
+	""", nativeQuery = true)
+	int updateCalendarEventBatch(
+	        @Param("eventBatchId") String eventBatchId,
+	        @Param("createdBy") Long createdBy,
+	        @Param("title") String title,
+	        @Param("description") String description,
+	        @Param("eventTime") LocalDateTime eventTime,
+	        @Param("endTime") LocalDateTime endTime,
+	        @Param("notifyBefore") Integer notifyBefore
+	);
 }

@@ -76,6 +76,8 @@ public class UserController {
 		return userService.changePwd(req);
 	}
 
+
+	/* 變更資料 */
 	@PostMapping(value = "/update_info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public BasicRes updateInfo(@RequestPart("userInfo") String userInfoJson,
 			@RequestPart("publicInventoryList") String publicInventoryJson,
@@ -96,6 +98,7 @@ public class UserController {
 
 	@GetMapping("/get_user_info")
 	public getUserInfoRes getSelfInfo(@RequestParam("userId") Long userId) {
+
 		return userService.getUserInfo(userId);
 	}
 

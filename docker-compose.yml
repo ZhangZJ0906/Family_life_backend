@@ -4,14 +4,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "18081:8081"
     volumes:
       - ./uploads:/app/uploads
     restart: always
     environment:
       - SERVER_PORT=8081
-      - TZ=Asia/Taipei
-      - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Taipei
     networks:
       - family_net
 

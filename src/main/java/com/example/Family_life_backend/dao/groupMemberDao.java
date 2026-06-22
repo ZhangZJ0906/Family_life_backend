@@ -67,10 +67,13 @@ public interface groupMemberDao extends JpaRepository<GroupMembers, GroupMembers
 	@Transactional
 	@Query(value = """
 			    insert into group_members (group_id, user_id, public_inventory)
-			    values (:groupId, :userId, :publicInventory )
+			    values (:groupId, :userId, :publicInventory)
 			""", nativeQuery = true)
-	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId,
-			@Param("publicInventory") int publicInventory);
+	public void insert(@Param("groupId") Long groupId, @Param("userId") Long userId, @Param("publicInventory") int publicInventory);
+	
+
+
+
 
 	@Query(value = """
 			    select count(*)

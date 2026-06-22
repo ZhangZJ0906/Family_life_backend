@@ -72,6 +72,15 @@ public class MessageController {
 				.collect(Collectors.toMap(u -> (long) u.getUserId(), Function.identity()));
 
 		// =========================
+		// 2. readByMe batch（🔥重點）
+		// =========================
+		List<Long> messageIds = messages.stream().map(GroupChatMessage::getId).toList();
+
+		List<GroupChatRead> myReads = readRepository.findByMessageIdInAndUserId(messageIds, userId);
+
+		Set<Long> readSet = myReads.stream().map(GroupChatRead::getMessageId).collect(Collectors.toSet());
+
+		// =========================
 		// 2. batch reply messages
 		// =========================
 		List<Long> replyIds = messages.stream().map(GroupChatMessage::getReplyId).filter(Objects::nonNull).distinct()
@@ -80,15 +89,6 @@ public class MessageController {
 		Map<Long, GroupChatMessage> replyMap = replyIds.isEmpty() ? Map.of()
 				: repository.findAllById(replyIds).stream()
 						.collect(Collectors.toMap(GroupChatMessage::getId, Function.identity()));
-
-		// =========================
-		// 3. batch read count
-		// =========================
-		List<Long> messageIds = messages.stream().map(GroupChatMessage::getId).toList();
-
-		Map<Long, Long> readCountMap = messageIds.isEmpty() ? Map.of()
-				: readRepository.countByMessageIds(messageIds).stream().collect(
-						Collectors.toMap(GroupChatReadCountDTO::getMessageId, GroupChatReadCountDTO::getCount));
 
 		// =========================
 		// 4. build DTO
@@ -107,9 +107,21 @@ public class MessageController {
 			dto.setImageUrl(msg.getImageUrl());
 			dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
-			dto.setReadByMe(readRepository.existsByMessageIdAndUserId(msg.getId(), currentUserId));
+			dto.setReadByMe(readSet.contains(msg.getId()));
 
 			dto.setReplyId(msg.getReplyId());
+			System.out.println("id: " + msg.getId() + "isrecall: " + msg.getRecalled());
+			dto.setRecalled(msg.getRecalled());
+
+			// =====================
+//			// sender info
+//			// =====================
+			if (user != null) {
+
+				dto.setSenderName(user.getUserName());
+
+				dto.setSenderAvatar(user.getAvatar());
+			}
 
 			// =====================
 			// reply message
@@ -136,20 +148,10 @@ public class MessageController {
 				}
 			}
 
-			// =====================
-			// sender info
-			// =====================
-			if (user != null) {
-
-				dto.setSenderName(user.getUserName());
-
-				dto.setSenderAvatar(user.getAvatar());
-			}
-
-			// =====================
-			// read count
-			// =====================
-			dto.setReadCount(readCountMap.getOrDefault(msg.getId(), 0L));
+//			// =====================
+//			// read count
+//			// =====================
+//			dto.setReadCount(readCountMap.getOrDefault(msg.getId(), 0L));
 
 			return dto;
 
@@ -299,8 +301,8 @@ public class MessageController {
 
 		long seconds = Duration.between(msg.getCreateTime(), LocalDateTime.now()).getSeconds();
 
-		if (seconds > 120) {
-			return ResponseEntity.badRequest().body("訊息超過2分鐘無法收回");
+		if (seconds > 86400) {
+			return ResponseEntity.badRequest().body("訊息超過一天無法收回");
 		}
 
 		msg.setRecalled(true);
