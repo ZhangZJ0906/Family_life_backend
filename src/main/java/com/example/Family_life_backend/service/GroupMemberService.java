@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.Family_life_backend.DTO.EmailNotifyUserDTO;
 import com.example.Family_life_backend.DTO.UserNotifyDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
@@ -28,6 +31,7 @@ import com.example.Family_life_backend.response.getNotifyRes;
 
 @Service
 public class GroupMemberService {
+
 	@Autowired
 	private EmailService emailService;
 
@@ -46,6 +50,12 @@ public class GroupMemberService {
 	@Autowired
 	private NotifySocketService notifySocketService;
 
+	@Autowired
+	private NotificationService notifacationService;
+
+	// =========================
+	// Invite
+	// =========================
 	@Transactional
 	public BasicResponse invite(groupMemberReq req) {
 
@@ -61,72 +71,62 @@ public class GroupMemberService {
 			return new BasicResponse(replyMsg.MEMBER_IS_INVITED.getMessage(), replyMsg.MEMBER_IS_INVITED.getCode());
 		}
 
-		req.setUser_id(userInfoDao.getUIDByEmail(req.getEmail()));
-		req.setUser_name(groupMemberDao.invitedUserName(req.getUser_id()));
+		Long userId = userInfoDao.getUIDByEmail(req.getEmail());
+		req.setUser_id(userId);
+		req.setUser_name(groupMemberDao.invitedUserName(userId));
 
 		String sendName = groupDao.getSelfName(req.getSendUserId());
 		String content = sendName + " 已傳送群組邀請給你";
-		String type = "invite";
 
-		groupMemberDao.sendInviteNotify(
-			    req.getSendUserId(),
-			    req.getUser_id(),
-			    content,
-			    type,
-			    false,
-			    req.getGroup_id(),
-			    LocalDateTime.now(ZoneId.of("Asia/Taipei"))
-			);
-		groupMemberDao.addToInviteMember(req.getUser_id(), req.getGroup_id());
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
 
-		if (userInfoDao.getEmailNotifyById(req.getUser_id()) == true) {
-			emailService.sendMail(userInfoDao.getEmailById(req.getUser_id()), "邀請通知", content);
-		}
+		groupMemberDao.sendInviteNotify(req.getSendUserId(), userId, content, "invite", false, req.getGroup_id(), now);
 
-		// 🔥 正確：要重新查 unread count
-		int unreadCount = notifyDao.countUnreadByUserId(req.getUser_id());
+		groupMemberDao.addToInviteMember(userId, req.getGroup_id());
 
-		notifySocketService.pushUnreadCount(req.getUser_id(), unreadCount);
+		sendEmailIfEnabled(userId, "邀請通知", content);
+
+		pushUnread(userId);
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
+	// =========================
+	// Accept Join Group
+	// =========================
 	@Transactional
 	public BasicResponse acceptJoinGroup(Long userId, Long groupId, Long notifyId) {
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
-		String content = "歡迎" + groupDao.getSelfName(userId) + "加入";
-
-		for (groupMembersDTO member : getGroupMembers) {
-			if (member.getUser_id() != userId) {
-				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId, LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-				}
-
-				// 🔥 正確：要重新查 unread count
-				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-			}
-		}
 
 		groupMemberDao.insert(groupId, userId, 0);
+
 		notifyDao.isReadOneNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("accepted", userId, notifyId);
+
+		notifyGroupMembers(groupId, userId);
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
+	// =========================
+	// Reject Join Group
+	// =========================
 	@Transactional
 	public BasicResponse rejectJoinGroup(Long userId, Long groupId, Long notifyId) {
+
 		notifyDao.isReadOneNotify(notifyId);
 		groupMemberDao.deleteInvitedMember(groupId, userId);
 		notifyDao.updateInviteNotify("rejected", userId, notifyId);
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
+	// =========================
+	// Join by invite code
+	// =========================
 	@Transactional
 	public BasicResponse join(joinGroupReq req) {
+
 		Long groupId = groupMemberDao.findGroupIdByInviteCode(req.getInviteCode());
 
 		if (groupId == null) {
@@ -137,50 +137,40 @@ public class GroupMemberService {
 			return new BasicResponse(replyMsg.USER_ID_EXIST.getMessage(), replyMsg.USER_ID_EXIST.getCode());
 		}
 
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
-		String content = "歡迎" + groupDao.getSelfName(req.getUserId()) + "加入";
-
-		for (groupMembersDTO member : getGroupMembers) {
-			if (member.getUser_id() != req.getUserId()) {
-				notifyDao.sendNewMemberNotify(groupId, member.getUser_id(), content, "group", false, groupId,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-
-				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "群組通知", content);
-				}
-
-				// 🔥 正確：要重新查 unread count
-				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-			}
-		}
+		groupMemberDao.insert(groupId, req.getUserId(), 0);
 
 		groupMemberDao.deleteInvitedMember(groupId, req.getUserId());
 		groupMemberDao.deleteInvitedMemberNotify(groupId, req.getUserId());
-		groupMemberDao.insert(groupId, req.getUserId(), 0);
+
+		notifyGroupMembers(groupId, req.getUserId());
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
+	// =========================
+	// Remove member
+	// =========================
 	@Transactional
-	public BasicResponse removeMember(Long group_id, Long user_id) {
-		groupMemberDao.deleteMember(group_id, user_id);
+	public BasicResponse removeMember(Long groupId, Long userId) {
+		groupMemberDao.deleteMember(groupId, userId);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 
+	// =========================
+	// Get notify list
+	// =========================
 	public getNotifyRes getNotifyList(Long userId) {
 		List<UserNotifyDTO> list = groupMemberDao.getNotifyList(userId);
 		return new getNotifyRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), list);
 	}
 
-	public int getNotifyCount(Long getUserId) {
-		int count = notifyDao.getNotifyCount(getUserId);
-		return count;
+	public int getNotifyCount(Long userId) {
+		return notifyDao.getNotifyCount(userId);
 	}
 
-	public getInviteMembersRes getInvitedMemberList(Long group_id) {
-
+	public getInviteMembersRes getInvitedMemberList(Long groupId) {
 		return new getInviteMembersRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(),
-				groupMemberDao.getInvitedMemberList(group_id));
+				groupMemberDao.getInvitedMemberList(groupId));
 	}
 
 	public GetGroupMemberRes getMemberList(Long groupId) {
@@ -188,15 +178,73 @@ public class GroupMemberService {
 				groupMemberDao.getMembersByGroupId(groupId));
 	}
 
-	/* 透過 user Id 去尋找 他加入的群組 202605-21 by zj */
+	// =========================
+	// Get group ids by user
+	// =========================
 	public GetGroupIdByUserIdRes getGroupIdList(Long userId) {
+
 		List<Object[]> list = groupMemberDao.getGroupIdByUserId(userId);
 
-		Map<Long, String> idMap = list.stream()//
-				.filter(row -> row[0] != null)//
-				.collect(Collectors.toMap(//
-						row -> ((Number) row[0]).longValue(), row -> row[1] != null ? row[1].toString() : "未命名群組"//
-				));
+		Map<Long, String> idMap = list.stream().filter(row -> row[0] != null)
+				.collect(Collectors.toMap(row -> ((Number) row[0]).longValue(),
+						row -> row[1] != null ? row[1].toString() : "未命名群組", (a, b) -> a));
+
 		return new GetGroupIdByUserIdRes(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode(), idMap);
 	}
+
+	// =====================================================
+	// 🔥 核心：通知群組成員（重構重點）
+	// =====================================================
+	private void notifyGroupMembers(Long groupId, Long joinedUserId) {
+
+		String joinUserName = groupDao.getSelfName(joinedUserId);
+
+		String content = "歡迎" + joinUserName + "加入";
+
+		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
+
+		List<Long> receiverIds = members.stream().map(groupMembersDTO::getUser_id)
+				.filter(id -> !Objects.equals(id, joinedUserId)).toList();
+
+		// 一次查 Email 設定
+		List<EmailNotifyUserDTO> userInfos = userInfoDao.findEmailNotifyUsers(receiverIds);
+
+		Map<Long, EmailNotifyUserDTO> userMap = userInfos.stream()
+				.collect(Collectors.toMap(EmailNotifyUserDTO::getUserId, Function.identity()));
+
+		// 寫通知
+		notifacationService.batchInsertNotify(groupId, receiverIds, content, "group");
+
+		// 一次查所有未讀數
+		List<Object[]> result = notifyDao.countUnreadByUserIds(receiverIds);
+
+		Map<Long, Integer> unreadMap = result.stream()
+				.collect(Collectors.toMap(row -> ((Number) row[0]).longValue(), row -> ((Number) row[1]).intValue()));
+
+		// 推播
+		for (Long memberId : receiverIds) {
+
+			notifySocketService.pushUnreadCount(memberId, unreadMap.getOrDefault(memberId, 0));
+		}
+
+		notifacationService.sendEmailNotify(receiverIds, content, userMap);
+	}
+
+	// =====================================================
+	// Email
+	// =====================================================
+	private void sendEmailIfEnabled(Long userId, String title, String content) {
+		if (userInfoDao.getEmailNotifyById(userId)) {
+			emailService.sendMail(userInfoDao.getEmailById(userId), title, content);
+		}
+	}
+
+	// =====================================================
+	// Socket unread
+	// =====================================================
+	private void pushUnread(Long userId) {
+		int unreadCount = notifyDao.countUnreadByUserId(userId);
+		notifySocketService.pushUnreadCount(userId, unreadCount);
+	}
+
 }

@@ -74,15 +74,16 @@ public interface UserInfoDao extends JpaRepository<UserInfo, Integer> {
 	@Transactional
 	@Query(value = "update users set email_verify = 1 where email = :email", nativeQuery = true)
 	public void updateEmailVerify(@Param("email") String email);
-	
+
+	// 拿所有通知需要資料
 	@Query(value = """
-		    SELECT
-		        user_id AS userId,
-		        email AS email,
-		        is_notify_by_email AS notifyByEmail
-		    FROM users
-		    WHERE user_id IN (:userIds)
-		""", nativeQuery = true)
-		List<EmailNotifyUserDTO> findEmailNotifyUsers(@Param("userIds") List<Long> userIds);
+			    SELECT
+			        user_id AS userId,
+			        email AS email,
+			        is_notify_by_email AS notifyByEmail
+			    FROM users
+			    WHERE user_id IN (:userIds)
+			""", nativeQuery = true)
+	public List<EmailNotifyUserDTO> findEmailNotifyUsers(@Param("userIds") List<Long> userIds);
 
 }

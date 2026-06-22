@@ -54,33 +54,6 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into notify (
-			        send_id,
-			        get_user_id,
-			        content,
-			        type,
-			        is_read,
-			        target_group_id,
-			        send_date
-			    )
-			    values (
-			        :sendUserId,
-			        :getUserId,
-			        :content,
-			        :type,
-			        :isRead,
-			        :targetGroupId,
-			        :sendDate
-			    )
-			""", nativeQuery = true)
-	public void sendNewMemberNotify(@Param("sendUserId") Long sendUserId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
-			@Param("targetGroupId") Long targetGroupId, @Param("sendDate") LocalDateTime sendDate);
-
-	@Modifying
-	@Transactional
-	@Query(value = """
-
 			    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
 			    values (:sendId, :getUserId, :content, :type, :isRead, :send_date)
 			""", nativeQuery = true)
