@@ -24,7 +24,7 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 	@Transactional
 	@Query(value = """
 			    DELETE FROM notify n
-			    WHERE n.notify_id IN :ids
+			    WHERE n.notify_id IN :ids and n.is_read = 1
 			""", nativeQuery = true)
 	int batchDeleteNotify(@Param("ids") List<Long> ids);
 
