@@ -7,14 +7,18 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.Family_life_backend.DTO.EmailNotifyUserDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.constant.replyMsg;
 import com.example.Family_life_backend.dao.ItemsDao;
@@ -55,6 +59,9 @@ public class groupService {
 
 	@Autowired
 	private ItemsDao itemsDao;
+
+	@Autowired
+	private NotificationService notifacationService;
 
 	@Autowired
 	private globalVar globalVar;
@@ -98,35 +105,50 @@ public class groupService {
 		}
 	}
 
+	private void pushUnreadForUsers(List<Long> userIds) {
+
+		if (userIds == null || userIds.isEmpty()) {
+			return;
+		}
+
+		List<Object[]> result = notifyDao.countUnreadByUserIds(userIds);
+
+		Map<Long, Integer> unreadMap = result.stream()
+				.collect(Collectors.toMap(row -> ((Number) row[0]).longValue(), row -> ((Number) row[1]).intValue()));
+
+		for (Long userId : userIds) {
+
+			notifySocketService.pushUnreadCount(userId, unreadMap.getOrDefault(userId, 0));
+		}
+	}
+
 	@Transactional
 	public BasicResponse updateGroup(Long groupId, String groupName, MultipartFile avatar, Long createdBy) {
 
-		String avatarUrl = null;
-
-		String selfName = groupDao.getSelfName(createdBy);
-
-		String oldGroupName = groupDao.getSelfGroupNameById(groupId);
-
 		try {
 
-			// 先拿舊的 avatar（重要）
+			String selfName = groupDao.getSelfName(createdBy);
+
+			String oldGroupName = groupDao.getSelfGroupNameById(groupId);
+
 			String oldAvatar = groupDao.getAvatarByGroupId(groupId);
 
-			avatarUrl = oldAvatar;
+			String avatarUrl = oldAvatar;
 
-			// 只有有新圖片才更新
+			// 更新頭像
 			if (avatar != null && !avatar.isEmpty()) {
 
 				String originalName = avatar.getOriginalFilename();
+
 				String ext = ".jpg";
 
 				if (originalName != null && originalName.contains(".")) {
+
 					ext = originalName.substring(originalName.lastIndexOf("."));
 				}
 
 				String fileName = System.currentTimeMillis() + "_" + UUID.randomUUID() + ext;
 
-				// Docker volume 對應的位置
 				Path uploadPath = Paths.get("/app/uploads");
 
 				if (!Files.exists(uploadPath)) {
@@ -137,39 +159,48 @@ public class groupService {
 
 				Files.copy(avatar.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				// DB 只存相對路徑，不要存 localhost
 				avatarUrl = "/uploads/" + fileName;
 			}
 
+			// 更新群組
 			groupDao.updateGroup(groupName, avatarUrl, groupId);
 
-			String NewGroupId = groupDao.getSelfGroupNameById(groupId);
+			String newGroupName = groupDao.getSelfGroupNameById(groupId);
 
-			String content = selfName + "已將群組" + oldGroupName + "改成" + NewGroupId;
+			boolean groupNameChanged = !Objects.equals(oldGroupName, newGroupName);
 
-			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
+			List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
 
-			for (groupMembersDTO member : getGroupMembers) {
-				if (member.getUser_id() != createdBy) {
-					if (!Objects.equals(oldGroupName, NewGroupId)) {
+			List<Long> receiverIds = members.stream().map(groupMembersDTO::getUser_id)
+					.filter(id -> !Objects.equals(id, createdBy)).toList();
 
-						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), content, "update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-					} else {
-						notifyDao.sendGroupNameUpdateNotify(groupId, member.getUser_id(), selfName + "已更改該群組的大頭貼",
-								"update", false,LocalDateTime.now(ZoneId.of("Asia/Taipei")));
+			if (receiverIds.isEmpty()) {
 
-					}
-
-					// 🔥 正確：要重新查 unread count
-					int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-					if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-						emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "更新通知", content);
-					}
-
-					notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-				}
+				return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 			}
+
+			// 一次查 Email 設定
+			List<EmailNotifyUserDTO> userInfos = userInfoDao.findEmailNotifyUsers(receiverIds);
+
+			Map<Long, EmailNotifyUserDTO> userMap = userInfos.stream()
+					.collect(Collectors.toMap(EmailNotifyUserDTO::getUserId, Function.identity()));
+
+			String notifyContent = "";
+
+			if (groupNameChanged) {
+
+				notifyContent = selfName + " 已將群組 " + oldGroupName + " 改成 " + newGroupName;
+
+			} else {
+
+				notifyContent = selfName + " 已更改該群組的大頭貼";
+			}
+
+			notifacationService.batchInsertNotify(createdBy, receiverIds, notifyContent, "update");
+
+			pushUnreadForUsers(receiverIds);
+
+			notifacationService.sendEmailNotify(receiverIds, notifyContent, userMap);
 
 			return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 
@@ -178,19 +209,20 @@ public class groupService {
 			e.printStackTrace();
 
 			return new BasicResponse("update fail", 500);
-
 		}
-
 	}
 
 	/* 刪除群組前，先將User本人勾選物品轉成私人 */
 	@Transactional
 	public BasicResponse deleteGroup(Long group_id) {
-		itemsDao.moveGroupItemsToPrivate(group_id);
+
+		groupDao.deleteGroupChatRoom(group_id);
 
 		groupMemberDao.deleteByGroupId(group_id);
+
+		itemsDao.moveGroupItemsToPrivate(group_id);
+
 		groupDao.deleteGroup(group_id);
-		groupDao.deleteGroupChatRoom(group_id);
 
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}

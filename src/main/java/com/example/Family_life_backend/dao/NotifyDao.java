@@ -24,7 +24,7 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 	@Transactional
 	@Query(value = """
 			    DELETE FROM notify n
-			    WHERE n.notify_id IN :ids
+			    WHERE n.notify_id IN :ids and n.is_read = 1
 			""", nativeQuery = true)
 	int batchDeleteNotify(@Param("ids") List<Long> ids);
 
@@ -54,33 +54,6 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 	@Modifying
 	@Transactional
 	@Query(value = """
-			    insert into notify (
-			        send_id,
-			        get_user_id,
-			        content,
-			        type,
-			        is_read,
-			        target_group_id,
-			        send_date
-			    )
-			    values (
-			        :sendUserId,
-			        :getUserId,
-			        :content,
-			        :type,
-			        :isRead,
-			        :targetGroupId,
-			        :sendDate
-			    )
-			""", nativeQuery = true)
-	public void sendNewMemberNotify(@Param("sendUserId") Long sendUserId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
-			@Param("targetGroupId") Long targetGroupId, @Param("sendDate") LocalDateTime sendDate);
-
-	@Modifying
-	@Transactional
-	@Query(value = """
-
 			    insert into notify (send_id, get_user_id, content, type, is_read,send_date)
 			    values (:sendId, :getUserId, :content, :type, :isRead, :send_date)
 			""", nativeQuery = true)
