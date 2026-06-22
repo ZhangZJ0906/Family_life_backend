@@ -1,7 +1,9 @@
 package com.example.Family_life_backend.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.Family_life_backend.DTO.OnlineUserDTO;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.NotifyDao;
-import com.example.Family_life_backend.dao.UserInfoDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.UserInfo;
@@ -23,9 +24,7 @@ import com.example.Family_life_backend.repositary.UserRepository;
 import com.example.Family_life_backend.request.ChatEnterRequest;
 import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
-import com.example.Family_life_backend.service.EmailService;
 import com.example.Family_life_backend.service.NotifySocketService;
-import java.util.Map;
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -84,7 +83,8 @@ public class ChatWebSocketController {
 
 		for (groupMembersDTO member : getGroupMembers) {
 			if (member.getUser_id() != request.getSenderId()) {
-				notifyDao.sendChatNotify(request.getGroupId(), member.getUser_id(), content, "chat", false);
+				notifyDao.sendChatNotify(request.getGroupId(), member.getUser_id(), content, "chat", false,
+						LocalDateTime.now(ZoneId.of("Asia/Taipei")));
 				// 🔥 正確：要重新查 unread count
 				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
