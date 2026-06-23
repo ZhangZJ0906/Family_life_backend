@@ -293,13 +293,28 @@ public class CalendarService {
 	    // 4. 檢查群組成員是否真的在群組內
 	    // =========================
 	    if (groupId != 0) {
-	        for (Long assignedUserId : assignedUserIds) {
-	            int memberCount = groupMemberDao.countByGroupIdAndUserId(groupId, assignedUserId);
 
-	            if (memberCount <= 0) {
-	                return new CalendarRes(400, "有指派成員不屬於該群組");
+	        List<Long> validAssignedUserIds = new ArrayList<>();
+
+	        for (Long assignedUserId : assignedUserIds) {
+
+	            int memberCount = groupMemberDao.countByGroupIdAndUserId(
+	                    groupId,
+	                    assignedUserId
+	            );
+
+	            // 還在群組內的成員才保留
+	            if (memberCount > 0) {
+	                validAssignedUserIds.add(assignedUserId);
 	            }
 	        }
+
+	        // 全部指派成員都已經不在群組內
+	        if (validAssignedUserIds.isEmpty()) {
+	            return new CalendarRes(400, "此活動的指派成員已不在群組內，請重新指派成員");
+	        }
+
+	        assignedUserIds = validAssignedUserIds;
 	    }
 	    
 	    List<Long> oldAssignedUserIds =
