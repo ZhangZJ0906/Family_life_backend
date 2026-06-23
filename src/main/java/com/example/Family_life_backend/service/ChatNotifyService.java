@@ -1,5 +1,7 @@
 package com.example.Family_life_backend.service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +28,24 @@ public class ChatNotifyService {
 
     @Async
     public void sendChatNotifications(ChatRequest request, String senderName) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
         String content = senderName + ": " + request.getMessage();
 
-        List<groupMembersDTO> members =
-                groupMemberDao.getMembersByGroupId(request.getGroupId());
+        List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(request.getGroupId());
 
         for (groupMembersDTO member : members) {
-            if (member.getUser_id() == request.getSenderId()) {
+            if (member.getUser_id().equals(request.getSenderId())) {
                 continue;
             }
 
-            notifyDao.sendChatNotify(
-                    request.getGroupId(),
+            notifyDao.sendGroupNameUpdateNotify(
+                    request.getSenderId(),
                     member.getUser_id(),
                     content,
                     "chat",
-                    false
+                    false,
+                    now
             );
-
-            int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
-
-            notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
         }
     }
 }
