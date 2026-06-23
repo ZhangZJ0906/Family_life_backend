@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,6 +50,14 @@ public class MessageController {
 	private final GroupChatReadRepository readRepository;
 
 	private final SimpMessagingTemplate messagingTemplate;
+	
+	private static final int DEFAULT_MESSAGE_LIMIT = 10;
+	
+	private static final int MAX_MESSAGE_LIMIT = 20;
+	
+	private static final int DEFAULT_READ_LIMIT = 40;
+	
+	private static final int MAX_READ_LIMIT = 200;
 
 	public MessageController(GroupChatRepository repository, UserRepository userRepository,
 			GroupChatReadRepository readRepository, SimpMessagingTemplate messagingTemplate) {
@@ -58,9 +69,35 @@ public class MessageController {
 	}
 
 	@GetMapping("/{groupId}")
-	public ResponseEntity<?> getMessages(@PathVariable("groupId") Long groupId, @RequestParam("userId") Long userId) {
+	public ResponseEntity<?> getMessages(
+	        @PathVariable("groupId") Long groupId,
+	        @RequestParam("userId") Long userId,
+	        @RequestParam(value = "beforeId", required = false) Long beforeId,
+	        @RequestParam(value = "limit", required = false) Integer limit) {
 
-		List<GroupChatMessage> messages = repository.findByGroupIdOrderByCreateTimeAsc(groupId);
+		int pageSize = normalizeLimit(limit, DEFAULT_MESSAGE_LIMIT, MAX_MESSAGE_LIMIT);
+
+	    // 多查 1 筆是為了判斷 hasMore。
+	    // 例如前端要 50 筆，後端查 51 筆；如果真的有第 51 筆，就代表還有下一頁。
+	    List<GroupChatMessage> messagesDesc = repository.findPageBeforeId(
+	            groupId,
+	            beforeId,
+	            PageRequest.of(0, pageSize + 1)
+	    );
+
+	    boolean hasMore = messagesDesc.size() > pageSize;
+
+	    if (hasMore) {
+	        messagesDesc = messagesDesc.subList(0, pageSize);
+	    }
+
+	    // DB 查出來是 id DESC，也就是新到舊。
+	    // 前端聊天室通常需要舊到新，所以這裡反轉。
+	    List<GroupChatMessage> messages = new ArrayList<>(messagesDesc);
+	    Collections.reverse(messages);
+
+	    // 下一頁游標：目前這頁最舊的訊息 id。
+	    Long nextBeforeId = messages.isEmpty() ? null : messages.get(0).getId();
 
 		Long currentUserId = userId;
 		// =========================
@@ -157,70 +194,70 @@ public class MessageController {
 
 		}).toList();
 
-		return ResponseEntity.ok(Map.of("messages", result));
+		Map<String, Object> response = new HashMap<>();
+		response.put("messages", result);
+		response.put("hasMore", hasMore);
+		response.put("nextBeforeId", nextBeforeId);
+
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/read/{groupId}")
-	public void markRead(@PathVariable("groupId") Long groupId, @RequestParam("userId") Long userId) {
+	public void markRead(
+	        @PathVariable("groupId") Long groupId,
+	        @RequestParam("userId") Long userId,
+	        @RequestParam(value = "upToMessageId", required = false) Long upToMessageId,
+	        @RequestParam(value = "limit", required = false) Integer limit) {
 
-		// 1️⃣ 撈群組訊息
-		List<GroupChatMessage> messages = repository.findByGroupId(groupId);
+	    int readLimit = normalizeLimit(limit, DEFAULT_READ_LIMIT, MAX_READ_LIMIT);
 
-		if (messages.isEmpty())
-			return;
+	    // 只查「尚未讀」且「不是自己發的」訊息。
+	    List<GroupChatMessage> messages = repository.findUnreadMessagesForUser(
+	            groupId,
+	            userId,
+	            upToMessageId,
+	            PageRequest.of(0, readLimit)
+	    );
 
-		// 2️⃣ 取 messageId list
-		List<Long> messageIds = messages.stream().map(GroupChatMessage::getId).toList();
+	    if (messages.isEmpty()) {
+	        return;
+	    }
 
-		// 3️⃣ 一次查已讀
-		List<GroupChatRead> reads = readRepository.findByMessageIdInAndUserId(messageIds, userId);
+	    List<Long> messageIds = messages.stream()
+	            .map(GroupChatMessage::getId)
+	            .toList();
 
-		Set<Long> readIds = reads.stream().map(GroupChatRead::getMessageId).collect(Collectors.toSet());
+	    List<GroupChatRead> newReads = new ArrayList<>();
 
-		// 4️⃣ 找未讀（排除自己訊息 + 已讀）
-		List<GroupChatRead> newReads = new ArrayList<>();
+	    for (GroupChatMessage msg : messages) {
+	        GroupChatRead read = new GroupChatRead();
+	        read.setMessageId(msg.getId());
+	        read.setUserId(userId);
+	        read.setReadTime(LocalDateTime.now());
+	        newReads.add(read);
+	    }
 
-		for (GroupChatMessage msg : messages) {
+	    readRepository.saveAll(newReads);
 
-			// 自己訊息不算已讀
-			if (msg.getSenderId().equals(userId)) {
-				continue;
-			}
+	    Map<Long, Long> countMap = readRepository.countByMessageIds(messageIds)
+	            .stream()
+	            .collect(Collectors.toMap(
+	                    GroupChatReadCountDTO::getMessageId,
+	                    GroupChatReadCountDTO::getCount
+	            ));
 
-			// 已讀 skip
-			if (readIds.contains(msg.getId())) {
-				continue;
-			}
+	    for (GroupChatMessage msg : messages) {
+	        Long count = countMap.getOrDefault(msg.getId(), 0L);
 
-			GroupChatRead read = new GroupChatRead();
-			read.setMessageId(msg.getId());
-			read.setUserId(userId);
-			read.setReadTime(LocalDateTime.now());
-
-			newReads.add(read);
-		}
-
-		// 5️⃣ 批次寫入
-		if (!newReads.isEmpty()) {
-			readRepository.saveAll(newReads);
-		}
-
-		// 6️⃣ 一次查 count（避免 N 次 SQL）
-		Map<Long, Long> countMap = readRepository.countByMessageIds(messageIds).stream()
-				.collect(Collectors.toMap(GroupChatReadCountDTO::getMessageId, GroupChatReadCountDTO::getCount));
-
-		// 7️⃣ 推 WS（只推必要資料）
-		for (GroupChatMessage msg : messages) {
-
-			if (msg.getSenderId().equals(userId)) {
-				continue;
-			}
-
-			Long count = countMap.getOrDefault(msg.getId(), 0L);
-
-			messagingTemplate.convertAndSend("/topic/group/" + groupId,
-					Map.of("type", "READ", "messageId", msg.getId(), "readCount", count));
-		}
+	        messagingTemplate.convertAndSend(
+	                "/topic/group/" + groupId,
+	                Map.of(
+	                        "type", "READ",
+	                        "messageId", msg.getId(),
+	                        "readCount", count
+	                )
+	        );
+	    }
 	}
 
 	@PostMapping("/upload")
@@ -313,6 +350,14 @@ public class MessageController {
 				Map.of("type", "RECALL", "messageId", msg.getId()));
 
 		return ResponseEntity.ok().build();
+	}
+	
+	//避免一次撈太多聊天訊息
+	private int normalizeLimit(Integer limit, int defaultLimit, int maxLimit) {
+	    if (limit == null || limit <= 0) {
+	        return defaultLimit;
+	    }
+	    return Math.min(limit, maxLimit);
 	}
 
 }
