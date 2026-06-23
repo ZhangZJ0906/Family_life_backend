@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,14 @@ import com.example.Family_life_backend.request.ChatEnterRequest;
 import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.request.HeartbeatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
+
 import com.example.Family_life_backend.service.NotifySocketService;
 
 import com.example.Family_life_backend.Manager.PresenceManager;
+
+
+import com.example.Family_life_backend.service.ChatNotifyService;
+
 
 
 @Controller
@@ -52,6 +59,9 @@ public class ChatWebSocketController {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+	
+	@Autowired
+	private ChatNotifyService chatNotifyService;
 
 	public ChatWebSocketController(SimpMessagingTemplate messagingTemplate, GroupChatRepository repository,
 			UserRepository userRepository) {
@@ -63,101 +73,64 @@ public class ChatWebSocketController {
 
 	@MessageMapping("/chat.send")
 	public void send(ChatRequest request) {
-
-		System.out.println("收到WS訊息：" + request.getMessage());
-
+		
 		GroupChatMessage msg = new GroupChatMessage();
+	    msg.setGroupId(request.getGroupId());
+	    msg.setSenderId(request.getSenderId());
+	    msg.setMessage(request.getMessage());
+	    msg.setReplyId(request.getReplyId());
+	    
+	    GroupChatMessage saved = repository.save(msg);
 
-		msg.setGroupId(request.getGroupId());
-		msg.setSenderId(request.getSenderId());
-		msg.setMessage(request.getMessage());
-		// ⭐ 新增：reply
-		msg.setReplyId(request.getReplyId());
+	    UserInfo sender = userRepository.findById(saved.getSenderId()).orElse(null);
+	    String senderName = sender != null ? sender.getUserName() : "未知使用者";
 
-		GroupChatMessage saved = repository.save(msg);
+	    ChatMessageResponse replyDto = null;
 
-		// 2. 查發送者
-		UserInfo sender = userRepository.findById(saved.getSenderId()).orElse(null);
+	    if (saved.getReplyId() != null) {
+	        GroupChatMessage reply = repository.findById(saved.getReplyId()).orElse(null);
 
-		String senderName = sender != null ? sender.getUserName() : "未知使用者";
+	        if (reply != null) {
+	            replyDto = new ChatMessageResponse();
+	            replyDto.setId(reply.getId());
+	            replyDto.setMessage(reply.getMessage());
+	            replyDto.setSenderId(reply.getSenderId());
 
-		String content = senderName + ": " + request.getMessage();
+	            UserInfo replyUser = userRepository.findById(reply.getSenderId()).orElse(null);
 
-		List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(request.getGroupId());
+	            if (replyUser != null) {
+	                replyDto.setSenderName(replyUser.getUserName());
+	            }
+	        }
+	    }
 
-		for (groupMembersDTO member : getGroupMembers) {
-			if (member.getUser_id() != request.getSenderId()) {
-				notifyDao.sendChatNotify(request.getGroupId(), member.getUser_id(), content, "chat", false,
-						LocalDateTime.now(ZoneId.of("Asia/Taipei")));
-				// 🔥 正確：要重新查 unread count
-				int unreadCount = notifyDao.countUnreadByUserId(member.getUser_id());
 
-//				if (userInfoDao.getEmailNotifyById(member.getUser_id()) == true) {
-//					emailService.sendMail(userInfoDao.getEmailById(member.getUser_id()), "聊天", content);
-//				}
+			    ChatMessageResponse dto = new ChatMessageResponse();
+	    dto.setId(saved.getId());
+	    dto.setGroupId(saved.getGroupId());
+	    dto.setSenderId(saved.getSenderId());
+	    dto.setMessage(saved.getMessage());
+	    dto.setImageUrl(saved.getImageUrl());
+	    dto.setCreateTime(saved.getCreateTime());
+	    dto.setRecalled(saved.getRecalled());
+	    dto.setReplyId(saved.getReplyId());
+	    dto.setReplyMessage(replyDto);
+	    dto.setType(saved.getImageUrl() != null ? "IMAGE" : "MESSAGE");
+	    dto.setReadCount(0L);
 
-				notifySocketService.pushUnreadCount(member.getUser_id(), unreadCount);
-			}
-		}
 
-		UserInfo user = userRepository.findById(request.getSenderId()).orElse(null);
+	    if (sender != null) {
+	        dto.setSenderName(sender.getUserName());
+	        dto.setSenderAvatar(sender.getAvatar());
+	    
 
-		// =========================
-		// ⭐ 先處理 reply（放這裡）
-		// =========================
-		ChatMessageResponse replyDto = null;
+	    // 重點：先把訊息推給聊天室
+	    messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
 
-		if (saved.getReplyId() != null) {
-
-			GroupChatMessage reply = repository.findById(saved.getReplyId()).orElse(null);
-
-			if (reply != null) {
-
-				replyDto = new ChatMessageResponse();
-				replyDto.setId(reply.getId());
-				replyDto.setMessage(reply.getMessage());
-				replyDto.setSenderId(reply.getSenderId());
-
-				UserInfo replyUser = userRepository.findById(reply.getSenderId()).orElse(null);
-
-				if (replyUser != null) {
-					replyDto.setSenderName(replyUser.getUserName());
-				}
-			}
-		}
-
-		// =========================
-		// 再組主 dto
-		// =========================
-		ChatMessageResponse dto = new ChatMessageResponse();
-
-		dto.setId(saved.getId());
-		dto.setGroupId(saved.getGroupId());
-		dto.setSenderId(saved.getSenderId());
-		dto.setMessage(saved.getMessage());
-		dto.setImageUrl(msg.getImageUrl());
-		dto.setCreateTime(saved.getCreateTime());
-		dto.setRecalled(msg.getRecalled());
-
-		// ⭐ replyId
-		dto.setReplyId(saved.getReplyId());
-		dto.setReplyMessage(replyDto); // ⭐關鍵
-
-		// ⭐ sender info
-		if (user != null) {
-			dto.setSenderName(user.getUserName());
-			dto.setSenderAvatar(user.getAvatar());
-		}
-
-		// ⭐ default fields（重點）
-		dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
-		dto.setReadCount(0L);
-
-		System.out.println("推播到 topic: /topic/group/" + saved.getGroupId());
-
-		messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
-	}
-
+	    // 再處理通知
+	    chatNotifyService.sendChatNotifications(request, senderName);
+	}}
+	
 	// 在線上
 	@MessageMapping("/chat.enter")
 	public void enter(ChatEnterRequest request, SimpMessageHeaderAccessor accessor) {
@@ -179,4 +152,7 @@ public class ChatWebSocketController {
 
 		presenceManager.heartbeat(accessor.getSessionId(), req.getUserId(), req.getGroupId());
 	}
+	
+	
+	
 }
