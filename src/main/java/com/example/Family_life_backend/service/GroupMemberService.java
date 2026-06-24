@@ -199,7 +199,7 @@ public class GroupMemberService {
 
 		String joinUserName = groupDao.getSelfName(joinedUserId);
 
-		String content = "歡迎" + joinUserName + "加入";
+		String content = "歡迎" + joinUserName + "加入" + groupDao.getGroupName(groupId);
 
 		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(groupId);
 

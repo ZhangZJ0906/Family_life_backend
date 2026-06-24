@@ -38,6 +38,7 @@ public class ChatNotifyService {
                 continue;
             }
 
+<<<<<<< HEAD
             notifyDao.sendGroupNameUpdateNotify(
                     request.getSenderId(),
                     member.getUser_id(),
@@ -46,6 +47,35 @@ public class ChatNotifyService {
                     false,
                     now
             );
+=======
+            notify n = new notify();
+            n.setSendId(request.getGroupId());
+            n.setGetUserId(member.getUser_id());
+            n.setContent(content);
+            n.setType("chat");
+            n.setRead(false);
+            n.setSendDate(now);
+
+            notifications.add(n);
+            userIds.add(member.getUser_id());
+        }
+
+        // 🚀 1. batch insert（一次寫入）
+        notifyDao.saveAll(notifications);
+
+        // 🚀 2. batch unread count（一次查完）
+        List<Object[]> counts = notifyDao.countUnreadByUserIds(userIds);
+
+        Map<Long, Integer> countMap = new HashMap<>();
+        for (Object[] row : counts) {
+            countMap.put(((Number) row[0]).longValue(), ((Number) row[1]).intValue());
+        }
+
+        // 🚀 3. websocket push（不查 DB）
+        for (Long userId : userIds) {
+            int unread = countMap.getOrDefault(userId, 0);
+            notifySocketService.pushUnreadCount(userId, unread);
+>>>>>>> origin/internet
         }
     }
 }
