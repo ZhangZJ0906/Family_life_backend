@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
  * 1. @RestControllerAdvice 包含了 @ControllerAdvice 和 @ResponseBody <br>
@@ -18,14 +19,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 2. @ExceptionHandler: 使用於 method 中的註釋，提供了在 controller 處理例外的功能<br>
  * 3. ResponseEntity: 可以做為 controller 的返回值
  */
-@RestControllerAdvice //用來表示這是一個全域的 REST 例外處理器
+@RestControllerAdvice // 用來表示這是一個全域的 REST 例外處理器
 public class GlobalExceptionHandler {
 
 	// @Valid 配合 Spring 會抛出 MethodArgumentNotValidException 異常；所以要針對此 Exception 處理
-	@ExceptionHandler({MethodArgumentNotValidException.class})
+	@ExceptionHandler({ MethodArgumentNotValidException.class })
 	public ResponseEntity<Map<String, Object>> paramExceptionHandler(MethodArgumentNotValidException e) {
-		// 因為在 controller 中不符合資料驗證規則時，res 返回的是 code: 數值 和 message: 字串；所以 map 的 value 用 Object 接
-		// 字串 code 和 message 要跟 BasicRes 中的2個屬性名稱一樣 
+		// 因為在 controller 中不符合資料驗證規則時，res 返回的是 code: 數值 和 message: 字串；所以 map 的 value 用
+		// Object 接
+		// 字串 code 和 message 要跟 BasicRes 中的2個屬性名稱一樣
 		Map<String, Object> errorMap = new HashMap<>();
 		// 將 req 中的參數檢查統一歸類為 bad_request，代碼為 400
 		errorMap.put("code", HttpStatus.BAD_REQUEST.value());
@@ -34,8 +36,8 @@ public class GlobalExceptionHandler {
 		// 返回的 Http Status Code 為 badRequest(400)
 		return ResponseEntity.badRequest().body(errorMap);
 	}
-	
-	@ExceptionHandler({SQLException.class})
+
+	@ExceptionHandler({ SQLException.class })
 	public ResponseEntity<Map<String, Object>> handleSQLException(SQLException e) {// 抓取 SQL Exception
 		// 因為在 controller 中的 res 返回的是 code: 數值 和 message: 字串；所以 map 的 value 用 Object 接
 		Map<String, Object> errorMap = new HashMap<>();
@@ -45,8 +47,8 @@ public class GlobalExceptionHandler {
 		errorMap.put("message", e.getMessage());
 		return ResponseEntity.internalServerError().body(errorMap);
 	}
-	
-	@ExceptionHandler({Exception.class})
+
+	@ExceptionHandler({ Exception.class })
 	public ResponseEntity<Map<String, Object>> handleException(Exception e) {// 抓取 Exception
 		// 因為在 controller 中的 res 返回的是 code: 數值 和 message: 字串；所以 map 的 value 用 Object 接
 		Map<String, Object> errorMap = new HashMap<>();
@@ -56,5 +58,16 @@ public class GlobalExceptionHandler {
 		errorMap.put("message", e.getMessage());
 		return ResponseEntity.internalServerError().body(errorMap);
 	}
-	
+
+	// 專門捕捉當上傳檔案超過 10MB (MaxUploadSizeExceededException) 的錯誤
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<Map<String, Object>> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+		Map<String, Object> body = new HashMap<>();
+		body.put("status", "error");
+		body.put("message", "上傳失敗：檔案大小不能超過 10MB！");
+
+		// 回傳 HTTP 狀態碼 400 (Bad Request) 或是 413 (Payload Too Large)
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+	}
+
 }
