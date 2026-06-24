@@ -61,14 +61,14 @@ public interface NotifyDao extends JpaRepository<notify, Long> {
 			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,
 			@Param("send_date") LocalDateTime send_date);
 
-	@Modifying
-	@Transactional
-	@Query(value = """
-			    insert into notify (send_id, get_user_id, content, type, is_read, send_date)
-			    values (:sendId, :getUserId, :content, :type, :isRead,:sendDate)
-			""", nativeQuery = true)
-	public void sendChatNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
-			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,  @Param("sendDate") LocalDateTime sendDate);
+//	@Modifying
+//	@Transactional
+//	@Query(value = """
+//			    insert into notify (send_id, get_user_id, content, type, is_read, send_date)
+//			    values (:sendId, :getUserId, :content, :type, :isRead,:sendDate)
+//			""", nativeQuery = true)
+//	public void sendChatNotify(@Param("sendId") Long sendId, @Param("getUserId") Long getUserId,
+//			@Param("content") String content, @Param("type") String type, @Param("isRead") boolean isRead,  @Param("sendDate") LocalDateTime sendDate);
 
 	@Query(value = """
 			    select count(*) from notify where get_user_id = :getUserId

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -32,10 +31,7 @@ import com.example.Family_life_backend.service.NotifySocketService;
 
 import com.example.Family_life_backend.Manager.PresenceManager;
 
-
 import com.example.Family_life_backend.service.ChatNotifyService;
-
-
 
 @Controller
 @CrossOrigin(origins = "*")
@@ -59,7 +55,7 @@ public class ChatWebSocketController {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+
 	@Autowired
 	private ChatNotifyService chatNotifyService;
 
@@ -73,64 +69,62 @@ public class ChatWebSocketController {
 
 	@MessageMapping("/chat.send")
 	public void send(ChatRequest request) {
-		
+
 		GroupChatMessage msg = new GroupChatMessage();
-	    msg.setGroupId(request.getGroupId());
-	    msg.setSenderId(request.getSenderId());
-	    msg.setMessage(request.getMessage());
-	    msg.setReplyId(request.getReplyId());
-	    
-	    GroupChatMessage saved = repository.save(msg);
+		msg.setGroupId(request.getGroupId());
+		msg.setSenderId(request.getSenderId());
+		msg.setMessage(request.getMessage());
+		msg.setReplyId(request.getReplyId());
 
-	    UserInfo sender = userRepository.findById(saved.getSenderId()).orElse(null);
-	    String senderName = sender != null ? sender.getUserName() : "未知使用者";
+		GroupChatMessage saved = repository.save(msg);
 
-	    ChatMessageResponse replyDto = null;
+		UserInfo sender = userRepository.findById(saved.getSenderId()).orElse(null);
+		String senderName = sender != null ? sender.getUserName() : "未知使用者";
 
-	    if (saved.getReplyId() != null) {
-	        GroupChatMessage reply = repository.findById(saved.getReplyId()).orElse(null);
+		ChatMessageResponse replyDto = null;
 
-	        if (reply != null) {
-	            replyDto = new ChatMessageResponse();
-	            replyDto.setId(reply.getId());
-	            replyDto.setMessage(reply.getMessage());
-	            replyDto.setSenderId(reply.getSenderId());
+		if (saved.getReplyId() != null) {
+			GroupChatMessage reply = repository.findById(saved.getReplyId()).orElse(null);
 
-	            UserInfo replyUser = userRepository.findById(reply.getSenderId()).orElse(null);
+			if (reply != null) {
+				replyDto = new ChatMessageResponse();
+				replyDto.setId(reply.getId());
+				replyDto.setMessage(reply.getMessage());
+				replyDto.setSenderId(reply.getSenderId());
 
-	            if (replyUser != null) {
-	                replyDto.setSenderName(replyUser.getUserName());
-	            }
-	        }
-	    }
+				UserInfo replyUser = userRepository.findById(reply.getSenderId()).orElse(null);
 
+				if (replyUser != null) {
+					replyDto.setSenderName(replyUser.getUserName());
+				}
+			}
+		}
 
-			    ChatMessageResponse dto = new ChatMessageResponse();
-	    dto.setId(saved.getId());
-	    dto.setGroupId(saved.getGroupId());
-	    dto.setSenderId(saved.getSenderId());
-	    dto.setMessage(saved.getMessage());
-	    dto.setImageUrl(saved.getImageUrl());
-	    dto.setCreateTime(saved.getCreateTime());
-	    dto.setRecalled(saved.getRecalled());
-	    dto.setReplyId(saved.getReplyId());
-	    dto.setReplyMessage(replyDto);
-	    dto.setType(saved.getImageUrl() != null ? "IMAGE" : "MESSAGE");
-	    dto.setReadCount(0L);
+		ChatMessageResponse dto = new ChatMessageResponse();
+		dto.setId(saved.getId());
+		dto.setGroupId(saved.getGroupId());
+		dto.setSenderId(saved.getSenderId());
+		dto.setMessage(saved.getMessage());
+		dto.setImageUrl(saved.getImageUrl());
+		dto.setCreateTime(saved.getCreateTime());
+		dto.setRecalled(saved.getRecalled());
+		dto.setReplyId(saved.getReplyId());
+		dto.setReplyMessage(replyDto);
+		dto.setType(saved.getImageUrl() != null ? "IMAGE" : "MESSAGE");
+		dto.setReadCount(0L);
 
+		if (sender != null) {
+			dto.setSenderName(sender.getUserName());
+			dto.setSenderAvatar(sender.getAvatar());
 
-	    if (sender != null) {
-	        dto.setSenderName(sender.getUserName());
-	        dto.setSenderAvatar(sender.getAvatar());
-	    
+			// 重點：先把訊息推給聊天室
+			messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
 
-	    // 重點：先把訊息推給聊天室
-	    messagingTemplate.convertAndSend("/topic/group/" + saved.getGroupId(), dto);
+			// 再處理通知
+			chatNotifyService.sendChatNotifications(request, senderName);
+		}
+	}
 
-	    // 再處理通知
-	    chatNotifyService.sendChatNotifications(request, senderName);
-	}}
-	
 	// 在線上
 	@MessageMapping("/chat.enter")
 	public void enter(ChatEnterRequest request, SimpMessageHeaderAccessor accessor) {
@@ -152,7 +146,5 @@ public class ChatWebSocketController {
 
 		presenceManager.heartbeat(accessor.getSessionId(), req.getUserId(), req.getGroupId());
 	}
-	
-	
-	
+
 }
