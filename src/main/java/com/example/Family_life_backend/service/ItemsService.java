@@ -108,67 +108,93 @@ public class ItemsService {
 
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req, MultipartFile image) {
-		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
+		try {
+			validateImage(image);
 
-		// 安全庫存量：沒填就給 0
-		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
+			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
-		String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+			Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
 
-		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
-		// 圖片上傳
-		String avatarUrl = itemListNotify.store(image);
-		itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
-				req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
-				req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(), req.getUnitPrice(),
+			String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
-				finalSafeQuantity, status, remindMessage, LocalDateTime.now(), avatarUrl);
+			String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
 
-		if (finalGroupId != 0) {
-			String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到一般用品清單";
-			itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
+			String avatarUrl = null;
+
+			if (image != null && !image.isEmpty()) {
+				avatarUrl = itemListNotify.store(image);
+			}
+
+			itemDao.insertItemNative(finalGroupId, req.getCategoryId(), req.getName(), req.getQuantity(), req.getUnit(),
+					req.getLocationId(), req.getPrice(), req.getPurchaseDate(), req.getExpireDate(),
+					req.getNotify() != null ? req.getNotify() : false, req.getNote(), req.getUserId(),
+					req.getUnitPrice(), finalSafeQuantity, status, remindMessage,
+					LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
+
+			if (finalGroupId != 0) {
+				String content = groupDao.getSelfName((long) req.getUserId()) + "已新增" + req.getName() + "到一般用品清單";
+
+				itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
+			}
+
+			return new AddItemsInfoRes("成功", 200);
+
+		} catch (IllegalArgumentException e) {
+			return new AddItemsInfoRes(e.getMessage(), 400);
+
+		} catch (Exception e) {
+			return new AddItemsInfoRes("新增物品失敗：" + e.getMessage(), 500);
 		}
-
-		return new AddItemsInfoRes("成功", 200);
 	}
 
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req, MultipartFile image) {
+		try {
+			validateImage(image);
 
-		Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
-		String oldItemName = itemDao.getItemNameById((long) req.getId());
+			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
-		// 安全庫存量：沒填就給 0
-		Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
+			String oldItemName = itemDao.getItemNameById((long) req.getId());
 
-		String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+			Integer finalSafeQuantity = req.getSafeQuantity() != null ? req.getSafeQuantity() : 0;
 
-		String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
-//跟groupService 一樣 先拿舊的 avatar
-		String oldAvatarString = itemDao.getItemImage(Long.valueOf(req.getId()));
-		String avatarUrl = oldAvatarString; // 預設使用舊圖
-		// 只有有新圖片才更新
-		if (image != null && !image.isEmpty()) {
-			avatarUrl = itemListNotify.store(image);
+			String status = calcStatus(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+
+			String remindMessage = calcRemindMessage(req.getQuantity(), finalSafeQuantity, req.getExpireDate());
+
+			String oldAvatarString = itemDao.getItemImage(Long.valueOf(req.getId()));
+
+			String avatarUrl = oldAvatarString;
+
+			if (image != null && !image.isEmpty()) {
+				avatarUrl = itemListNotify.store(image);
+			}
+
+			int result = itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(),
+					req.getName(), req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(),
+					req.getPurchaseDate(), req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false,
+					req.getNote(), req.getUnitPrice(), finalSafeQuantity, status, remindMessage,
+					LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
+
+			if (result == 0) {
+				return new BasicRes(404, "查無此物品資料");
+			}
+
+			if (finalGroupId != 0) {
+				String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成"
+						+ req.getName();
+
+				itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
+			}
+
+			return new BasicRes("成功", 200);
+
+		} catch (IllegalArgumentException e) {
+			return new BasicRes(400, e.getMessage());
+
+		} catch (Exception e) {
+			return new BasicRes(500, "修改物品失敗：" + e.getMessage());
 		}
-
-		int result = itemDao.updateItem(req.getId(), finalGroupId, (long) req.getUserId(), req.getCategoryId(),
-				req.getName(), req.getQuantity(), req.getUnit(), req.getLocationId(), req.getPrice(),
-				req.getPurchaseDate(), req.getExpireDate(), req.getNotify() != null ? req.getNotify() : false,
-				req.getNote(),
-
-				req.getUnitPrice(), finalSafeQuantity, status, remindMessage,
-				LocalDateTime.now(ZoneId.of("Asia/Taipei")), avatarUrl);
-		if (result == 0) {
-			return new BasicRes(404, "查無此物品資料");
-		}
-		String content = groupDao.getSelfName((long) req.getUserId()) + "已將" + oldItemName + "一般用品清單改成" + req.getName();
-
-		if (finalGroupId != 0) {
-			itemListNotify.notifyGroupMembers(finalGroupId, req.getUserId(), content);
-		}
-
-		return new BasicRes("成功", 200);
 	}
 
 	@Transactional
@@ -241,6 +267,25 @@ public class ItemsService {
 		}
 
 		return "";
+	}
+
+	private void validateImage(MultipartFile image) {
+		if (image == null || image.isEmpty()) {
+			return;
+		}
+
+		// 例如限制 5MB
+		long maxSize = 5 * 1024 * 1024;
+
+		if (image.getSize() > maxSize) {
+			throw new IllegalArgumentException("圖片大小不能超過 5MB");
+		}
+
+		String contentType = image.getContentType();
+
+		if (contentType == null || !contentType.startsWith("image/")) {
+			throw new IllegalArgumentException("只能上傳圖片檔案");
+		}
 	}
 
 }
