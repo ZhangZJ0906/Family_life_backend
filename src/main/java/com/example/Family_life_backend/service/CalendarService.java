@@ -47,81 +47,29 @@ public class CalendarService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
-	
+
 	private static final ZoneId TAIWAN_ZONE = ZoneId.of("Asia/Taipei");
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
 
-		// =========================
-		// 1. 基本欄位驗證
-		// =========================
-		if (req.getCreatedBy() == null) {
-			return new CalendarRes(400, "createdBy 不可為空");
-		}
+		CalendarRes validateResult = validateCalendarRequest(req);
 
-		if (req.getTitle() == null || req.getTitle().isBlank()) {
-			return new CalendarRes(400, "活動名稱不可為空");
-		}
-
-		if (req.getEventTime() == null) {
-			return new CalendarRes(400, "活動時間不可為空");
-		}
-
-		if (req.getEventTime().toLocalDate().isBefore(LocalDate.now(TAIWAN_ZONE))) {
-		    return new CalendarRes(400, "開始日期不可早於今天");
-		}
-
-		if (req.getEventTime().toLocalDate().isBefore(java.time.LocalDate.now())) {
-			return new CalendarRes(400, "開始日期不可早於今天");
+		if (validateResult != null) {
+			return validateResult;
 		}
 
 		// groupId = 0 代表私人活動
 		Long groupId = req.getGroupId() == null ? 0L : req.getGroupId();
 
-		// =========================
-		// 2. 決定要指派給哪些成員
-		// =========================
-		List<Long> assignedUserIds = new ArrayList<>();
+		List<Long> assignedUserIds = resolveAssignedUsers(groupId, req);
 
-		if (groupId == 0) {
-			// 私人活動：不用選成員，直接指派給建立者自己
-			assignedUserIds.add(req.getCreatedBy());
-		} else {
-			// 群組活動：優先使用前端複選傳來的 assignedUserIds
-			if (req.getAssignedUserIds() != null && !req.getAssignedUserIds().isEmpty()) {
-				assignedUserIds.addAll(req.getAssignedUserIds());
-			}
+		List<Long> validAssignedUserIds = getValidAssignedUsers(groupId,	assignedUserIds);
 
-			// 保險：如果前端舊版只傳 assignedUserId，也可以接住
-			if (assignedUserIds.isEmpty() && req.getAssignedUserId() != null) {
-				assignedUserIds.add(req.getAssignedUserId());
-			}
-
-			// 如果還是空，代表前端沒有成功送出指派成員
-			if (assignedUserIds.isEmpty()) {
-				return new CalendarRes(400, "請選擇指派成員");
-			}
-		}
-
-		// =========================
-		// 3. 去除重複成員
-		// 例如前端不小心送 [1, 1, 2]
-		// =========================
-		assignedUserIds = assignedUserIds.stream().distinct().toList();
-
-		// =========================
-		// 4. 檢查群組活動的每位指派成員是否真的在群組內
-		// =========================
-		if (groupId != 0) {
-			for (Long assignedUserId : assignedUserIds) {
-
-				int memberCount = groupMemberDao.countByGroupIdAndUserId(groupId, assignedUserId);
-
-				if (memberCount <= 0) {
-					return new CalendarRes(400, "有指派成員不屬於該群組");
-				}
-			}
+		if (assignedUserIds.size() != validAssignedUserIds.size()) {
+		    return new CalendarRes(
+		            400,
+		            "有指派成員不屬於該群組");
 		}
 
 		// 同一次新增的多位成員活動，共用同一個批次 ID
@@ -135,18 +83,9 @@ public class CalendarService {
 
 			LocalDateTime taiwanNow = LocalDateTime.now(TAIWAN_ZONE);
 
-			int result = calendarDao.insertCalendarEvent(
-			    eventBatchId,
-			    groupId,
-			    req.getCreatedBy(),
-			    assignedUserId,
-			    req.getTitle(),
-			    req.getDescription(),
-			    req.getEventTime(),
-			    req.getEndTime(),
-			    req.getNotifyBefore(),
-			    taiwanNow
-			);
+			int result = calendarDao.insertCalendarEvent(eventBatchId, groupId, req.getCreatedBy(), assignedUserId,
+					req.getTitle(), req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore(),
+					taiwanNow);
 			successCount += result;
 		}
 
@@ -163,38 +102,26 @@ public class CalendarService {
 
 			LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
 
-			List<EmailNotifyUserDTO> notifyUsers =
-			        userInfoDao.findEmailNotifyUsers(assignedUserIds);
+			List<EmailNotifyUserDTO> notifyUsers = userInfoDao.findEmailNotifyUsers(assignedUserIds);
 
 			Set<Long> pushUserIds = new HashSet<>();
 
 			for (Long assignedUserId : assignedUserIds) {
 
-			    calendarDao.insertCalendarEventNotify(
-			        groupId,
-			        assignedUserId,
-			        content,
-			        "calendar",
-			        false,
-			        now
-			    );
+				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "calendar", false, now);
 
-			    pushUserIds.add(assignedUserId);
+				pushUserIds.add(assignedUserId);
 			}
 
 			for (EmailNotifyUserDTO user : notifyUsers) {
-			    if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
-			        emailService.sendMailAsync(
-			            user.getEmail(),
-			            "群組通知",
-			            content
-			        );
-			    }
+				if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
+					emailService.sendMailAsync(user.getEmail(), "群組通知", content);
+				}
 			}
 
 			for (Long pushUserId : pushUserIds) {
-			    int unreadCount = notifyDao.countUnreadByUserId(pushUserId);
-			    notifySocketService.pushUnreadCount(pushUserId, unreadCount);
+				int unreadCount = notifyDao.countUnreadByUserId(pushUserId);
+				notifySocketService.pushUnreadCount(pushUserId, unreadCount);
 			}
 		}
 
@@ -204,202 +131,133 @@ public class CalendarService {
 	// 修改事件：同步修改同一批活動
 	public CalendarRes update(Long id, CalendarReq req) {
 
-	    // =========================
-	    // 1. 基本驗證
-	    // =========================
-	    if (req.getCreatedBy() == null) {
-	        return new CalendarRes(400, "createdBy 不可為空");
-	    }
+		CalendarRes validateResult = validateCalendarRequest(req);
 
-	    if (req.getTitle() == null || req.getTitle().isBlank()) {
-	        return new CalendarRes(400, "活動名稱不可為空");
-	    }
+		if (validateResult != null) {
+			return validateResult;
+		}
 
-	    if (req.getEventTime() == null) {
-	        return new CalendarRes(400, "活動時間不可為空");
-	    }
+		Long groupId = req.getGroupId() == null ? 0L : req.getGroupId();
 
-	    if (req.getEventTime().toLocalDate().isBefore(LocalDate.now(TAIWAN_ZONE))) {
-	        return new CalendarRes(400, "開始日期不可早於今天");
-	    }
+		// =========================
+		// 2. 找出目前這筆活動
+		// id 找不到時，改用 eventBatchId 找
+		// =========================
+		Optional<Calendar> oldOp = calendarDao.findById(id);
 
-	    if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
-	        return new CalendarRes(400, "開始時間不可大於結束時間");
-	    }
+		Calendar oldEvent = null;
 
-	    Long groupId = req.getGroupId() == null ? 0L : req.getGroupId();
+		if (oldOp.isPresent()) {
+			oldEvent = oldOp.get();
+		} else if (req.getEventBatchId() != null && !req.getEventBatchId().isBlank()) {
+			List<Calendar> batchEvents = calendarDao.findByEventBatchId(req.getEventBatchId());
 
-	    // =========================
-	    // 2. 找出目前這筆活動
-	    // id 找不到時，改用 eventBatchId 找
-	    // =========================
-	    Optional<Calendar> oldOp = calendarDao.findById(id);
+			if (!batchEvents.isEmpty()) {
+				oldEvent = batchEvents.get(0);
+			}
+		}
 
-	    Calendar oldEvent = null;
+		if (oldEvent == null) {
+			return new CalendarRes(404, "查無此事件");
+		}
 
-	    if (oldOp.isPresent()) {
-	        oldEvent = oldOp.get();
-	    } else if (req.getEventBatchId() != null && !req.getEventBatchId().isBlank()) {
-	        List<Calendar> batchEvents = calendarDao.findByEventBatchId(req.getEventBatchId());
+		String eventBatchId = oldEvent.getEventBatchId();
 
-	        if (!batchEvents.isEmpty()) {
-	            oldEvent = batchEvents.get(0);
-	        }
-	    }
+		if (eventBatchId == null || eventBatchId.isBlank()) {
+			eventBatchId = req.getEventBatchId();
+		}
 
-	    if (oldEvent == null) {
-	        return new CalendarRes(404, "查無此事件");
-	    }
+		if (eventBatchId == null || eventBatchId.isBlank()) {
+			eventBatchId = UUID.randomUUID().toString();
+		}
 
-	    String eventBatchId = oldEvent.getEventBatchId();
+		String oldCalendarTitle = oldEvent.getTitle();
 
-	    if (eventBatchId == null || eventBatchId.isBlank()) {
-	        eventBatchId = req.getEventBatchId();
-	    }
+		// =========================
+		// 3. 決定修改後要指派給哪些成員
+		// =========================
+		List<Long> assignedUserIds = resolveAssignedUsers(groupId, req);
 
-	    if (eventBatchId == null || eventBatchId.isBlank()) {
-	        eventBatchId = UUID.randomUUID().toString();
-	    }
+		// =========================
+		// 4. 檢查群組成員是否真的在群組內
+		// =========================
+		assignedUserIds = getValidAssignedUsers(groupId,	assignedUserIds);
 
-	    String oldCalendarTitle = oldEvent.getTitle();
+		if (assignedUserIds.isEmpty()) {
 
-	    // =========================
-	    // 3. 決定修改後要指派給哪些成員
-	    // =========================
-	    List<Long> assignedUserIds = new ArrayList<>();
+			calendarDao.deleteByEventBatchId(eventBatchId);
 
-	    if (groupId == 0) {
-	        // 私人活動：固定指派給自己
-	        assignedUserIds.add(req.getCreatedBy());
-	    } else {
-	        // 群組活動：使用前端多選成員
-	        if (req.getAssignedUserIds() != null && !req.getAssignedUserIds().isEmpty()) {
-	            assignedUserIds.addAll(req.getAssignedUserIds());
-	        }
+	        return new CalendarRes(
+	                200,
+	                "所有指派成員皆已離開群組，活動已自動刪除");
+			}
 
-	        // 舊版 fallback
-	        if (assignedUserIds.isEmpty() && req.getAssignedUserId() != null) {
-	            assignedUserIds.add(req.getAssignedUserId());
-	        }
+		List<Long> oldAssignedUserIds = calendarDao.findAssignedUserIdsByEventBatchId(eventBatchId);
 
-	        if (assignedUserIds.isEmpty()) {
-	            return new CalendarRes(400, "請選擇指派成員");
-	        }
-	    }
+		List<Long> oldSorted = oldAssignedUserIds.stream().sorted().toList();
 
-	    assignedUserIds = assignedUserIds.stream().distinct().toList();
+		List<Long> newSorted = assignedUserIds.stream().sorted().toList();
 
-	    // =========================
-	    // 4. 檢查群組成員是否真的在群組內
-	    // =========================
-	    if (groupId != 0) {
-	        for (Long assignedUserId : assignedUserIds) {
-	            int memberCount = groupMemberDao.countByGroupIdAndUserId(groupId, assignedUserId);
+		boolean sameAssignedUsers = oldSorted.equals(newSorted);
 
-	            if (memberCount <= 0) {
-	                return new CalendarRes(400, "有指派成員不屬於該群組");
-	            }
-	        }
-	    }
-	    
-	    List<Long> oldAssignedUserIds =
-	            calendarDao.findAssignedUserIdsByEventBatchId(eventBatchId);
+		int successCount = 0;
 
-	    List<Long> oldSorted = oldAssignedUserIds.stream()
-	            .sorted()
-	            .toList();
+		if (sameAssignedUsers) {
+			successCount = calendarDao.updateCalendarEventBatch(eventBatchId, req.getCreatedBy(), req.getTitle(),
+					req.getDescription(), req.getEventTime(), req.getEndTime(), req.getNotifyBefore());
+		} else {
+			calendarDao.deleteByEventBatchId(eventBatchId);
 
-	    List<Long> newSorted = assignedUserIds.stream()
-	            .sorted()
-	            .toList();
+			LocalDateTime taiwanNow = LocalDateTime.now(TAIWAN_ZONE);
 
-	    boolean sameAssignedUsers = oldSorted.equals(newSorted);
+			for (Long assignedUserId : assignedUserIds) {
+				int result = calendarDao.insertCalendarEvent(eventBatchId, groupId, req.getCreatedBy(), assignedUserId,
+						req.getTitle(), req.getDescription(), req.getEventTime(), req.getEndTime(),
+						req.getNotifyBefore(), taiwanNow);
 
-	    int successCount = 0;
+				successCount += result;
+			}
+		}
 
-	    if (sameAssignedUsers) {
-	        successCount = calendarDao.updateCalendarEventBatch(
-	                eventBatchId,
-	                req.getCreatedBy(),
-	                req.getTitle(),
-	                req.getDescription(),
-	                req.getEventTime(),
-	                req.getEndTime(),
-	                req.getNotifyBefore()
-	        );
-	    } else {
-	        calendarDao.deleteByEventBatchId(eventBatchId);
+		if (successCount <= 0) {
+			return new CalendarRes(500, "修改失敗");
+		}
 
-	        LocalDateTime taiwanNow = LocalDateTime.now(TAIWAN_ZONE);
+		// =========================
+		// 7. 發送通知
+		// =========================
+		if (groupId != 0) {
 
-	        for (Long assignedUserId : assignedUserIds) {
-	            int result = calendarDao.insertCalendarEvent(
-	                    eventBatchId,
-	                    groupId,
-	                    req.getCreatedBy(),
-	                    assignedUserId,
-	                    req.getTitle(),
-	                    req.getDescription(),
-	                    req.getEventTime(),
-	                    req.getEndTime(),
-	                    req.getNotifyBefore(),
-	                    taiwanNow
-	            );
+			String content = groupDao.getSelfName(req.getCreatedBy()) + "修改行事曆活動：" + oldCalendarTitle + " → "
+					+ req.getTitle();
 
-	            successCount += result;
-	        }
-	    }
+			LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
 
-	    if (successCount <= 0) {
-	        return new CalendarRes(500, "修改失敗");
-	    }
+			List<EmailNotifyUserDTO> notifyUsers = userInfoDao.findEmailNotifyUsers(assignedUserIds);
 
-	   
-	    // =========================
-	    // 7. 發送通知
-	    // =========================
-	    if (groupId != 0) {
+			Set<Long> pushUserIds = new HashSet<>();
 
-	        String content = groupDao.getSelfName(req.getCreatedBy())
-	                + "修改行事曆活動：" + oldCalendarTitle + " → " + req.getTitle();
+			for (Long assignedUserId : assignedUserIds) {
+				calendarDao.insertCalendarEventNotify(groupId, assignedUserId, content, "update", false, now);
 
-	        LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
+				pushUserIds.add(assignedUserId);
+			}
 
-	        List<EmailNotifyUserDTO> notifyUsers =
-	                userInfoDao.findEmailNotifyUsers(assignedUserIds);
+			for (EmailNotifyUserDTO user : notifyUsers) {
+				if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
+					emailService.sendMailAsync(user.getEmail(), "群組通知", content);
+				}
+			}
 
-	        Set<Long> pushUserIds = new HashSet<>();
+			for (Long pushUserId : pushUserIds) {
+				int unreadCount = notifyDao.countUnreadByUserId(pushUserId);
+				notifySocketService.pushUnreadCount(pushUserId, unreadCount);
+			}
+		}
 
-	        for (Long assignedUserId : assignedUserIds) {
-	            calendarDao.insertCalendarEventNotify(
-	                    groupId,
-	                    assignedUserId,
-	                    content,
-	                    "update",
-	                    false,
-	                    now
-	            );
+		return new CalendarRes(200, "修改成功");
+	}
 
-	            pushUserIds.add(assignedUserId);
-	        }
-
-	        for (EmailNotifyUserDTO user : notifyUsers) {
-	            if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
-	                emailService.sendMailAsync(
-	                        user.getEmail(),
-	                        "群組通知",
-	                        content
-	                );
-	            }
-	        }
-
-	        for (Long pushUserId : pushUserIds) {
-	            int unreadCount = notifyDao.countUnreadByUserId(pushUserId);
-	            notifySocketService.pushUnreadCount(pushUserId, unreadCount);
-	        }
-	    }
-
-	    return new CalendarRes(200, "修改成功");}
 	// 刪除事件：如果有 eventBatchId，就刪除同一批活動
 	public CalendarRes delete(Long id, Long userId, Long groupId) {
 
@@ -419,50 +277,33 @@ public class CalendarService {
 		// 群組活動才發通知
 		if (groupId != null && groupId != 0) {
 
-		    List<groupMembersDTO> getGroupMembers =
-		            groupMemberDao.getMembersByGroupId(groupId);
+			List<groupMembersDTO> getGroupMembers = groupMemberDao.getMembersByGroupId(groupId);
 
-		    List<Long> notifyUserIds = getGroupMembers.stream()
-		            .map(groupMembersDTO::getUser_id)
-		            .filter(memberId -> !java.util.Objects.equals(memberId, userId))
-		            .distinct()
-		            .toList();
+			List<Long> notifyUserIds = getGroupMembers.stream().map(groupMembersDTO::getUser_id)
+					.filter(memberId -> !java.util.Objects.equals(memberId, userId)).distinct().toList();
 
-		    if (!notifyUserIds.isEmpty()) {
+			if (!notifyUserIds.isEmpty()) {
 
-		        LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
+				LocalDateTime now = LocalDateTime.now(TAIWAN_ZONE);
 
-		        List<EmailNotifyUserDTO> notifyUsers =
-		                userInfoDao.findEmailNotifyUsers(notifyUserIds);
+				List<EmailNotifyUserDTO> notifyUsers = userInfoDao.findEmailNotifyUsers(notifyUserIds);
 
-		        for (Long notifyUserId : notifyUserIds) {
-		            calendarDao.insertCalendarEventNotify(
-		                    groupId,
-		                    notifyUserId,
-		                    content,
-		                    "update",
-		                    false,
-		                    now
-		            );
-		        }
+				for (Long notifyUserId : notifyUserIds) {
+					calendarDao.insertCalendarEventNotify(groupId, notifyUserId, content, "update", false, now);
+				}
 
-		        for (EmailNotifyUserDTO user : notifyUsers) {
-		            if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
-		                emailService.sendMailAsync(
-		                        user.getEmail(),
-		                        "群組通知",
-		                        content
-		                );
-		            }
-		        }
+				for (EmailNotifyUserDTO user : notifyUsers) {
+					if (Boolean.TRUE.equals(user.getNotifyByEmail())) {
+						emailService.sendMailAsync(user.getEmail(), "群組通知", content);
+					}
+				}
 
-		        for (Long notifyUserId : notifyUserIds) {
-		            int unreadCount = notifyDao.countUnreadByUserId(notifyUserId);
-		            notifySocketService.pushUnreadCount(notifyUserId, unreadCount);
-		        }
-		    }
+				for (Long notifyUserId : notifyUserIds) {
+					int unreadCount = notifyDao.countUnreadByUserId(notifyUserId);
+					notifySocketService.pushUnreadCount(notifyUserId, unreadCount);
+				}
+			}
 		}
-		
 
 		int result;
 
@@ -559,6 +400,76 @@ public class CalendarService {
 		List<Long> assignedUserIds = calendarDao.findAssignedUserIdsByEventBatchId(eventBatchId);
 
 		return new CalendarRes(200, "查詢成功", assignedUserIds);
+	}
+
+	// 基本驗證
+	private CalendarRes validateCalendarRequest(CalendarReq req) {
+
+		if (req.getCreatedBy() == null) {
+			return new CalendarRes(400, "createdBy 不可為空");
+		}
+
+		if (req.getTitle() == null || req.getTitle().isBlank()) {
+
+			return new CalendarRes(400, "活動名稱不可為空");
+		}
+
+		if (req.getEventTime() == null) {
+			return new CalendarRes(400, "活動時間不可為空");
+		}
+
+		if (req.getEventTime().toLocalDate().isBefore(LocalDate.now(TAIWAN_ZONE))) {
+
+			return new CalendarRes(400, "開始日期不可早於今天");
+		}
+
+		if (req.getEndTime() != null && req.getEventTime().isAfter(req.getEndTime())) {
+
+			return new CalendarRes(400, "開始時間不可大於結束時間");
+		}
+
+		return null;
+	}
+
+	// 檢查群組活動的每位指派成員是否真的在群組內
+	private List<Long> getValidAssignedUsers(Long groupId,	List<Long> assignedUserIds) {
+
+	    if (groupId == 0) {
+	        return assignedUserIds;
+	    }
+
+	    Set<Long> groupMemberIds =
+	            new HashSet<>(
+	                    groupMemberDao.findUserIdsByGroupId(groupId));
+
+	    return assignedUserIds.stream()
+	            .filter(groupMemberIds::contains)
+	            .toList();
+	}
+
+	// 指派成員
+	private List<Long> resolveAssignedUsers(Long groupId, CalendarReq req) {
+
+		List<Long> users = new ArrayList<>();
+
+		if (groupId == 0) {
+			users.add(req.getCreatedBy());
+		} else {
+
+			if (req.getAssignedUserIds() != null) {
+				users.addAll(req.getAssignedUserIds());
+			}
+
+			if (users.isEmpty() && req.getAssignedUserId() != null) {
+				users.add(req.getAssignedUserId());
+			}
+
+			if (users.isEmpty()) {
+				throw new IllegalArgumentException("請選擇指派成員");
+			}
+		}
+
+		return users.stream().distinct().toList();
 	}
 
 }

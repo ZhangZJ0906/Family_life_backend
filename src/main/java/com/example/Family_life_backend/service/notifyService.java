@@ -15,34 +15,42 @@ import com.example.Family_life_backend.response.BasicResponse;
 public class notifyService {
 	@Autowired
 	NotifyDao notifyDao;
-	
+
 	@Transactional
 	public BasicResponse isRead(Long notify_id) {
-		notifyDao.isReadNotify(notify_id);
+		notifyDao.isReadOneNotify(notify_id);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
-	
+
 	@Transactional
 	public BasicResponse readAllNotify(UpdateAllNotifyReq req) {
-		List<Long> noyifyIdList = req.getIds();
-		for(Long notifyId: noyifyIdList) {
-			notifyDao.isReadNotify(notifyId);
+		List<Long> notifyIdList = req.getIds();
+
+		if (notifyIdList == null || notifyIdList.isEmpty()) {
+			return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 		}
+
+		notifyDao.batchReadNotify(notifyIdList);
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
-	
+
 	@Transactional
 	public BasicResponse deleteNotify(Long notify_id) {
-		notifyDao.deleteNotify(notify_id);
+		notifyDao.deleteOneNotify(notify_id);
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
-	
+
 	@Transactional
 	public BasicResponse deleteIsReadAllNotify(UpdateAllNotifyReq req) {
-		List<Long> noyifyIdList = req.getIds();
-		for(Long notifyId: noyifyIdList) {
-			notifyDao.deleteNotify(notifyId);
+		List<Long> notifyIdList = req.getIds();
+
+		if (notifyIdList == null || notifyIdList.isEmpty()) {
+			return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 		}
+
+		notifyDao.batchDeleteNotify(notifyIdList);
+
 		return new BasicResponse(replyMsg.SUCCESS.getMessage(), replyMsg.SUCCESS.getCode());
 	}
 }
