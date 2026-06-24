@@ -54,7 +54,7 @@ public class ChatNotifyService {
             }
 
             notify n = new notify();
-            n.setSendId(request.getSenderId());
+            n.setSendId(request.getGroupId());
             n.setGetUserId(member.getUser_id());
             n.setContent(content);
             n.setType("chat");
