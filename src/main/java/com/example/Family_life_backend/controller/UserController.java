@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -141,9 +142,12 @@ public class UserController {
 	    if (savedInfo == null) {
 	        return "請先發送驗證碼";
 	    }
+	    
+        System.out.println("666");
 
-	    if (savedInfo.getExpiresAt().isBefore(LocalDateTime.now())) {
+	    if (savedInfo.getExpiresAt().isBefore(LocalDateTime.now(ZoneId.of("Asia/Taipei")))) {
 	        verificationCodes.remove(email);
+	        System.out.println("expire");
 	        return "驗證碼已過期，請重新發送";
 	    }
 
