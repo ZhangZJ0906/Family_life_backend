@@ -2,7 +2,10 @@ package com.example.Family_life_backend.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -11,71 +14,60 @@ import org.springframework.stereotype.Service;
 import com.example.Family_life_backend.DTO.groupMembersDTO;
 import com.example.Family_life_backend.dao.NotifyDao;
 import com.example.Family_life_backend.dao.groupMemberDao;
+import com.example.Family_life_backend.entity.notify;
 import com.example.Family_life_backend.request.ChatRequest;
 
-//發送訊息通知
 @Service
 public class ChatNotifyService {
-	
+
 	@Autowired
-    private groupMemberDao groupMemberDao;
+	private groupMemberDao groupMemberDao;
 
-    @Autowired
-    private NotifyDao notifyDao;
+	@Autowired
+	private NotifyDao notifyDao;
 
-    @Autowired
-    private NotifySocketService notifySocketService;
+	@Autowired
+	private NotifySocketService notifySocketService;
 
-    @Async
-    public void sendChatNotifications(ChatRequest request, String senderName) {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
-        String content = senderName + ": " + request.getMessage();
+	@Async
+	public void sendChatNotifications(ChatRequest request, String senderName) {
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+		String content = senderName + ": " + request.getMessage();
 
-        List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(request.getGroupId());
+		List<groupMembersDTO> members = groupMemberDao.getMembersByGroupId(request.getGroupId());
+		List<notify> notifications = new ArrayList<>();
+		List<Long> userIds = new ArrayList<>();
 
-        for (groupMembersDTO member : members) {
-            if (member.getUser_id().equals(request.getSenderId())) {
-                continue;
-            }
+		for (groupMembersDTO member : members) {
+			if (member.getUser_id().equals(request.getSenderId())) {
+				continue;
+			}
 
-<<<<<<< HEAD
-            notifyDao.sendGroupNameUpdateNotify(
-                    request.getSenderId(),
-                    member.getUser_id(),
-                    content,
-                    "chat",
-                    false,
-                    now
-            );
-=======
-            notify n = new notify();
-            n.setSendId(request.getGroupId());
-            n.setGetUserId(member.getUser_id());
-            n.setContent(content);
-            n.setType("chat");
-            n.setRead(false);
-            n.setSendDate(now);
+			notify notification = new notify();
+			notification.setSendId(request.getSenderId());
+			notification.setGetUserId(member.getUser_id());
+			notification.setContent(content);
+			notification.setType("chat");
+			notification.setRead(false);
+			notification.setSendDate(now);
 
-            notifications.add(n);
-            userIds.add(member.getUser_id());
-        }
+			notifications.add(notification);
+			userIds.add(member.getUser_id());
+		}
 
-        // 🚀 1. batch insert（一次寫入）
-        notifyDao.saveAll(notifications);
+		if (notifications.isEmpty()) {
+			return;
+		}
 
-        // 🚀 2. batch unread count（一次查完）
-        List<Object[]> counts = notifyDao.countUnreadByUserIds(userIds);
+		notifyDao.saveAll(notifications);
 
-        Map<Long, Integer> countMap = new HashMap<>();
-        for (Object[] row : counts) {
-            countMap.put(((Number) row[0]).longValue(), ((Number) row[1]).intValue());
-        }
+		Map<Long, Integer> unreadMap = new HashMap<>();
+		for (Object[] row : notifyDao.countUnreadByUserIds(userIds)) {
+			unreadMap.put(((Number) row[0]).longValue(), ((Number) row[1]).intValue());
+		}
 
-        // 🚀 3. websocket push（不查 DB）
-        for (Long userId : userIds) {
-            int unread = countMap.getOrDefault(userId, 0);
-            notifySocketService.pushUnreadCount(userId, unread);
->>>>>>> origin/internet
-        }
-    }
+		for (Long userId : userIds) {
+			notifySocketService.pushUnreadCount(userId, unreadMap.getOrDefault(userId, 0));
+		}
+	}
 }

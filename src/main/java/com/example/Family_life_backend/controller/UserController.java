@@ -1,6 +1,5 @@
 package com.example.Family_life_backend.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -58,12 +57,34 @@ public class UserController {
 	//email驗證碼
 	private static final int VERIFICATION_EXPIRE_MINUTES = 5;
 	private static final int RESEND_COOLDOWN_SECONDS = 60;
+	private static final int VERIFIED_EMAIL_EXPIRE_MINUTES = 10;
 	
     private final Map<String, VerificationCodeInfo> verificationCodes = new ConcurrentHashMap<>();
+    private final Map<String, LocalDateTime> verifiedEmails = new ConcurrentHashMap<>();
 
 	@PostMapping("/register")
 	public BasicRes addUser(@Valid @RequestBody AddInfoReq req) {
-		return userService.addInfo(req);
+		String email = normalizeEmail(req.getEmail());
+		LocalDateTime verifiedUntil = verifiedEmails.get(email);
+
+		if (verifiedUntil == null) {
+			return new BasicRes("EMAIL_NOT_VERIFIED", 400);
+		}
+
+		if (verifiedUntil.isBefore(LocalDateTime.now())) {
+			verifiedEmails.remove(email);
+			return new BasicRes("EMAIL_VERIFY_EXPIRED", 400);
+		}
+
+		req.setEmail(email);
+		BasicRes res = userService.addInfo(req);
+
+		if (res.getCode() == 200) {
+			userInfoDao.updateEmailVerify(email);
+			verifiedEmails.remove(email);
+		}
+
+		return res;
 	}
 
 	@GetMapping(value = "/login")
@@ -105,6 +126,12 @@ public class UserController {
 	// 寄送驗證
 	@PostMapping("/send")
 	public String sendCode(@RequestParam("email") String email) {
+		email = normalizeEmail(email);
+
+		if (userInfoDao.existsByEmail(email)) {
+			return "EMAIL_EXISTS";
+		}
+
 	    LocalDateTime now = LocalDateTime.now();
 	    VerificationCodeInfo oldInfo = verificationCodes.get(email);
 
@@ -136,6 +163,7 @@ public class UserController {
 
 	@PostMapping("/verify")
 	public String verifyCode(@RequestParam("email") String email, @RequestParam("code") String code) {
+		email = normalizeEmail(email);
 	    VerificationCodeInfo savedInfo = verificationCodes.get(email);
 
 	    if (savedInfo == null) {
@@ -149,7 +177,7 @@ public class UserController {
 
 	    if (savedInfo.getCode().equals(code)) {
 	        verificationCodes.remove(email);
-	        userInfoDao.updateEmailVerify(email);
+	        verifiedEmails.put(email, LocalDateTime.now().plusMinutes(VERIFIED_EMAIL_EXPIRE_MINUTES));
 	        return "驗證成功";
 	    }
 
@@ -166,6 +194,10 @@ public class UserController {
 	public BasicRes updatePassword(@RequestBody UpdatePasswordReq req) {
 		System.out.println(req.getEmail() + req.getPassword());
 		return userService.updatePassword(req.getEmail(), req.getPassword());
+	}
+
+	private String normalizeEmail(String email) {
+		return email == null ? "" : email.trim().toLowerCase();
 	}
 	
 	// 只存在記憶體
