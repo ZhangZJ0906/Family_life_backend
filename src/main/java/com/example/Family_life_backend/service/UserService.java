@@ -43,7 +43,7 @@ public class UserService {
 		if (userInfoDao.existsByEmail(req.getEmail())) {
 			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getMessage(), ReplyMessage.EMAIL_EXISTS.getCode());
 		}
-
+		
 		String now = LocalDateTime.now().toString();
 		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), now);
 
