@@ -31,10 +31,10 @@ public class UserInfo {
 	private String avatar;
 
 	@Column(name = "is_notify_by_enddate")
-	private boolean notifyByEndDate;
+	private Boolean notifyByEndDate;
 
 	@Column(name = "is_notify_by_email")
-	private boolean notifyByEmail;
+	private Boolean notifyByEmail;
 
 	@Column(name = "created_at")
 	private LocalDate createdDate;
@@ -42,8 +42,8 @@ public class UserInfo {
 	@Column(name = "updated_at")
 	private LocalDate updateDate;
 
-	@Column(name = "email_verify")
-	private boolean emailVerify;
+	@Column(name = "email_verify", columnDefinition = "TINYINT(1) DEFAULT 0")
+	private Boolean emailVerify;
 
 	public int getUserId() {
 		return userId;
@@ -89,7 +89,7 @@ public class UserInfo {
 		return notifyByEndDate;
 	}
 
-	public void setNotifyByEndDate(boolean notifyByEndDate) {
+	public void setNotifyByEndDate(Boolean notifyByEndDate) {
 		this.notifyByEndDate = notifyByEndDate;
 	}
 
@@ -97,7 +97,7 @@ public class UserInfo {
 		return notifyByEmail;
 	}
 
-	public void setNotifyByEmail(boolean notifyByEmail) {
+	public void setNotifyByEmail(Boolean notifyByEmail) {
 		this.notifyByEmail = notifyByEmail;
 	}
 
@@ -121,7 +121,7 @@ public class UserInfo {
 		return emailVerify;
 	}
 
-	public void setEmailVerify(boolean emailVerify) {
+	public void setEmailVerify(Boolean emailVerify) {
 		this.emailVerify = emailVerify;
 	}
 
