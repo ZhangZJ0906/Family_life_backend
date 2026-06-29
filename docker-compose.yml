@@ -6,20 +6,20 @@ services:
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: family_db
-      MYSQL_USER: family_user
-      MYSQL_PASSWORD: root
-      MYSQL_INITDB_CHARSET: utf8mb4        
-      MYSQL_INITDB_COLLATION: utf8mb4_unicode_ci  
+      MYSQL_DATABASE: railway
+      MYSQL_USER: family-user
+      MYSQL_PASSWORD: L125914701
+      MYSQL_INITDB_CHARSET: utf8mb4
+      MYSQL_INITDB_COLLATION: utf8mb4_unicode_ci
     volumes:
-      - mysql_data:/var/lib/mysql   # 持久化資料，容器重啟不會消失
+      - mysql_data:/var/lib/mysql
       - ./utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf
-    # ports:
-    #   - "3306:3306"                 # 如果只給後端用，這行可以拿掉
+    ports:
+      - "3307:3306"
     networks:
       - family_net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyour_root_password"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,16 +32,15 @@ services:
       - "18081:8081"
     volumes:
       - ./uploads:/app/uploads
-      
     restart: always
     environment:
       - SERVER_PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/family_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=UTF-8&useUnicode=true&sessionVariables=character_set_client=utf8mb4,character_set_results=utf8mb4,character_set_connection=utf8mb4
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=UTF-8&useUnicode=true
+      - SPRING_DATASOURCE_USERNAME=family-user
+      - SPRING_DATASOURCE_PASSWORD=L125914701
     depends_on:
       mysql-db:
-        condition: service_healthy   # 等 MySQL 健康才啟動
+        condition: service_healthy
     networks:
       - family_net
 
