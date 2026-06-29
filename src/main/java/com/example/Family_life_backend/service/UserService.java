@@ -1,6 +1,5 @@
 package com.example.Family_life_backend.service;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +19,7 @@ import com.example.Family_life_backend.dao.groupDao;
 import com.example.Family_life_backend.entity.PublicInventoryItem;
 import com.example.Family_life_backend.entity.UserInfo;
 import com.example.Family_life_backend.globalVar.globalVar;
+import com.example.Family_life_backend.repositary.UserRepository;
 import com.example.Family_life_backend.request.AddInfoReq;
 import com.example.Family_life_backend.request.ChangePwdReq;
 import com.example.Family_life_backend.request.UpdateUserAllReq;
@@ -34,6 +34,9 @@ public class UserService {
 	private UserInfoDao userInfoDao;
 
 	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
 	private groupDao groupDao;
 
 	@Autowired
@@ -43,9 +46,19 @@ public class UserService {
 		if (userInfoDao.existsByEmail(req.getEmail())) {
 			return new BasicRes(ReplyMessage.EMAIL_EXISTS.getMessage(), ReplyMessage.EMAIL_EXISTS.getCode());
 		}
-		
+
 		String now = LocalDateTime.now().toString();
 		userInfoDao.insert(req.getEmail(), req.getUserName(), req.getPwd(), req.getAvatar(), now);
+
+		UserInfo userInfo = userRepository.findByEmail(req.getEmail());
+
+		LocalDateTime now02 = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+
+		userInfo.setLoginItemListPageTime(now02);
+		userInfo.setLoginCalendarPageTime(now02);
+		userInfo.setLoginExpensePageTime(now02);
+
+		userRepository.save(userInfo);
 
 		return new BasicRes(ReplyMessage.SUCCESS.getMessage(), ReplyMessage.SUCCESS.getCode());
 	}

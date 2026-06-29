@@ -48,10 +48,10 @@ public class Calendar {
 	@Column(name = "assigned_user_id")
 	private Long assignedUserId;
 
-	@Column(name = "is_send_before_notify")
+	@Column(name = "is_send_before_notify", columnDefinition = "TINYINT(1) DEFAULT 0")
 	private Long isSendBeforeNotify;
 
-	@Column(name = "is_send_start_notify")
+	@Column(name = "is_send_start_notify", columnDefinition = "TINYINT(1) DEFAULT 0")
 	private Long isSendStartNotify;
 
 	@PrePersist

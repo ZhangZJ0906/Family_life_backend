@@ -1,12 +1,15 @@
 package com.example.Family_life_backend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,10 +33,10 @@ public class UserInfo {
 	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "is_notify_by_enddate")
+	@Column(name = "is_notify_by_enddate", columnDefinition = "TINYINT(1) DEFAULT 0")
 	private Boolean notifyByEndDate;
 
-	@Column(name = "is_notify_by_email")
+	@Column(name = "is_notify_by_email", columnDefinition = "TINYINT(1) DEFAULT 0")
 	private Boolean notifyByEmail;
 
 	@Column(name = "created_at")
@@ -42,8 +45,36 @@ public class UserInfo {
 	@Column(name = "updated_at")
 	private LocalDate updateDate;
 
-	@Column(name = "email_verify", columnDefinition = "TINYINT(1) DEFAULT 0")
+	@Column(name = "email_verify", columnDefinition = "TINYINT(1) DEFAULT 1")
 	private Boolean emailVerify;
+
+	@Column(name = "login_item_list_page_time")
+	private LocalDateTime loginItemListPageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+
+	@Column(name = "login_calendar_page_time")
+	private LocalDateTime loginCalendarPageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+
+	@Column(name = "login_expense_page_time")
+	private LocalDateTime loginExpensePageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+
+	@PrePersist
+	public void prePersist() {
+		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+		if (createdDate == null)
+			createdDate = LocalDate.now(ZoneId.of("Asia/Taipei"));
+
+		if (createdDate == null)
+			createdDate = LocalDate.now(ZoneId.of("Asia/Taipei"));
+
+		if (loginItemListPageTime == null)
+			loginItemListPageTime = now;
+
+		if (loginCalendarPageTime == null)
+			loginCalendarPageTime = now;
+
+		if (loginExpensePageTime == null)
+			loginExpensePageTime = now;
+	}
 
 	public int getUserId() {
 		return userId;
@@ -123,6 +154,30 @@ public class UserInfo {
 
 	public void setEmailVerify(Boolean emailVerify) {
 		this.emailVerify = emailVerify;
+	}
+
+	public LocalDateTime getLoginItemListPageTime() {
+		return loginItemListPageTime;
+	}
+
+	public void setLoginItemListPageTime(LocalDateTime loginItemListPageTime) {
+		this.loginItemListPageTime = loginItemListPageTime;
+	}
+
+	public LocalDateTime getLoginCalendarPageTime() {
+		return loginCalendarPageTime;
+	}
+
+	public void setLoginCalendarPageTime(LocalDateTime loginCalendarPageTime) {
+		this.loginCalendarPageTime = loginCalendarPageTime;
+	}
+
+	public LocalDateTime getLoginExpensePageTime() {
+		return loginExpensePageTime;
+	}
+
+	public void setLoginExpensePageTime(LocalDateTime loginExpensePageTime) {
+		this.loginExpensePageTime = loginExpensePageTime;
 	}
 
 }

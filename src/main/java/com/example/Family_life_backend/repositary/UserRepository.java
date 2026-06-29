@@ -7,4 +7,5 @@ import com.example.Family_life_backend.entity.UserInfo;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserInfo, Long> {
+	UserInfo findByEmail(String email);
 }
