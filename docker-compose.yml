@@ -14,6 +14,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql   # 持久化資料，容器重啟不會消失
       - ./utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf
+      - ./DB/init.sql:/docker-entrypoint-initdb.d/init.sql # 初始化 docker mysql DB 結構 跟新增分類跟地點資料
     # ports:
     #   - "3306:3306"                 # 如果只給後端用，這行可以拿掉
     networks:
