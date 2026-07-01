@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -314,7 +314,7 @@ CREATE TABLE `notify` (
   `status` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`notify_id`),
   KEY `idx_notify_user_read` (`get_user_id`,`is_read`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -416,8 +416,8 @@ CREATE TABLE `users` (
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '登入 Email',
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '加密後密碼',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '頭像圖片網址',
-  `is_notify_by_enddate` tinyint(1) NOT NULL DEFAULT '0',
-  `is_notify_by_email` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否開啟通知',
+  `is_notify_by_enddate` tinyint(1) NOT NULL DEFAULT '1',
+  `is_notify_by_email` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否開啟通知',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '建立時間',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新時間',
   `login_item_list_page_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -483,7 +483,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. 預設分類資料 (categories)
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` (`category_id`, `category_name`, `icon`) VALUES
+INSERT IGNORE INTO `categories` (`category_id`, `category_name`, `icon`) VALUES
 (1, '食品', 'food'),
 (2, '藥品', 'medicine'),
 (3, '日常用品', 'daily_supplies'),
@@ -496,7 +496,7 @@ UNLOCK TABLES;
 -- 2. 預設位置資料 (locations)
 LOCK TABLES `locations` WRITE;
 /*!40000 ALTER TABLE `locations` DISABLE KEYS */;
-INSERT INTO `locations` (`id`, `name`, `icon`) VALUES
+INSERT IGNORE INTO `locations` (`id`, `name`, `icon`) VALUES
 (1, '冰箱', 'fridge'),
 (2, '櫥櫃', 'cabinet'),
 (3, '藥箱', 'medicine_box'),
