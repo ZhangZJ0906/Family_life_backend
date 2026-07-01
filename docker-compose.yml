@@ -8,9 +8,11 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: railway
       MYSQL_USER: family-user
+
       MYSQL_PASSWORD: L125914701
       MYSQL_INITDB_CHARSET: utf8mb4
       MYSQL_INITDB_COLLATION: utf8mb4_unicode_ci
+
     volumes:
       - mysql_data:/var/lib/mysql
       - ./utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf
@@ -39,6 +41,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=UTF-8&useUnicode=true
       - SPRING_DATASOURCE_USERNAME=family-user
       - SPRING_DATASOURCE_PASSWORD=L125914701
+
     depends_on:
       mysql-db:
         condition: service_healthy

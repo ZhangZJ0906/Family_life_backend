@@ -1,5 +1,10 @@
 package com.example.Family_life_backend.request;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,6 +24,31 @@ public class AddInfoReq {
 	private String userName;
 	private String avatar;
 	private boolean notify;
+
+//	private LocalDate createdDate;
+//
+//	private LocalDateTime loginItemListPageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+//
+//	private LocalDateTime loginCalendarPageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+//
+//	private LocalDateTime loginExpensePageTime = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+//
+//	@PrePersist
+//	public void prePersist() {
+//		LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Taipei"));
+//
+//		if (createdDate == null)
+//			createdDate = LocalDate.now(ZoneId.of("Asia/Taipei"));
+//		
+//		if (loginItemListPageTime == null)
+//			loginItemListPageTime = now;
+//
+//		if (loginCalendarPageTime == null)
+//			loginCalendarPageTime = now;
+//
+//		if (loginExpensePageTime == null)
+//			loginExpensePageTime = now;
+//	}
 
 	public int getUserId() {
 		return userId;
