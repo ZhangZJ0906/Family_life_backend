@@ -14,6 +14,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf
+      - ./DB/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3307:3306"
     networks:
