@@ -72,7 +72,7 @@ public class MedicineService {
 	}
 
 	public MedicineRes add(AddMedicineReq req, MultipartFile image) {
-
+		itemListNotify.validateImage(image);
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new MedicineRes(400, "userId 不可為空");
 		}
@@ -119,7 +119,7 @@ public class MedicineService {
 	}
 
 	public MedicineRes update(UpdateMedicineReq req, MultipartFile image) {
-
+itemListNotify.validateImage(image);
 		String oldName = medicineDao.getMedicineNameById(req.getId());
 
 		if (req.getName() == null || req.getName().isBlank()) {
@@ -170,7 +170,7 @@ public class MedicineService {
 		return new MedicineRes(200, "修改成功");
 	}
 
-// 更新notify
+	// 更新notify
 	public BasicRes updateNotify(UpdateNotifyReq req) {
 
 		medicineDao.updateNotifyById(req.getId(), req.getNotify());
