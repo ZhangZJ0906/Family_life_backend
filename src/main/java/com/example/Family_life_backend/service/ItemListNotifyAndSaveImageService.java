@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,8 +30,6 @@ public class ItemListNotifyAndSaveImageService {
 
 	@Autowired
 	private groupMemberDao groupMemberDao;
-	@Autowired
-	private groupDao groupDao;
 	@Autowired
 	private UserInfoDao userInfoDao;
 	@Autowired
@@ -79,18 +78,54 @@ public class ItemListNotifyAndSaveImageService {
 		}
 	}
 
-	public String store(MultipartFile image) {
-		if (image == null || image.isEmpty())
-			return null;
-		try {
-			String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-			Path uploadPath = Paths.get("/app/uploads");
-			if (!Files.exists(uploadPath))
-				Files.createDirectories(uploadPath);
-			Files.copy(image.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-			return "/uploads/" + fileName;
-		} catch (Exception e) {
-			throw new RuntimeException("圖片上傳失敗", e);
+public String store(MultipartFile image) {
+    if (image == null || image.isEmpty())
+        return null;
+    try {
+        String originalName = image.getOriginalFilename() == null ? "" : image.getOriginalFilename();
+        String ext = "";
+        int dotIdx = originalName.lastIndexOf('.');
+        if (dotIdx >= 0) {
+            ext = originalName.substring(dotIdx).toLowerCase();
+        }
+
+        List<String> allowedExt = List.of(".png", ".jpg", ".jpeg", ".gif", ".webp");
+        if (!allowedExt.contains(ext)) {
+            throw new IllegalArgumentException("不支援的檔案格式");
+        }
+
+        // 完全不用原始檔名，避免任何路徑穿越可能
+        String fileName = UUID.randomUUID() + ext;
+
+        Path uploadPath = Paths.get("/app/uploads");
+        if (!Files.exists(uploadPath))
+            Files.createDirectories(uploadPath);
+
+        Files.copy(image.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+        return "/uploads/" + fileName;
+    } catch (IllegalArgumentException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new RuntimeException("圖片上傳失敗", e);
+    }
+}
+
+	public void validateImage(MultipartFile image) {
+		if (image == null || image.isEmpty()) {
+			return;
+		}
+
+		// 例如限制 5MB
+		long maxSize = 5 * 1024 * 1024;
+
+		if (image.getSize() > maxSize) {
+			throw new IllegalArgumentException("圖片大小不能超過 5MB");
+		}
+
+		String contentType = image.getContentType();
+
+		if (contentType == null || !contentType.startsWith("image/")) {
+			throw new IllegalArgumentException("只能上傳圖片檔案");
 		}
 	}
 }

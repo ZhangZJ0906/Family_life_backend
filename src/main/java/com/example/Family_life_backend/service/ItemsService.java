@@ -109,7 +109,7 @@ public class ItemsService {
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req, MultipartFile image) {
 		try {
-			validateImage(image);
+			itemListNotify.validateImage(image);
 
 			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
@@ -150,7 +150,7 @@ public class ItemsService {
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req, MultipartFile image) {
 		try {
-			validateImage(image);
+			itemListNotify.validateImage(image);
 
 			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
@@ -269,23 +269,6 @@ public class ItemsService {
 		return "";
 	}
 
-	private void validateImage(MultipartFile image) {
-		if (image == null || image.isEmpty()) {
-			return;
-		}
 
-		// 例如限制 5MB
-		long maxSize = 5 * 1024 * 1024;
-
-		if (image.getSize() > maxSize) {
-			throw new IllegalArgumentException("圖片大小不能超過 5MB");
-		}
-
-		String contentType = image.getContentType();
-
-		if (contentType == null || !contentType.startsWith("image/")) {
-			throw new IllegalArgumentException("只能上傳圖片檔案");
-		}
-	}
 
 }

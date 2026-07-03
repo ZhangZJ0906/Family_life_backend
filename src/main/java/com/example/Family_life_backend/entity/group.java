@@ -31,7 +31,7 @@ public class group {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-	@Column(name = "avatar", nullable = false, length = 100)
+	@Column(name = "avatar", nullable = true, length = 100)
 	private String Avatar;
 
 	@Transient
