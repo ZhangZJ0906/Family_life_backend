@@ -32,6 +32,7 @@ import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -60,10 +61,31 @@ public class ItemsService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+
 	@Autowired
 	private globalVar globalVar;
+
 	@Autowired
 	private ItemListNotifyAndSaveImageService itemListNotify;
+
+	// @Autowired
+	// private javax.sql.DataSource dataSource;
+
+	// @PostConstruct
+	// public void test() throws Exception {
+	// 	System.out.println("========== TEST ==========");
+
+	// 	try (var conn = dataSource.getConnection()) {
+	// 		System.out.println("URL = " + conn.getMetaData().getURL());
+	// 		System.out.println("DB = " + conn.getCatalog());
+
+	// 		var rs = conn.createStatement().executeQuery("SHOW VARIABLES LIKE 'character_set_results'");
+
+	// 		while (rs.next()) {
+	// 			System.out.println(rs.getString(1) + " = " + rs.getString(2));
+	// 		}
+	// 	}
+	// }
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
@@ -89,6 +111,12 @@ public class ItemsService {
 		// 2. 查詢資料庫取得位置資訊
 		List<Location> locData = locationDao.getItemLocationList();
 		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
+
+		// System.out.println("========== TEST ==========");
+
+		// for (Categories c : categoriesData) {
+		// 	System.out.println("Category = " + c.getCategoryName());
+		// }
 
 		// 3. 將 List<Object[]> 轉成 Map<Integer, String>，方便前端使用
 		Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(//
