@@ -2,6 +2,7 @@ package com.example.Family_life_backend.Manager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,6 +63,14 @@ public class PresenceManager {
 		return sessions.values().stream().filter(p -> Objects.equals(p.groupId, groupId)).map(p -> p.userId).distinct()
 				.toList();
 	}
+
+	public Set<Long> getOnlineUserSet(Long groupId) {
+
+        return sessions.values().stream()
+                .filter(p -> Objects.equals(p.groupId, groupId))
+                .map(p -> p.userId)
+                .collect(Collectors.toSet());
+    }
 
 	// =========================
 	// 4. TTL cleanup (核心)
