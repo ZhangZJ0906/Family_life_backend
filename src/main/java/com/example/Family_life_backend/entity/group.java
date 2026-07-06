@@ -32,10 +32,6 @@ public class group {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-<<<<<<< HEAD
-	@Column(name = "avatar", nullable = true, length = 100)
-	private String Avatar;
-=======
 
 	@Column(name = "avatar", nullable = false, length = 255)
 	private String avatar;
@@ -51,7 +47,6 @@ public class group {
 	        this.avatar = "/uploads/default-group-avatar.png";
 	    }
 	}
->>>>>>> origin/feature-backend
 
 	@Transient
 	private String creater;
@@ -127,7 +122,7 @@ public class group {
 		this.inviteCode = inviteCode;
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
-		this.Avatar = avatar;
+		this.avatar = avatar;
 		this.creater = creater;
 	}
 
