@@ -33,6 +33,7 @@ public class group {
 	private LocalDateTime createdAt;
 
 
+
 	@Column(name = "avatar", nullable = false, length = 255)
 	private String avatar;
 	

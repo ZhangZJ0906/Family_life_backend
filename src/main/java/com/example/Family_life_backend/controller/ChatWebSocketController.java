@@ -1,13 +1,5 @@
 package com.example.Family_life_backend.controller;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -15,9 +7,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.example.Family_life_backend.DTO.groupMembersDTO;
-import com.example.Family_life_backend.dao.NotifyDao;
-import com.example.Family_life_backend.dao.groupMemberDao;
 import com.example.Family_life_backend.entity.GroupChatMessage;
 import com.example.Family_life_backend.entity.UserInfo;
 import com.example.Family_life_backend.repositary.GroupChatRepository;
@@ -26,8 +15,6 @@ import com.example.Family_life_backend.request.ChatEnterRequest;
 import com.example.Family_life_backend.request.ChatRequest;
 import com.example.Family_life_backend.request.HeartbeatRequest;
 import com.example.Family_life_backend.response.ChatMessageResponse;
-
-import com.example.Family_life_backend.service.NotifySocketService;
 
 import com.example.Family_life_backend.Manager.PresenceManager;
 
@@ -40,21 +27,6 @@ public class ChatWebSocketController {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final GroupChatRepository repository;
 	private final UserRepository userRepository;
-
-	@Autowired
-	private groupMemberDao groupMemberDao;
-
-	@Autowired
-	private NotifyDao notifyDao;
-
-//	@Autowired
-//	private EmailService emailService;
-//
-//	@Autowired
-//	private UserInfoDao userInfoDao;
-
-	@Autowired
-	private NotifySocketService notifySocketService;
 
 	@Autowired
 	private ChatNotifyService chatNotifyService;
