@@ -81,6 +81,9 @@ public class groupService {
 		group.setCreatedBy(req.getCreateBy());
 		group.setCreater(self_name);
 		group.setCreatedAt(LocalDateTime.now());
+		
+		 // 重點：避免 avatar 寫入 null
+	    group.setAvatar("/uploads/default-group-avatar.png");
 
 		group saved = groupRepository.save(group);
 
@@ -133,7 +136,10 @@ public class groupService {
 
 			String oldAvatar = groupDao.getAvatarByGroupId(groupId);
 
-			String avatarUrl = oldAvatar;
+			String avatarUrl =
+			        oldAvatar == null || oldAvatar.isBlank()
+			                ? "/uploads/default-group-avatar.png"
+			                : oldAvatar;
 
 			// 更新頭像
 			if (avatar != null && !avatar.isEmpty()) {
