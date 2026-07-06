@@ -49,10 +49,42 @@ public class CalendarService {
 	private NotifySocketService notifySocketService;
 	
 	private static final ZoneId TAIWAN_ZONE = ZoneId.of("Asia/Taipei");
+	
+	private CalendarRes validateCalendarText(CalendarReq req) {
+
+	    if (req.getTitle() == null || req.getTitle().isBlank()) {
+	        return new CalendarRes(400, "活動名稱不可為空");
+	    }
+
+	    String title = req.getTitle().trim();
+
+	    if (title.length() > 100) {
+	        return new CalendarRes(400, "活動名稱不可超過 100 個字");
+	    }
+
+	    String description =
+	            req.getDescription() == null
+	                    ? ""
+	                    : req.getDescription().trim();
+
+	    if (description.length() > 2000) {
+	        return new CalendarRes(400, "活動描述不可超過 2000 個字");
+	    }
+
+	    req.setTitle(title);
+	    req.setDescription(description);
+
+	    return null;
+	}
 
 	// 新增事件
 	public CalendarRes create(CalendarReq req) {
 
+		 CalendarRes validationError = validateCalendarText(req);
+
+		    if (validationError != null) {
+		        return validationError;
+		    }
 		// =========================
 		// 1. 基本欄位驗證
 		// =========================
@@ -203,6 +235,12 @@ public class CalendarService {
 
 	// 修改事件：同步修改同一批活動
 	public CalendarRes update(Long id, CalendarReq req) {
+		
+		CalendarRes validationError = validateCalendarText(req);
+
+	    if (validationError != null) {
+	        return validationError;
+	    }
 
 	    // =========================
 	    // 1. 基本驗證

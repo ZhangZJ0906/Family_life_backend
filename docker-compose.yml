@@ -3,13 +3,16 @@ services:
     image: mysql:8.0
     container_name: family-mysql
     restart: always
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: railway
       MYSQL_USER: family-user
-
-      MYSQL_PASSWORD: D1051284
+      MYSQL_PASSWORD: L125914701
       MYSQL_INITDB_CHARSET: utf8mb4
       MYSQL_INITDB_COLLATION: utf8mb4_unicode_ci
 
@@ -17,12 +20,25 @@ services:
       - mysql_data:/var/lib/mysql
       - ./utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf
       - ./DB/init.sql:/docker-entrypoint-initdb.d/init.sql
+
     ports:
       - "3307:3306"
+
     networks:
       - family_net
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-proot"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,20 +47,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports: 
+
+    ports:
       - "18081:8081"
+
     volumes:
       - ./uploads:/app/uploads
+
     restart: always
+
     environment:
-      - SERVER_PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=utf8&useUnicode=true
-      - SPRING_DATASOURCE_USERNAME=family-user
-      - SPRING_DATASOURCE_PASSWORD=D1051284
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=utf8&useUnicode=true
+      SPRING_DATASOURCE_USERNAME: family-user
+      SPRING_DATASOURCE_PASSWORD: L125914701
 
     depends_on:
       mysql-db:
         condition: service_healthy
+
     networks:
       - family_net
 

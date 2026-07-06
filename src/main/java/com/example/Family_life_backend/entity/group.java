@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -31,8 +32,26 @@ public class group {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
+<<<<<<< HEAD
 	@Column(name = "avatar", nullable = true, length = 100)
 	private String Avatar;
+=======
+
+	@Column(name = "avatar", nullable = false, length = 255)
+	private String avatar;
+	
+	@PrePersist
+	public void prePersist() {
+
+	    if (this.createdAt == null) {
+	        this.createdAt = LocalDateTime.now();
+	    }
+
+	    if (this.avatar == null || this.avatar.isBlank()) {
+	        this.avatar = "/uploads/default-group-avatar.png";
+	    }
+	}
+>>>>>>> origin/feature-backend
 
 	@Transient
 	private String creater;
@@ -80,11 +99,11 @@ public class group {
 	}
 
 	public String getAvatar() {
-		return Avatar;
+		return avatar;
 	}
 
 	public void setAvatar(String avatar) {
-		Avatar = avatar;
+		this.avatar = avatar;
 	}
 
 	public String getCreater() {
