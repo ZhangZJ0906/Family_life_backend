@@ -30,7 +30,7 @@ public interface ExpenseDao extends JpaRepository<Expense, Integer> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "INTO expenses (group_id,user_id, price, category_id, related_item_id, expense_date, note, created_at,related_item_name) "
+	@Query(value = "insert INTO expenses (group_id,user_id, price, category_id, related_item_id, expense_date, note, created_at,related_item_name) "
 			+ "VALUES (:groupId,:userId, :price, :categoryId, :relatedItemId, :expenseDate, :note, :createdAt, :relatedItemName)", nativeQuery = true)
 	public void insertExpense(@Param("groupId") Long groupId, @Param("userId") Long userId,
 			@Param("price") Integer price, @Param("categoryId") Integer categoryId,

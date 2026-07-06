@@ -66,7 +66,7 @@ public class WarrantyService {
 	}
 
 	public WarrantyRes add(AddWarrantyReq req, MultipartFile image) {
-
+itemListNotify.validateImage(image);
 		if (req.getUserId() == null || req.getUserId() <= 0) {
 			return new WarrantyRes(400, "userId 不可為空");
 		}
@@ -106,7 +106,7 @@ public class WarrantyService {
 	}
 
 	public WarrantyRes update(UpdateWarrantyReq req, MultipartFile image) {
-
+itemListNotify.validateImage(image);
 		String oldName = warrantyDao.getNameById(req.getId());
 
 		if (req.getProductName() == null || req.getProductName().isBlank()) {

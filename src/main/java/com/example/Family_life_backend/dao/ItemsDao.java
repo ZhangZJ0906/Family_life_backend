@@ -110,8 +110,8 @@ public interface ItemsDao extends JpaRepository<Items, Long> {
 	/* 刪除 */
 	@Modifying
 	@Transactional
-	@Query(value = "delete from items where id  in (?)", nativeQuery = true)
-	public void deleteItemById(List<Integer> id);
+	@Query(value = "delete from items where id  in (:id)", nativeQuery = true)
+	public void deleteItemById(@Param("id") List<Integer> id);
 
 	/* 群組刪除後，物品轉私人 */
 	@Modifying

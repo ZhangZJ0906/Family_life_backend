@@ -32,6 +32,7 @@ import com.example.Family_life_backend.response.AddItemsInfoRes;
 import com.example.Family_life_backend.response.BasicRes;
 import com.example.Family_life_backend.response.GetItemsRes;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -60,10 +61,31 @@ public class ItemsService {
 
 	@Autowired
 	private NotifySocketService notifySocketService;
+
 	@Autowired
 	private globalVar globalVar;
+
 	@Autowired
 	private ItemListNotifyAndSaveImageService itemListNotify;
+
+	// @Autowired
+	// private javax.sql.DataSource dataSource;
+
+	// @PostConstruct
+	// public void test() throws Exception {
+	// 	System.out.println("========== TEST ==========");
+
+	// 	try (var conn = dataSource.getConnection()) {
+	// 		System.out.println("URL = " + conn.getMetaData().getURL());
+	// 		System.out.println("DB = " + conn.getCatalog());
+
+	// 		var rs = conn.createStatement().executeQuery("SHOW VARIABLES LIKE 'character_set_results'");
+
+	// 		while (rs.next()) {
+	// 			System.out.println(rs.getString(1) + " = " + rs.getString(2));
+	// 		}
+	// 	}
+	// }
 
 	public GetItemsRes getItems(Integer groupId, Integer userId) {
 
@@ -90,6 +112,12 @@ public class ItemsService {
 		List<Location> locData = locationDao.getItemLocationList();
 		List<Categories> categoriesData = categoiesDao.getItemCategoriesList();
 
+		// System.out.println("========== TEST ==========");
+
+		// for (Categories c : categoriesData) {
+		// 	System.out.println("Category = " + c.getCategoryName());
+		// }
+
 		// 3. 將 List<Object[]> 轉成 Map<Integer, String>，方便前端使用
 		Map<Integer, String> locationMap = locData.stream().collect(Collectors.toMap(//
 				Location::getId, //
@@ -109,7 +137,7 @@ public class ItemsService {
 	@Transactional
 	public AddItemsInfoRes saveItem(ItemAddInfoReq req, MultipartFile image) {
 		try {
-			validateImage(image);
+			itemListNotify.validateImage(image);
 
 			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
@@ -150,7 +178,7 @@ public class ItemsService {
 	@Transactional
 	public BasicRes updateItem(ItemUpdateReq req, MultipartFile image) {
 		try {
-			validateImage(image);
+			itemListNotify.validateImage(image);
 
 			Integer finalGroupId = (req.getGroupId() != null) ? req.getGroupId() : 0;
 
@@ -269,23 +297,6 @@ public class ItemsService {
 		return "";
 	}
 
-	private void validateImage(MultipartFile image) {
-		if (image == null || image.isEmpty()) {
-			return;
-		}
 
-		// 例如限制 5MB
-		long maxSize = 5 * 1024 * 1024;
-
-		if (image.getSize() > maxSize) {
-			throw new IllegalArgumentException("圖片大小不能超過 5MB");
-		}
-
-		String contentType = image.getContentType();
-
-		if (contentType == null || !contentType.startsWith("image/")) {
-			throw new IllegalArgumentException("只能上傳圖片檔案");
-		}
-	}
 
 }

@@ -8,7 +8,7 @@ public interface UserNotifyDTO {
     Long getGetUserId();
     String getContent();
     String getType();
-    Byte getIsRead();
+    Boolean getIsRead();
     LocalDateTime getSendDate();
     Long getTargetGroupId();
     String getStatus();
