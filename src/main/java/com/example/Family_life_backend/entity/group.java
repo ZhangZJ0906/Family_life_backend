@@ -31,11 +31,9 @@ public class group {
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-<<<<<<< HEAD
+
 	@Column(name = "avatar",nullable = true, length = 100)
-=======
-	@Column(name = "avatar", nullable = true, length = 100)
->>>>>>> origin/ZJ
+
 	private String Avatar;
 
 	@Transient

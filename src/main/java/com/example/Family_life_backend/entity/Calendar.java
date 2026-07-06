@@ -27,7 +27,7 @@ public class Calendar {
 	@Column(name = "created_by")
 	private Long createdBy;
 
-	@Column(name = "title")
+	@Column(name = "title", nullable = false, length = 100)
 	private String title;
 
 	@Column(columnDefinition = "TEXT")
