@@ -5,10 +5,12 @@ services:
     restart: always
 
     command:
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
 
     environment:
+      TZ: Asia/Taipei
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: railway
       MYSQL_USER: family-user
@@ -29,16 +31,14 @@ services:
 
     healthcheck:
       test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-proot"
-        ]
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u
+        - root
+        - -proot
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,8 +57,10 @@ services:
     restart: always
 
     environment:
+      TZ: Asia/Taipei
+      JAVA_TOOL_OPTIONS: "-Duser.timezone=Asia/Taipei"
       SERVER_PORT: 8081
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=utf8&useUnicode=true
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Taipei&characterEncoding=utf8&useUnicode=true&rewriteBatchedStatements=true"
       SPRING_DATASOURCE_USERNAME: family-user
       SPRING_DATASOURCE_PASSWORD: L125914701
 

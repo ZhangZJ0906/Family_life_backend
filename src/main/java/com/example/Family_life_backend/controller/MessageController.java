@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -117,6 +118,20 @@ public class MessageController {
 
 		Set<Long> readSet = myReads.stream().map(GroupChatRead::getMessageId).collect(Collectors.toSet());
 
+		// 新增：一次查出每則訊息的已讀人數
+		Map<Long, Long> readCountMap;
+
+		if (messageIds.isEmpty()) {
+			readCountMap = Map.of();
+		} else {
+			readCountMap = readRepository.countByMessageIds(messageIds)
+					.stream()
+					.collect(Collectors.toMap(
+							GroupChatReadCountDTO::getMessageId,
+							GroupChatReadCountDTO::getCount
+					));
+		}
+
 		// =========================
 		// 2. batch reply messages
 		// =========================
@@ -145,6 +160,9 @@ public class MessageController {
 			dto.setType(msg.getImageUrl() != null ? "IMAGE" : "MESSAGE");
 
 			dto.setReadByMe(readSet.contains(msg.getId()));
+			dto.setReadCount(
+			readCountMap.getOrDefault(msg.getId(), 0L)
+	);
 
 			dto.setReplyId(msg.getReplyId());
 			System.out.println("id: " + msg.getId() + "isrecall: " + msg.getRecalled());
@@ -188,7 +206,7 @@ public class MessageController {
 //			// =====================
 //			// read count
 //			// =====================
-//			dto.setReadCount(readCountMap.getOrDefault(msg.getId(), 0L));
+			
 
 			return dto;
 
@@ -203,62 +221,94 @@ public class MessageController {
 	}
 
 	@PostMapping("/read/{groupId}")
-	public void markRead(
-	        @PathVariable("groupId") Long groupId,
-	        @RequestParam("userId") Long userId,
-	        @RequestParam(value = "upToMessageId", required = false) Long upToMessageId,
-	        @RequestParam(value = "limit", required = false) Integer limit) {
+		public void markRead(
+				@PathVariable("groupId") Long groupId,
+				@RequestParam("userId") Long userId,
+				@RequestParam(value = "upToMessageId", required = false) Long upToMessageId,
+				@RequestParam(value = "limit", required = false) Integer limit) {
 
-	    int readLimit = normalizeLimit(limit, DEFAULT_READ_LIMIT, MAX_READ_LIMIT);
+			System.out.println("===== mark read =====");
+			System.out.println("groupId = " + groupId);
+			System.out.println("userId = " + userId);
+			System.out.println("upToMessageId = " + upToMessageId);
 
-	    // 只查「尚未讀」且「不是自己發的」訊息。
-	    List<GroupChatMessage> messages = repository.findUnreadMessagesForUser(
-	            groupId,
-	            userId,
-	            upToMessageId,
-	            PageRequest.of(0, readLimit)
-	    );
+			int readLimit =
+					normalizeLimit(limit, DEFAULT_READ_LIMIT, MAX_READ_LIMIT);
 
-	    if (messages.isEmpty()) {
-	        return;
-	    }
+			List<GroupChatMessage> messages =
+					repository.findUnreadMessagesForUser(
+							groupId,
+							userId,
+							upToMessageId,
+							PageRequest.of(0, readLimit)
+					);
 
-	    List<Long> messageIds = messages.stream()
-	            .map(GroupChatMessage::getId)
-	            .toList();
+			System.out.println("unread messages count = " + messages.size());
 
-	    List<GroupChatRead> newReads = new ArrayList<>();
+			if (messages.isEmpty()) {
+				return;
+			}
 
-	    for (GroupChatMessage msg : messages) {
-	        GroupChatRead read = new GroupChatRead();
-	        read.setMessageId(msg.getId());
-	        read.setUserId(userId);
-	        read.setReadTime(LocalDateTime.now());
-	        newReads.add(read);
-	    }
+			List<GroupChatRead> newReads = new ArrayList<>();
 
-	    readRepository.saveAll(newReads);
+			for (GroupChatMessage msg : messages) {
 
-	    Map<Long, Long> countMap = readRepository.countByMessageIds(messageIds)
-	            .stream()
-	            .collect(Collectors.toMap(
-	                    GroupChatReadCountDTO::getMessageId,
-	                    GroupChatReadCountDTO::getCount
-	            ));
+				boolean alreadyRead =
+						readRepository.existsByMessageIdAndUserId(
+								msg.getId(),
+								userId
+						);
 
-	    for (GroupChatMessage msg : messages) {
-	        Long count = countMap.getOrDefault(msg.getId(), 0L);
+				if (alreadyRead) {
+					continue;
+				}
 
-	        messagingTemplate.convertAndSend(
-	                "/topic/group/" + groupId,
-	                Map.of(
-	                        "type", "READ",
-	                        "messageId", msg.getId(),
-	                        "readCount", count
-	                )
-	        );
-	    }
-	}
+				GroupChatRead read = new GroupChatRead();
+				read.setMessageId(msg.getId());
+				read.setUserId(userId);
+				read.setReadTime(
+						LocalDateTime.now(
+								ZoneId.of("Asia/Taipei")
+						)
+				);
+
+				newReads.add(read);
+			}
+
+			if (newReads.isEmpty()) {
+				return;
+			}
+
+			readRepository.saveAll(newReads);
+			readRepository.flush();
+
+			System.out.println("saved reads count = " + newReads.size());
+
+			List<Long> messageIds = newReads.stream()
+					.map(GroupChatRead::getMessageId)
+					.toList();
+
+			Map<Long, Long> countMap =
+					readRepository.countByMessageIds(messageIds)
+							.stream()
+							.collect(Collectors.toMap(
+									GroupChatReadCountDTO::getMessageId,
+									GroupChatReadCountDTO::getCount
+							));
+
+			for (Long messageId : messageIds) {
+				Long count = countMap.getOrDefault(messageId, 0L);
+
+				messagingTemplate.convertAndSend(
+						"/topic/group/" + groupId,
+						Map.of(
+								"type", "READ",
+								"messageId", messageId,
+								"readCount", count
+						)
+				);
+			}
+		}
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file, @RequestParam("groupId") Long groupId,

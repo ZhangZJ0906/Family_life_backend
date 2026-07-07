@@ -4,7 +4,15 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "group_chat_read")
+@Table(
+    name = "group_chat_message_read",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_message_user",
+            columnNames = {"message_id", "user_id"}
+        )
+    }
+)
 public class GroupChatRead {
 
 	@Id
@@ -17,8 +25,8 @@ public class GroupChatRead {
 	@Column(name = "user_id")
 	private Long userId;
 
-	@Column(name = "read_time")
-	private LocalDateTime readTime;
+	 @Column(name = "read_time", nullable = false)
+    private LocalDateTime readTime;
 
 	public Long getId() {
 		return id;

@@ -123,7 +123,7 @@ public class group {
 		this.inviteCode = inviteCode;
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
-		this.Avatar = avatar;
+		this.avatar = avatar;
 		this.creater = creater;
 	}
 

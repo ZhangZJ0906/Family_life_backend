@@ -32,26 +32,26 @@ public interface GroupChatRepository extends JpaRepository<GroupChatMessage, Lon
 	// senderId <> userId：自己發的訊息不需要標記已讀。
 	// upToMessageId：只標記使用者目前看到的範圍，避免一次掃整個聊天室。
 	// NOT EXISTS：排除 group_chat_read 已經有紀錄的訊息。
-	@Query("""
-	        SELECT m
-	        FROM GroupChatMessage m
-	        WHERE m.groupId = :groupId
-	          AND m.senderId <> :userId
-	          AND (:upToMessageId IS NULL OR m.id <= :upToMessageId)
-	          AND NOT EXISTS (
-	              SELECT 1
-	              FROM GroupChatRead r
-	              WHERE r.messageId = m.id
-	                AND r.userId = :userId
-	          )
-	        ORDER BY m.id ASC
-	        """)
-	List<GroupChatMessage> findUnreadMessagesForUser(
-	        @Param("groupId") Long groupId,
-	        @Param("userId") Long userId,
-	        @Param("upToMessageId") Long upToMessageId,
-	        Pageable pageable
-	);
+			@Query("""
+			SELECT m
+			FROM GroupChatMessage m
+			WHERE m.groupId = :groupId
+			AND m.senderId <> :userId
+			AND (:upToMessageId IS NULL OR m.id <= :upToMessageId)
+			AND NOT EXISTS (
+				SELECT r.id
+				FROM GroupChatRead r
+				WHERE r.messageId = m.id
+					AND r.userId = :userId
+			)
+			ORDER BY m.id ASC
+		""")
+		List<GroupChatMessage> findUnreadMessagesForUser(
+				@Param("groupId") Long groupId,
+				@Param("userId") Long userId,
+				@Param("upToMessageId") Long upToMessageId,
+				Pageable pageable
+		);
 
 //	@Query("""
 //			    SELECT new com.example.Family_life_backend.dto.GroupChatMessageDto(
